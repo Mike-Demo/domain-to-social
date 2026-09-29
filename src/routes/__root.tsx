@@ -11,6 +11,12 @@ import { useEffect, type ReactNode } from "react";
 import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
+import waThemeCss from "@/design-system/font-awsome-web-awesome-171158/webawesome/theme.css?url";
+import {
+  WEB_AWESOME_STYLE_URLS,
+  WEB_AWESOME_FOUCE_STYLE_URL,
+} from "@/design-system/font-awsome-web-awesome-171158/webawesome/cdn";
+import { WEB_AWESOME_HTML_CLASSES } from "@/design-system/font-awsome-web-awesome-171158/webawesome/setup";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -89,6 +95,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
+      ...WEB_AWESOME_STYLE_URLS.map((href) => ({ rel: "stylesheet", href })),
+      { rel: "stylesheet", href: WEB_AWESOME_FOUCE_STYLE_URL },
+      { rel: "stylesheet", href: waThemeCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
@@ -106,7 +115,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={WEB_AWESOME_HTML_CLASSES}>
       <head>
         <HeadContent />
       </head>
