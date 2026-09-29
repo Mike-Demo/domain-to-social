@@ -8,3 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Social lookup core lives in `src/lib/social/lookup.server.ts` (framework-agnostic `lookupDomain`); server fns are thin wrappers. Why: bulk lookups and an MCP server can reuse it later as premium entry points.
+- Platform rules live only in `src/lib/social/platforms.ts`. Why: one registry drives extraction, search fallback, and UI.
+- Fallback search uses DuckDuckGo HTML (no API key). Why: free/open for the MVP; swap behind `ddgSearch` if rate-limited.
