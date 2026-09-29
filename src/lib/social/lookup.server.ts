@@ -64,8 +64,8 @@ function findOrgName(node: unknown): string | null {
     const o = node as Record<string, unknown>;
     const t = o["@type"];
     const types = Array.isArray(t) ? t : [t];
-    if (types.some((x) => x === "Organization" || x === "Corporation" || x === "Brand") && typeof o.name === "string")
-      return o.name;
+    if (types.some((x) => x === "Organization" || x === "Corporation" || x === "Brand") && typeof o["name"] === "string")
+      return o["name"];
     for (const v of Object.values(o)) {
       const r = findOrgName(v);
       if (r) return r;
