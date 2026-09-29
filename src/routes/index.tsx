@@ -7,6 +7,7 @@ import { lookupSocials, searchBrand } from "@/lib/social/lookup.functions";
 import { allVerifiedTags, formatCheckedAt, looksLikeUrl } from "@/lib/social/format";
 import { ResultCard, copyText } from "@/components/social/ResultCard";
 import type { DomainCandidate, LookupResult } from "@/lib/social/types";
+import { WebAwesomeLoader } from "@/design-system/font-awsome-web-awesome-171158/webawesome/setup";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -57,6 +58,7 @@ function Index() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <WebAwesomeLoader />
       <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-16">
         <header className="mb-10">
           <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase">Handlebar</p>

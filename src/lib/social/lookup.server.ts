@@ -232,23 +232,37 @@ async function fallbackSearch(
   return out.filter((r): r is PlatformResult => r !== null);
 }
 
+async function fetchSite(url: string): Promise<{ text: string; finalUrl: string } | null> {
+  const direct = await fetchText(url);
+  if (direct) return direct;
+  const u = new URL(url);
+  if (u.hostname.startsWith("www.")) return null;
+  u.hostname = `www.${u.hostname}`;
+  return fetchText(u.toString());
+}
+
 export async function lookupDomain(input: string): Promise<LookupResult> {
   const url = normalizeInputUrl(input);
-  const page = await fetchText(url);
-  if (!page) throw new Error(`Could not load ${url}. Check the address and try again.`);
-  const domain = normalizeHost(new URL(page.finalUrl).hostname);
+  const page = await fetchSite(url);
   const checkedAt = new Date().toISOString();
-  const { findings, brandName } = extractFromHtml(page.text, page.finalUrl, domain);
+  // Some sites (e.g. behind bot protection) block automated fetches.
+  // Fall back to search-only results instead of failing the lookup.
+  const domain = normalizeHost(new URL(page?.finalUrl ?? url).hostname);
+  const { findings, brandName } = page
+    ? extractFromHtml(page.text, page.finalUrl, domain)
+    : { findings: [] as RawFinding[], brandName: domain.split(".")[0] ?? domain };
   const verified = groupFindings(findings, checkedAt);
   const found = new Set(verified.map((v) => v.platformId));
   const missing = PLATFORMS.map((p) => p.id).filter((id) => !found.has(id));
   const unverified = await fallbackSearch(missing, brandName, domain, checkedAt);
+  if (!page && unverified.length === 0)
+    throw new Error(`${domain} blocked our visit and search found no profiles. Try again later.`);
   const all = [...verified, ...unverified];
   const allFound = new Set(all.map((r) => r.platformId));
   return {
     input,
     domain,
-    finalUrl: page.finalUrl,
+    finalUrl: page?.finalUrl ?? url,
     brandName,
     checkedAt,
     platforms: all,
