@@ -2,6 +2,9 @@ import type { PlatformId } from "./platforms";
 
 export type ReciprocalStatus = "links_back" | "no_link_found" | "unreachable";
 
+/** Computed from independent signals (never a percentage). */
+export type SignalRating = "strong" | "moderate" | "weak";
+
 export interface ProfileEntry {
   handle: string;
   tag: string;
@@ -9,8 +12,11 @@ export interface ProfileEntry {
   verified: boolean;
   /** Human-readable evidence lines, e.g. "Found in JSON-LD sameAs". */
   evidence: string[];
-  sources: ("jsonld" | "site" | "search")[];
+  sources: ("jsonld" | "site" | "search" | "probe")[];
   reciprocal?: ReciprocalStatus;
+  rating?: SignalRating;
+  /** Short names of the signals that produced the rating. */
+  signals?: string[];
   checkedAt: string;
 }
 

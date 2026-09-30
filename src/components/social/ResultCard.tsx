@@ -17,6 +17,12 @@ function EntryRow({ entry }: { entry: ProfileEntry }) {
           <span className="rounded-full bg-signal/15 px-2 py-0.5 text-xs font-medium text-signal">Links back</span>
         )}
       </div>
+      {entry.rating && (
+        <p className="text-xs text-muted-foreground">
+          <span className="font-semibold capitalize text-foreground">{entry.rating} evidence</span>
+          {entry.signals && entry.signals.length > 0 ? ` · ${entry.signals.join(", ")}` : " · search result only"}
+        </p>
+      )}
       <ul className="space-y-1 text-sm text-muted-foreground">
         {entry.evidence.map((ev) => (
           <li key={ev} className="flex gap-2">
