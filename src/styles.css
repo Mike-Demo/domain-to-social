@@ -271,6 +271,25 @@
   --text-body-sm: 12px;
   --text-body-sm--line-height: 18px;
   --text-body-sm--font-weight: 400;
+
+  --text-micro: 10px;
+  --text-micro--line-height: 12px;
+  --text-micro--font-weight: 700;
+
+  /* Hard-offset "stamped print" shadows — the signature of this look. */
+  --shadow-stamp-xs: 2px 2px 0 #0b0c0e;
+  --shadow-stamp-sm: 3px 3px 0 #0b0c0e;
+  --shadow-stamp: 4px 4px 0 #0b0c0e;
+  --shadow-stamp-md: 5px 5px 0 #0b0c0e;
+  --shadow-stamp-lg: 6px 6px 0 #0b0c0e;
+  --shadow-stamp-xl: 8px 8px 0 #0b0c0e;
+  --shadow-stamp-magenta: 4px 4px 0 #ff007a;
+  --shadow-stamp-magenta-xl: 8px 8px 0 #ff007a;
+  --shadow-stamp-lime: 4px 4px 0 #cdf200;
+  --shadow-stamp-lime-md: 5px 5px 0 #cdf200;
+  --shadow-stamp-lime-xl: 8px 8px 0 #cdf200;
+
+  --drop-shadow-stamp: 4px 4px 0 #0b0c0e;
 }
 
 @utility halftone {
