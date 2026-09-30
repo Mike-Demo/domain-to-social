@@ -404,8 +404,8 @@ export async function lookupDomain(input: string): Promise<LookupResult> {
     checkedAt,
   );
   const unverified = [...searched, ...probed];
-  if (!page && unverified.length === 0)
-    throw new Error(`${domain} blocked our visit and search found no profiles. Try again later.`);
+  // A blocked site is an expected outcome, not a crash: return an empty-but-valid
+  // result flagged as blocked so the UI can explain it.
   const all = [...verified, ...unverified].map((r) => ({
     ...r,
     entries: r.entries.map((e) => rateEntry(e, brandName, domain)),
@@ -419,6 +419,7 @@ export async function lookupDomain(input: string): Promise<LookupResult> {
     checkedAt,
     platforms: all,
     notFound: PLATFORMS.filter((p) => !allFound.has(p.id)).map((p) => p.name),
+    blocked: !page,
   };
 }
 
