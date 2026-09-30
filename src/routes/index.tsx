@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
 import { lookupSocials, searchBrand } from "@/lib/social/lookup.functions";
 import { allVerifiedTags, formatCheckedAt, looksLikeUrl } from "@/lib/social/format";
+import { buildShareUrl } from "@/lib/social/share";
 import { ProfileSlab, copyText } from "@/components/diggr/ProfileSlab";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
 import type { DomainCandidate, LookupResult } from "@/lib/social/types";
@@ -295,6 +296,12 @@ function RadarScanner() {
                     Copy all verified handles
                   </button>
                 )}
+                <button
+                  onClick={async () => copyText(await buildShareUrl(result), "share link")}
+                  className="font-label-stamp text-label-stamp bg-cyber-cyan text-grit-black px-4 py-3 uppercase shadow-stamp transition-transform hover:-translate-y-0.5"
+                >
+                  Copy share link
+                </button>
                 <button
                   onClick={() => runLookup(result.input)}
                   className="font-label-stamp text-label-stamp text-paper-distressed border-2 border-paper-distressed px-4 py-3 uppercase hover:bg-paper-distressed hover:text-grit-black"
