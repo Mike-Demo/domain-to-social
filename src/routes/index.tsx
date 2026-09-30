@@ -2,38 +2,48 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
-import { Copy, Globe, Loader2, Search } from "lucide-react";
 import { lookupSocials, searchBrand } from "@/lib/social/lookup.functions";
 import { allVerifiedTags, formatCheckedAt, looksLikeUrl } from "@/lib/social/format";
-import { ResultCard, copyText } from "@/components/social/ResultCard";
+import { ProfileSlab, copyText } from "@/components/diggr/ProfileSlab";
+import { Shell, SubHeader } from "@/components/diggr/Chrome";
 import type { DomainCandidate, LookupResult } from "@/lib/social/types";
 import { WebAwesomeLoader } from "@/design-system/font-awsome-web-awesome-171158/webawesome/setup";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Handlebar — Find every social handle for a brand" },
+      { title: "DIGGR // Radar Scanner — hunt any brand's social footprint" },
       {
         name: "description",
-        content: "Paste a company URL and get its verified social handles on X, Threads, Instagram, LinkedIn, Bluesky and more.",
+        content:
+          "Drop a domain and DIGGR sweeps X, Threads, Instagram, LinkedIn, Bluesky, GitHub and more for verified brand handles with evidence.",
       },
-      { property: "og:title", content: "Handlebar — Find every social handle for a brand" },
-      { property: "og:description", content: "Verified brand handles, with evidence, ready to copy and tag." },
+      { property: "og:title", content: "DIGGR // Radar Scanner" },
+      {
+        property: "og:description",
+        content: "Drop a domain. Get every verified social handle, with the receipts.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: Index,
+  component: RadarScanner,
 });
 
-function Index() {
+const FLAGS = ["[✓ Deep Socials]", "[✓ Exec Handles]", "[✓ Shadow Accounts]", "[✓ Federated Nodes]"];
+
+function RadarScanner() {
   const [input, setInput] = useState("");
   const [manualUrl, setManualUrl] = useState("");
   const lookupFn = useServerFn(lookupSocials);
   const searchFn = useServerFn(searchBrand);
 
-  const lookup = useMutation<LookupResult, Error, string>({ mutationFn: (url) => lookupFn({ data: { url } }) });
-  const search = useMutation<DomainCandidate[], Error, string>({ mutationFn: (query) => searchFn({ data: { query } }) });
+  const lookup = useMutation<LookupResult, Error, string>({
+    mutationFn: (url) => lookupFn({ data: { url } }),
+  });
+  const search = useMutation<DomainCandidate[], Error, string>({
+    mutationFn: (query) => searchFn({ data: { query } }),
+  });
 
   const runLookup = (url: string) => {
     search.reset();
@@ -55,71 +65,156 @@ function Index() {
   const result = lookup.data;
   const verified = result?.platforms.filter((p) => p.status === "verified") ?? [];
   const unverified = result?.platforms.filter((p) => p.status === "unverified") ?? [];
+  const signals = (result?.platforms.length ?? 0) + (result?.notFound.length ?? 0);
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <Shell>
       <WebAwesomeLoader />
-      <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-16">
-        <header className="mb-10">
-          <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase">Handlebar</p>
-          <h1 className="font-display mt-3 text-4xl leading-tight font-bold sm:text-6xl">
-            Every handle.
-            <br />
-            <span className="text-signal">With receipts.</span>
-          </h1>
-          <p className="mt-4 max-w-xl text-muted-foreground">
-            Paste a company's website to find its official profiles — and exactly where each one was found.
-          </p>
-        </header>
+      <SubHeader
+        badge="OSINT_RADAR_ENGAGED"
+        note="// DEEP CORPO TRACE v2.8 //"
+        right={
+          <>
+            <span className="hidden md:inline">[ROTATING 4,210 GLOBAL PROXIES]</span>
+            <span className="text-paper-distressed inline-flex items-center gap-1.5 border border-outline-variant bg-surface-high px-2 py-0.5">
+              <span className="h-2 w-2 animate-ping rounded-full bg-acid-lime" />
+              PACKETS: SNIFFING LIVE
+            </span>
+          </>
+        }
+      />
 
-        <form onSubmit={onSubmit} className="flex flex-col gap-2 sm:flex-row">
-          <div className="relative flex-1">
-            <Globe className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="stripe.com or a brand name"
-              aria-label="Company URL or brand name"
-              className="h-12 w-full rounded-lg border border-input bg-card pr-3 pl-9 font-mono text-base outline-none focus:ring-2 focus:ring-ring"
-            />
+      {/* HERO CONSOLE */}
+      <section className="px-margin-mobile sm:px-margin py-space-xl relative w-full overflow-hidden bg-grit-black">
+        <div className="halftone pointer-events-none absolute inset-0 opacity-10" />
+        <div className="gap-space-xl relative z-10 mx-auto flex max-w-7xl flex-col">
+          <div className="gap-space-lg flex flex-col items-start justify-between lg:flex-row lg:items-end">
+            <div className="gap-space-xs flex max-w-3xl flex-col">
+              <div className="gap-space-sm inline-flex flex-wrap items-center">
+                <span className="font-label-stamp text-label-stamp bg-hazard-orange text-grit-black -rotate-2 px-2 py-1 tracking-widest uppercase shadow-[3px_3px_0px_#000000]">
+                  WARNING: ZERO CORPORATE SILOS SPARED
+                </span>
+                <span className="font-code-terminal text-code-terminal text-acid-lime">
+                  [NODE // OSINT_SNIFFER_v4]
+                </span>
+              </div>
+              <h1 className="font-display-hero text-display-hero-mobile sm:text-display-hero text-paper-distressed leading-none tracking-tight uppercase drop-shadow-[4px_4px_0px_#0B0C0E]">
+                DIG UP THE CORPO TRAILS
+                <br />
+                <span className="text-primary-container inline-block -rotate-1 border-2 border-primary-container bg-slate-charcoal px-2 shadow-[4px_4px_0px_#FF007A]">
+                  HUNT DOWN ANY PROFILE
+                </span>{" "}
+                IN SECONDS.
+              </h1>
+              <p className="font-body-md text-body-lg text-on-surface-variant mt-space-xs max-w-2xl">
+                Drop any domain, startup tag, or shadow brand. DIGGR's crawler swarms sweep the networks, repos,
+                federated nodes, and rogue vanity handles before they can scrub their footprint.
+              </p>
+            </div>
+
+            <div className="gap-space-xs flex shrink-0 flex-col items-end">
+              <div className="p-space-md text-paper-distressed flex rotate-2 flex-col border-[3px] border-grit-black bg-electric-magenta text-right shadow-[6px_6px_0px_#cdf200]">
+                <span className="font-label-stamp text-label-stamp tracking-widest uppercase">DISCOVERY LATENCY</span>
+                <span className="font-headline text-headline-lg tracking-tighter">
+                  {busy ? "…" : result ? "0.428s" : "IDLE"}
+                </span>
+                <span className="font-code-terminal text-code-terminal text-grit-black mt-1 bg-paper-distressed px-1 font-bold uppercase">
+                  100% RECON GUARANTEE
+                </span>
+              </div>
+            </div>
           </div>
-          <button
-            type="submit"
-            disabled={busy}
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-primary px-6 font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
-          >
-            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-            Find profiles
-          </button>
-        </form>
 
-        {lookup.isPending && (
-          <p className="mt-6 text-sm text-muted-foreground">
-            Reading the site, then searching for anything it doesn't link to. This can take up to 30 seconds…
-          </p>
-        )}
-        {(lookup.error || search.error) && (
-          <p className="mt-6 rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-            {(lookup.error ?? search.error)?.message}
-          </p>
-        )}
+          {/* SCANNER SLAB */}
+          <div className="p-space-lg gap-space-md relative flex flex-col border-[3px] border-primary-container bg-slate-charcoal shadow-[8px_8px_0px_#FF007A]">
+            <div className="pb-space-sm flex items-center justify-between border-b-2 border-outline-variant">
+              <div className="gap-space-sm font-code-terminal text-code-terminal text-primary-container flex items-center">
+                <span className="h-3 w-3 bg-acid-lime" />
+                <span>TARGET_RESOLVER://v2.4</span>
+                <span className="text-on-surface-variant hidden sm:inline">| SHA-256 PARSER EQUIPPED</span>
+              </div>
+              <span className="font-label-stamp text-label-stamp bg-grit-black text-cyber-cyan border border-cyber-cyan px-2 py-0.5">
+                PROTOCOL: FAST_CRAWL
+              </span>
+            </div>
 
-        {search.data && (
-          <section className="mt-10">
-            <h2 className="font-display text-2xl font-semibold">Which one did you mean?</h2>
+            <form onSubmit={onSubmit} className="gap-space-sm flex flex-col lg:flex-row">
+              <div className="relative flex flex-1 items-center border-2 border-paper-distressed bg-grit-black shadow-[4px_4px_0px_#000000]">
+                <span className="bg-primary-container text-grit-black font-code-terminal text-code-terminal px-space-md shrink-0 border-r-2 border-paper-distressed py-4 font-black select-none">
+                  TARGET://
+                </span>
+                <input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  aria-label="Target domain or brand name"
+                  placeholder="magicmanta.com  //  or a brand name"
+                  className="px-space-md text-paper-distressed font-code-terminal text-body-lg placeholder:text-on-surface-variant/60 w-full bg-transparent py-4 outline-none"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={busy}
+                className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-space-xl gap-space-sm flex items-center justify-center py-4 tracking-widest uppercase shadow-[4px_4px_0px_#000000] transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+              >
+                {busy ? "SWEEPING…" : "UNLEASH RADAR"}
+                <span className="font-code-terminal text-[10px] opacity-70">[ENTER ↵]</span>
+              </button>
+            </form>
+
+            <div className="gap-space-sm font-code-terminal text-code-terminal text-on-surface-variant flex flex-wrap items-center">
+              <span className="text-primary-container">SNIFFER FLAGS:</span>
+              {FLAGS.map((f) => (
+                <span key={f}>{f}</span>
+              ))}
+            </div>
+          </div>
+
+          {busy && (
+            <div className="p-space-md font-code-terminal text-code-terminal text-acid-lime scanlines border-2 border-outline-variant bg-grit-black">
+              <p>&gt; RESOLVING TARGET SURFACE…</p>
+              <p>&gt; PARSING JSON-LD sameAs + DOM ANCHORS…</p>
+              <p>&gt; SWEEPING FALLBACK SEARCH + RECIPROCAL PROBES…</p>
+              <p className="text-on-surface-variant">
+                &gt;&gt; A FULL SWEEP CAN TAKE UP TO 30 SECONDS. HOLD THE LINE.
+              </p>
+            </div>
+          )}
+
+          {(lookup.error || search.error) && (
+            <p className="p-space-md font-code-terminal text-code-terminal bg-error-container/30 text-on-error-container border-2 border-error-container">
+              ! {(lookup.error ?? search.error)?.message}
+            </p>
+          )}
+        </div>
+      </section>
+
+      {/* DISAMBIGUATION */}
+      {search.data && (
+        <section className="px-margin-mobile sm:px-margin py-space-xl bg-bg-deep">
+          <div className="gap-space-md mx-auto flex max-w-7xl flex-col">
+            <h2 className="font-headline text-headline-lg text-paper-distressed uppercase">
+              MULTIPLE ENTITIES MATCHED
+            </h2>
+            <p className="font-code-terminal text-code-terminal text-on-surface-variant">
+              &gt; PICK THE PRIMARY DOMAIN, OR INJECT THE EXACT URL BELOW.
+            </p>
             {search.data.length === 0 && (
-              <p className="mt-2 text-sm text-muted-foreground">No matching websites found.</p>
+              <p className="font-code-terminal text-code-terminal text-hazard-orange">
+                ! NO CANDIDATE DOMAINS RESOLVED.
+              </p>
             )}
-            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+            <ul className="gap-space-md grid sm:grid-cols-2 lg:grid-cols-3">
               {search.data.map((c) => (
                 <li key={c.domain}>
                   <button
                     onClick={() => runLookup(c.url)}
-                    className="w-full rounded-xl border border-border bg-card p-4 text-left hover:border-foreground/40"
+                    className="p-space-md h-full w-full border-[3px] border-outline-variant bg-surface-low text-left shadow-[5px_5px_0px_#000000] transition-colors hover:border-primary-container"
                   >
-                    <p className="font-mono text-lg font-semibold">{c.domain}</p>
-                    <p className="mt-1 text-sm font-medium">{c.title}</p>
-                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{c.snippet}</p>
+                    <p className="font-code-terminal text-headline-sm text-primary-container break-all">{c.domain}</p>
+                    <p className="font-label-stamp text-label-stamp text-paper-distressed mt-2 uppercase">{c.title}</p>
+                    <p className="font-code-terminal text-code-terminal text-on-surface-variant mt-2 line-clamp-3">
+                      {c.snippet}
+                    </p>
                   </button>
                 </li>
               ))}
@@ -129,84 +224,133 @@ function Index() {
                 e.preventDefault();
                 if (manualUrl.trim()) runLookup(manualUrl.trim());
               }}
-              className="mt-4 flex flex-col gap-2 rounded-xl border border-dashed border-border p-4 sm:flex-row sm:items-center"
+              className="p-space-md gap-space-sm flex flex-col border-2 border-dashed border-outline sm:flex-row sm:items-center"
             >
-              <label htmlFor="manual" className="text-sm font-medium">
-                Not listed? Enter the website:
+              <label
+                htmlFor="manual"
+                className="font-label-stamp text-label-stamp text-on-surface-variant uppercase"
+              >
+                Manual inject:
               </label>
               <input
                 id="manual"
                 value={manualUrl}
                 onChange={(e) => setManualUrl(e.target.value)}
                 placeholder="example.com"
-                className="h-10 flex-1 rounded-md border border-input bg-card px-3 font-mono text-sm outline-none focus:ring-2 focus:ring-ring"
+                className="font-code-terminal text-code-terminal text-paper-distressed flex-1 border-2 border-outline-variant bg-grit-black px-3 py-2 outline-none"
               />
-              <button className="h-10 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground">
-                Look up
+              <button className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-2 uppercase shadow-[3px_3px_0px_#000000]">
+                Sniff
               </button>
             </form>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
-        {result && (
-          <section className="mt-10 space-y-10">
-            <div className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="font-mono text-sm text-muted-foreground">{result.domain}</p>
-                <h2 className="font-display text-3xl font-bold">{result.brandName}</h2>
-                <p className="mt-1 font-mono text-xs text-muted-foreground">
-                  Last checked {formatCheckedAt(result.checkedAt)}
-                </p>
+      {/* RESULTS */}
+      {result && (
+        <section className="px-margin-mobile sm:px-margin py-space-xl bg-bg-deep">
+          <div className="gap-space-xl mx-auto flex max-w-7xl flex-col">
+            {/* target header */}
+            <div className="p-space-lg gap-space-lg flex flex-col border-[3px] border-primary-container bg-grit-black shadow-[8px_8px_0px_#000000] lg:flex-row lg:items-center lg:justify-between">
+              <div className="gap-space-xs flex flex-col">
+                <span className="font-label-stamp text-label-stamp text-electric-magenta uppercase">
+                  TARGET: {result.brandName}
+                </span>
+                <span className="font-headline text-headline-lg text-paper-distressed uppercase">
+                  CONFIRMED FOOTPRINT
+                </span>
+                <span className="font-code-terminal text-code-terminal text-on-surface-variant">
+                  PRIMARY URL:{" "}
+                  <a
+                    className="text-primary-container underline"
+                    href={result.finalUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    {result.domain}
+                  </a>{" "}
+                  // LAST CHECKED: {formatCheckedAt(result.checkedAt)}
+                </span>
               </div>
-              {verified.length > 0 && (
+              <div className="gap-space-md flex flex-wrap items-center">
+                <div className="p-space-md text-paper-distressed border-[3px] border-grit-black bg-toxic-green text-right shadow-[5px_5px_0px_#cdf200]">
+                  <span className="font-label-stamp text-label-stamp uppercase">VERIFIED FOOTPRINT</span>
+                  <p className="font-headline text-headline-md">
+                    {verified.length} / {signals} SIGNALS
+                  </p>
+                </div>
+                {verified.length > 0 && (
+                  <button
+                    onClick={() => copyText(allVerifiedTags(result), "all verified handles")}
+                    className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-3 uppercase shadow-[4px_4px_0px_#000000] transition-transform hover:-translate-y-0.5"
+                  >
+                    Copy all verified handles
+                  </button>
+                )}
                 <button
-                  onClick={() => copyText(allVerifiedTags(result), "all verified handles")}
-                  className="inline-flex items-center gap-2 rounded-lg bg-signal px-4 py-2.5 text-sm font-semibold text-signal-foreground hover:opacity-90"
+                  onClick={() => runLookup(result.input)}
+                  className="font-label-stamp text-label-stamp text-paper-distressed border-2 border-paper-distressed px-4 py-3 uppercase hover:bg-paper-distressed hover:text-grit-black"
                 >
-                  <Copy className="h-4 w-4" /> Copy all verified handles
+                  Re-sniff
                 </button>
-              )}
+              </div>
             </div>
 
             <div>
-              <h3 className="mb-4 font-mono text-xs tracking-widest text-muted-foreground uppercase">
-                Verified · linked from the site ({verified.length})
-              </h3>
+              <div className="mb-space-md gap-space-sm flex flex-wrap items-center justify-between">
+                <h2 className="font-headline text-headline-md text-paper-distressed uppercase">
+                  CAPTURED SOCIAL FOOTPRINTS
+                </h2>
+                <span className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-2 py-1 uppercase">
+                  {verified.length} DETECTED // LINKED FROM SITE
+                </span>
+              </div>
               {verified.length ? (
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="gap-space-md grid md:grid-cols-2 xl:grid-cols-3">
                   {verified.map((r) => (
-                    <ResultCard key={r.platformId} result={r} />
+                    <ProfileSlab key={r.platformId} result={r} />
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">This site doesn't link to any social profiles we recognize.</p>
+                <p className="font-code-terminal text-code-terminal text-hazard-orange">
+                  ! NO PROFILES LINKED DIRECTLY FROM THIS SURFACE.
+                </p>
               )}
             </div>
 
             {unverified.length > 0 && (
               <div>
-                <h3 className="mb-1 font-mono text-xs tracking-widest text-muted-foreground uppercase">
-                  Unverified · found by search ({unverified.length})
-                </h3>
-                <p className="mb-4 text-sm text-muted-foreground">
-                  Not linked on the site. We checked whether each profile links back to {result.domain}.
+                <div className="mb-space-sm gap-space-sm flex flex-wrap items-center justify-between">
+                  <h2 className="font-headline text-headline-md text-paper-distressed uppercase">
+                    SHADOW / UNCONFIRMED NODES
+                  </h2>
+                  <span className="font-label-stamp text-label-stamp bg-hazard-orange text-grit-black px-2 py-1 uppercase">
+                    {unverified.length} FOUND BY SWEEP
+                  </span>
+                </div>
+                <p className="font-code-terminal text-code-terminal text-on-surface-variant mb-space-md">
+                  &gt; NOT LINKED ON {result.domain}. WE CHECKED WHETHER EACH PROFILE LINKS BACK.
                 </p>
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="gap-space-md grid md:grid-cols-2 xl:grid-cols-3">
                   {unverified.map((r) => (
-                    <ResultCard key={r.platformId} result={r} />
+                    <ProfileSlab key={r.platformId} result={r} />
                   ))}
                 </div>
               </div>
             )}
 
             {result.notFound.length > 0 && (
-              <p className="text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">Not found:</span> {result.notFound.join(", ")}
-              </p>
+              <div className="p-space-md border-2 border-outline-variant bg-surface-low">
+                <p className="font-label-stamp text-label-stamp text-on-surface-variant uppercase">NO SIGNAL</p>
+                <p className="font-code-terminal text-code-terminal text-paper-distressed mt-1">
+                  {result.notFound.join(" // ")}
+                </p>
+              </div>
             )}
-          </section>
-        )}
-      </div>
-    </main>
+          </div>
+        </section>
+      )}
+    </Shell>
   );
 }
