@@ -55,7 +55,7 @@ export function Ticker() {
 
 export function Header() {
   return (
-    <header className="fixed top-0 z-50 w-full border-b-[3px] border-primary-container bg-grit-black">
+    <header className="fixed top-0 z-50 w-full border-b-3 border-primary-container bg-grit-black">
       <Ticker />
       <div className="px-space-lg flex h-20 w-full items-center justify-between">
         <div className="gap-space-md flex items-center">
@@ -111,7 +111,7 @@ export function Header() {
 
 export function MobileNav() {
   return (
-    <nav className="fixed bottom-0 left-0 z-50 flex w-full items-stretch border-t-[3px] border-primary-container bg-grit-black xl:hidden">
+    <nav className="fixed bottom-0 left-0 z-50 flex w-full items-stretch border-t-3 border-primary-container bg-grit-black xl:hidden">
       {NAV_ITEMS.slice(0, 4).map((item) => (
         <Link
           key={item.to}

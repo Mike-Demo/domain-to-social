@@ -294,7 +294,7 @@
 }
 
 @utility halftone {
-  background-image: radial-gradient(#cdf200 1.5px, transparent 1.5px);
+  background-image: radial-gradient(var(--color-primary-container) 1.5px, transparent 1.5px);
   background-size: 20px 20px;
 }
 
@@ -315,8 +315,8 @@
     font-family: var(--font-body-md);
   }
   .diggr ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: var(--spacing-space-xs);
+    height: var(--spacing-space-xs);
   }
   .diggr ::-webkit-scrollbar-thumb {
     background: var(--color-outline-variant);
