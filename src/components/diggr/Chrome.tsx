@@ -9,7 +9,7 @@ export const NAV_ITEMS = [
   { to: "/", label: "Radar Scanner", short: "Radar" },
   { to: "/batch", label: "Batch Sniffer", short: "Batch" },
   { to: "/adapters", label: "Awesome Framework", short: "Adapters" },
-  { to: "/hall", label: "Hall of Fame", short: "Hall" },
+  { to: "/source", label: "Source", short: "Source" },
   { to: "/dossier", label: "Dossier Export", short: "Dossier" },
 ] as const;
 
@@ -125,7 +125,9 @@ export function MobileNav() {
                 ? "terminal"
                 : item.to === "/adapters"
                   ? "hub"
-                  : "military_tech"}
+                  : item.to === "/source"
+                    ? "source"
+                    : "military_tech"}
           </span>
           {item.short}
         </Link>
