@@ -14,19 +14,71 @@ import type {
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
 
+// SSRF guard: only plain public web addresses may be fetched. Rejects non-http(s)
+// schemes, credentials, IP literals, and loopback/private/internal hostnames.
+export function isPublicHttpUrl(url: string): boolean {
+  let u: URL;
+  try {
+    u = new URL(url);
+  } catch {
+    return false;
+  }
+  if (u.protocol !== "http:" && u.protocol !== "https:") return false;
+  if (u.username || u.password) return false;
+  const host = u.hostname.toLowerCase();
+  if (!host || host === "localhost" || host.endsWith(".localhost")) return false;
+  if (host.endsWith(".local") || host.endsWith(".internal") || host.endsWith(".lan") || host.endsWith(".home"))
+    return false;
+  // IPv6 literal (URL hostname keeps brackets)
+  if (host.startsWith("[")) return false;
+  // IPv4 literal: block every private/loopback/reserved range
+  const v4 = host.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+  if (v4) {
+    const [a, b] = [Number(v4[1]), Number(v4[2])];
+    if (
+      a === 0 ||
+      a === 10 ||
+      a === 127 ||
+      (a === 100 && b >= 64 && b <= 127) ||
+      (a === 169 && b === 254) ||
+      (a === 172 && b >= 16 && b <= 31) ||
+      (a === 192 && b === 168) ||
+      (a === 192 && b === 0) ||
+      (a === 198 && (b === 18 || b === 19)) ||
+      a >= 224
+    )
+      return false;
+  }
+  // Bare numbers (e.g. http://2130706433) and single-label hosts are not public sites
+  if (/^\d+$/.test(host) || !host.includes(".")) return false;
+  return true;
+}
+
 async function fetchText(
   url: string,
   timeoutMs = 10000,
   accept = "text/html,application/xhtml+xml",
 ): Promise<{ text: string; finalUrl: string } | null> {
   try {
-    const res = await fetch(url, {
-      headers: { "user-agent": UA, accept },
-      redirect: "follow",
-      signal: AbortSignal.timeout(timeoutMs),
-    });
-    if (!res.ok) return null;
-    return { text: (await res.text()).slice(0, 3_000_000), finalUrl: res.url || url };
+    let current = url;
+    // Follow redirects manually so every hop is re-validated against the SSRF guard.
+    for (let hops = 0; hops <= 5; hops++) {
+      if (!isPublicHttpUrl(current)) return null;
+      const res = await fetch(current, {
+        headers: { "user-agent": UA, accept },
+        redirect: "manual",
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+      if (res.status >= 300 && res.status < 400) {
+        const location = res.headers.get("location");
+        if (!location) return null;
+        current = new URL(location, current).toString();
+        continue;
+      }
+      if (!res.ok) return null;
+      return { text: (await res.text()).slice(0, 3_000_000), finalUrl: current };
+    }
+    return null;
   } catch {
     return null;
   }
@@ -331,6 +383,7 @@ async function fetchSite(url: string): Promise<{ text: string; finalUrl: string 
 
 export async function lookupDomain(input: string): Promise<LookupResult> {
   const url = normalizeInputUrl(input);
+  if (!isPublicHttpUrl(url)) throw new Error("Please enter a public website address.");
   const page = await fetchSite(url);
   const checkedAt = new Date().toISOString();
   // Some sites (e.g. behind bot protection) block automated fetches.
