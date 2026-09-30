@@ -63,6 +63,7 @@ function Dossier() {
             </span>
           </div>
 
+          <h2 className="font-headline text-headline-sm uppercase">CONFIRMED HANDLES</h2>
           <table className="w-full text-left">
             <thead>
               <tr className="font-label-stamp text-label-stamp uppercase">
@@ -83,7 +84,7 @@ function Dossier() {
           </table>
 
           <div>
-            <p className="font-label-stamp text-label-stamp uppercase">EVIDENCE CHAIN</p>
+            <h2 className="font-headline text-headline-sm uppercase">EVIDENCE CHAIN</h2>
             <ol className="font-code-terminal text-code-terminal mt-2 space-y-1">
               {SHEET.chain.map((c) => (
                 <li key={c}>&gt; {c}</li>
