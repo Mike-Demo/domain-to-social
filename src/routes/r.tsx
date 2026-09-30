@@ -62,9 +62,9 @@ function SharedResult() {
                   <span className="font-label-stamp text-label-stamp text-electric-magenta uppercase">
                     TARGET: {result.brandName}
                   </span>
-                  <span className="font-headline text-headline-lg text-paper-distressed uppercase">
-                    {result.domain}
-                  </span>
+                  <h1 className="font-headline text-headline-lg text-paper-distressed uppercase">
+                    {result.domain} — social footprint snapshot
+                  </h1>
                   <span className="font-code-terminal text-code-terminal text-on-surface-variant">
                     SNAPSHOT TAKEN: {formatCheckedAt(result.checkedAt)}
                   </span>

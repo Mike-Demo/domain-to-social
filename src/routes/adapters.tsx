@@ -85,12 +85,14 @@ function Adapters() {
           </p>
         </div>
 
+        <h2 className="font-headline text-headline-md text-paper-distressed uppercase">THREE DOORWAYS IN</h2>
         <div className="gap-space-md grid lg:grid-cols-3">
           <Snippet title="REACT HOOK" code={HOOK_SNIPPET} accent="bg-primary-container text-on-primary-container" />
           <Snippet title="REST" code={CURL_SNIPPET} accent="bg-cyber-cyan text-grit-black" />
           <Snippet title="MCP" code={MCP_SNIPPET} accent="bg-electric-magenta text-paper-distressed" />
         </div>
 
+        <h2 className="font-headline text-headline-md text-paper-distressed uppercase">UNDER THE HOOD</h2>
         <div className="gap-space-md grid sm:grid-cols-2 xl:grid-cols-4">
           {FEATURES.map((f) => (
             <div
