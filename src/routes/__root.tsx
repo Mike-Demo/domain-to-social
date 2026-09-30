@@ -98,7 +98,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       ...WEB_AWESOME_STYLE_URLS.map((href) => ({ rel: "stylesheet", href })),
       { rel: "stylesheet", href: WEB_AWESOME_FOUCE_STYLE_URL },
       { rel: "stylesheet", href: waThemeCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
