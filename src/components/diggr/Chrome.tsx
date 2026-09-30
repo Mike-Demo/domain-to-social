@@ -1,9 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { WebAwesomeLoader } from "@/design-system/font-awsome-web-awesome-171158/webawesome/setup";
-
-const LOGO_SRC =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBoj_YORBifyf5IgdQxhoq6KLU99WwV5WGIJ6ZQbcVZBIFzrgVyUgoqYS8fZfovw_IEohnVIfPUPE5XBStYPREIRpQkUPCXVFoFfItUrOZBUEJfzJrE3d3TKqSte67refoDU5h2u5RYP138WbTZ4IFR7Pe1q5Qh8E375bewdRtvKv4_nP8gvEKVUYenQGo6bUSUEw8__THYkbtEFVWy-hfZtO-5DJivNmN7_e-ab04J2TIUwIdN4qXhpQ";
+import LOGO_SRC from "@/assets/favicon-src.png";
 const AVATAR_SRC =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuBUloobL9HW88fEsYPyyZ9mkRAJfsP59UKsEGH5jF40d_qG89qUDowXCQZeR1iX6s3d7HOAhOhtA7n3hKkX8-FD5YLS8BmQ1wfE_pyVKhH85dYjHQWg6MyZP2rGkev19YjRlSuGkgZX9Uh7m61a-uApdg2azH6YAbV0ffvhRYHPBUP15XhFzCU8r3OosRtUPusWYpGAQCU-4znMHaygitcBms141w_AbCWDSE_BRTted3kQiP9hbUiILg";
 
