@@ -18,6 +18,7 @@ import {
 } from "@/design-system/font-awsome-web-awesome-171158/webawesome/cdn";
 import { WEB_AWESOME_HTML_CLASSES } from "@/design-system/font-awsome-web-awesome-171158/webawesome/setup";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { SiteFooter } from "@/design-system/font-awsome-web-awesome-171158/webawesome/patterns/site-footer";
 
 function NotFoundComponent() {
   return (
@@ -145,6 +146,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <SiteFooter />
       <Toaster position="bottom-center" />
     </QueryClientProvider>
   );
