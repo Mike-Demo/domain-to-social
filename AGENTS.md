@@ -15,3 +15,4 @@
 - Tier 3 fallback = direct per-platform existence probes (`probe` in `platforms.ts`) on guessed handles, kept only when the profile links back, always unverified. Why: cheap, no 1000-site machinery.
 - qeeqbox/social-analyzer is reference-only, never a dependency; if a probe library is ever needed, prefer MIT Sherlock. Why: AGPL-3.0 conflicts with a hosted premium service, and it pulls Firefox/Selenium/tesseract.
 - Evidence strength is a computed label (strong/moderate/weak from counted signals via `rateEntry`), never a percentage. Why: honest, explainable confidence.
+- Share links are self-contained snapshots: the lookup result is deflate-compressed into the `/r#<token>` hash (`src/lib/social/share.ts`). Why: read-only, tamper-evident-by-design links with no backend storage.
