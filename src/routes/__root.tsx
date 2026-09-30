@@ -130,6 +130,19 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en" className={WEB_AWESOME_HTML_CLASSES}>
       <head>
         <HeadContent />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Brand Connector Pro",
+              alternateName: "M4G1C M4NT4 // Social Radar",
+              url: "https://magicmanta.com",
+              description: "Find verified social handles for any brand.",
+            }),
+          }}
+        />
       </head>
       <body>
         {children}
