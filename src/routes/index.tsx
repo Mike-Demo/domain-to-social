@@ -120,7 +120,7 @@ function RadarScanner() {
             </div>
 
             <div className="gap-space-xs flex shrink-0 flex-col items-end">
-              <div className="p-space-md text-paper-distressed flex rotate-2 flex-col border-3 border-grit-black bg-electric-magenta text-right shadow-[6px_6px_0px_#cdf200]">
+              <div className="p-space-md text-paper-distressed flex rotate-2 flex-col border-3 border-grit-black bg-electric-magenta text-right shadow-stamp-lime-lg">
                 <span className="font-label-stamp text-label-stamp tracking-widest uppercase">DISCOVERY LATENCY</span>
                 <span className="font-headline text-headline-lg tracking-tighter">
                   {busy ? "…" : elapsed !== null ? `${elapsed.toFixed(2)}s` : "IDLE"}
