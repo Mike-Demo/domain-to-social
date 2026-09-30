@@ -22,20 +22,20 @@ export const Route = createFileRoute("/dossier")({
 
 const SHEET = {
   target: "MAGIC MANTA",
-  domain: "magicmanta.com",
+  domain: "stripe.com",
   handles: [
-    { platform: "X", tag: "@magicmanta", proof: "JSON-LD sameAs" },
-    { platform: "GitHub", tag: "@magicmanta", proof: "Footer link on magicmanta.com" },
-    { platform: "LinkedIn", tag: "company/magicmanta", proof: "JSON-LD sameAs" },
-    { platform: "Bluesky", tag: "@magicmanta.com", proof: "rel=me link" },
-    { platform: "YouTube", tag: "@magicmanta", proof: "Footer link on magicmanta.com" },
+    { platform: "X", tag: "@stripe", proof: "JSON-LD sameAs" },
+    { platform: "GitHub", tag: "@stripe", proof: "Footer link on stripe.com" },
+    { platform: "LinkedIn", tag: "company/stripe", proof: "JSON-LD sameAs" },
+    { platform: "Bluesky", tag: "@stripe.com", proof: "rel=me link" },
+    { platform: "YouTube", tag: "@stripe", proof: "Footer link on stripe.com" },
   ],
   chain: [
-    "FETCH magicmanta.com -> 200 OK (final URL https://magicmanta.com/)",
+    "FETCH stripe.com -> 200 OK (final URL https://stripe.com/)",
     "PARSE application/ld+json -> Organization.sameAs [4 urls]",
     "PARSE <a href> anchors -> 11 outbound social links, 6 unique platforms",
     "MERGE by handle -> no conflicts between structured data and DOM",
-    "RECIPROCAL CHECK -> 3 profiles link back to magicmanta.com",
+    "RECIPROCAL CHECK -> 3 profiles link back to stripe.com",
   ],
 };
 

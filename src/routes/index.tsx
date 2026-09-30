@@ -154,7 +154,7 @@ function RadarScanner() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   aria-label="Target domain or brand name"
-                  placeholder="magicmanta.com  //  or a brand name"
+                  placeholder="stripe.com  //  or a brand name"
                   className="px-space-md text-paper-distressed! font-code-terminal text-body-lg placeholder:text-on-surface-variant/60 w-full bg-transparent! py-4 outline-none"
                 />
               </div>
