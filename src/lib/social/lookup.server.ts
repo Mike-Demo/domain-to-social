@@ -383,6 +383,7 @@ async function fetchSite(url: string): Promise<{ text: string; finalUrl: string 
 
 export async function lookupDomain(input: string): Promise<LookupResult> {
   const url = normalizeInputUrl(input);
+  if (!isPublicHttpUrl(url)) throw new Error("Please enter a public website address.");
   const page = await fetchSite(url);
   const checkedAt = new Date().toISOString();
   // Some sites (e.g. behind bot protection) block automated fetches.
