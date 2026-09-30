@@ -2,15 +2,26 @@
 // bulk jobs / an MCP server later without changes.
 import { parse, type HTMLElement } from "node-html-parser";
 import { PLATFORMS, SOCIAL_HOSTS, matchProfile, normalizeHost, type PlatformId } from "./platforms";
-import type { DomainCandidate, LookupResult, PlatformResult, ProfileEntry, ReciprocalStatus } from "./types";
+import type {
+  DomainCandidate,
+  LookupResult,
+  PlatformResult,
+  ProfileEntry,
+  ReciprocalStatus,
+  SignalRating,
+} from "./types";
 
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
 
-async function fetchText(url: string, timeoutMs = 10000): Promise<{ text: string; finalUrl: string } | null> {
+async function fetchText(
+  url: string,
+  timeoutMs = 10000,
+  accept = "text/html,application/xhtml+xml",
+): Promise<{ text: string; finalUrl: string } | null> {
   try {
     const res = await fetch(url, {
-      headers: { "user-agent": UA, accept: "text/html,application/xhtml+xml" },
+      headers: { "user-agent": UA, accept },
       redirect: "follow",
       signal: AbortSignal.timeout(timeoutMs),
     });
@@ -232,6 +243,83 @@ async function fallbackSearch(
   return out.filter((r): r is PlatformResult => r !== null);
 }
 
+// Username permutations from the brand name and domain label (idea borrowed from
+// social-analyzer; implemented locally — that project is AGPL and reference-only).
+export function handleCandidates(brandName: string, domain: string): string[] {
+  const label = (domain.split(".")[0] ?? "").toLowerCase();
+  const base = brandName.toLowerCase().replace(/[^a-z0-9]+/g, "");
+  const set = new Set([label, base, `${label}hq`, `${label}app`, `get${label}`]);
+  return [...set].filter((h) => /^[a-z0-9._-]{2,40}$/.test(h)).slice(0, 4);
+}
+
+// Tier 3: direct per-platform existence checks. Only kept when the profile links
+// back to the domain, and always shown as unverified.
+async function probePlatforms(
+  missing: PlatformId[],
+  brandName: string,
+  domain: string,
+  checkedAt: string,
+): Promise<PlatformResult[]> {
+  const candidates = handleCandidates(brandName, domain);
+  const out = await Promise.all(
+    missing.map(async (id): Promise<PlatformResult | null> => {
+      const p = PLATFORMS.find((x) => x.id === id);
+      if (!p?.probe) return null;
+      const probe = p.probe;
+      const hits = await Promise.all(
+        candidates.map(async (h) => {
+          const page = await fetchText(probe.url(h), 6000, probe.accept);
+          return page && page.text.toLowerCase().includes(domain.toLowerCase()) ? h : null;
+        }),
+      );
+      const handle = hits.find((h): h is string => h !== null);
+      if (!handle) return null;
+      const match = matchProfile(probe.profileUrl(handle));
+      if (!match) return null;
+      return {
+        platformId: id,
+        platformName: p.name,
+        status: "unverified",
+        conflict: false,
+        checkedAt,
+        entries: [
+          {
+            ...match.profile,
+            verified: false,
+            sources: ["probe"],
+            evidence: [
+              `Not linked on ${domain}; handle guessed from "${brandName}"`,
+              `Profile exists and links back to ${domain}`,
+            ],
+            reciprocal: "links_back",
+            checkedAt,
+          },
+        ],
+      };
+    }),
+  );
+  return out.filter((r): r is PlatformResult => r !== null);
+}
+
+// Honest multi-signal rating: counts independent evidence, no percentages.
+export function rateEntry(e: ProfileEntry, brandName: string, domain: string): ProfileEntry {
+  const signals: string[] = [];
+  if (e.sources.includes("jsonld")) signals.push("structured data");
+  if (e.sources.includes("site")) signals.push("site link");
+  if (e.reciprocal === "links_back") signals.push("links back");
+  const h = e.handle.toLowerCase().split("/").pop()?.replace(/\.bsky\.social$/, "").replace(/[^a-z0-9]/g, "") ?? "";
+  if (h && handleCandidates(brandName, domain).some((c) => c.replace(/[^a-z0-9]/g, "") === h))
+    signals.push("name match");
+  const rating: SignalRating = e.verified
+    ? signals.length >= 2
+      ? "strong"
+      : "moderate"
+    : e.reciprocal === "links_back"
+      ? "moderate"
+      : "weak";
+  return { ...e, signals, rating };
+}
+
 async function fetchSite(url: string): Promise<{ text: string; finalUrl: string } | null> {
   const direct = await fetchText(url);
   if (direct) return direct;
@@ -254,10 +342,21 @@ export async function lookupDomain(input: string): Promise<LookupResult> {
   const verified = groupFindings(findings, checkedAt);
   const found = new Set(verified.map((v) => v.platformId));
   const missing = PLATFORMS.map((p) => p.id).filter((id) => !found.has(id));
-  const unverified = await fallbackSearch(missing, brandName, domain, checkedAt);
+  const searched = await fallbackSearch(missing, brandName, domain, checkedAt);
+  const searchedIds = new Set(searched.map((r) => r.platformId));
+  const probed = await probePlatforms(
+    missing.filter((id) => !searchedIds.has(id)),
+    brandName,
+    domain,
+    checkedAt,
+  );
+  const unverified = [...searched, ...probed];
   if (!page && unverified.length === 0)
     throw new Error(`${domain} blocked our visit and search found no profiles. Try again later.`);
-  const all = [...verified, ...unverified];
+  const all = [...verified, ...unverified].map((r) => ({
+    ...r,
+    entries: r.entries.map((e) => rateEntry(e, brandName, domain)),
+  }));
   const allFound = new Set(all.map((r) => r.platformId));
   return {
     input,

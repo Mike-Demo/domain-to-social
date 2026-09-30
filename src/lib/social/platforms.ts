@@ -22,11 +22,21 @@ export interface ParsedProfile {
   url: string;
 }
 
+export interface PlatformProbe {
+  /** URL fetched to test whether a guessed handle exists (public page or public API). */
+  url: (handle: string) => string;
+  /** Canonical profile URL for that handle; parsed back through `parse`. */
+  profileUrl: (handle: string) => string;
+  accept?: string;
+}
+
 export interface PlatformDef {
   id: PlatformId;
   name: string;
   searchHost: string;
   parse: (host: string, segs: string[]) => ParsedProfile | null;
+  /** Direct existence check (Tier 3). Omitted for platforms that wall off logged-out visitors. */
+  probe?: PlatformProbe;
 }
 
 const COMMON_RESERVED = new Set([
