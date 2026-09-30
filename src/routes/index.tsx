@@ -7,7 +7,6 @@ import { allVerifiedTags, formatCheckedAt, looksLikeUrl } from "@/lib/social/for
 import { ProfileSlab, copyText } from "@/components/diggr/ProfileSlab";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
 import type { DomainCandidate, LookupResult } from "@/lib/social/types";
-import { WebAwesomeLoader } from "@/design-system/font-awsome-web-awesome-171158/webawesome/setup";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -69,7 +68,6 @@ function RadarScanner() {
 
   return (
     <Shell>
-      <WebAwesomeLoader />
       <SubHeader
         badge="OSINT_RADAR_ENGAGED"
         note="// DEEP CORPO TRACE v2.8 //"

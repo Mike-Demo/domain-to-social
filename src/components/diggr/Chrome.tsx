@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { WebAwesomeLoader } from "@/design-system/font-awsome-web-awesome-171158/webawesome/setup";
 
 const LOGO_SRC =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuBoj_YORBifyf5IgdQxhoq6KLU99WwV5WGIJ6ZQbcVZBIFzrgVyUgoqYS8fZfovw_IEohnVIfPUPE5XBStYPREIRpQkUPCXVFoFfItUrOZBUEJfzJrE3d3TKqSte67refoDU5h2u5RYP138WbTZ4IFR7Pe1q5Qh8E375bewdRtvKv4_nP8gvEKVUYenQGo6bUSUEw8__THYkbtEFVWy-hfZtO-5DJivNmN7_e-ab04J2TIUwIdN4qXhpQ";
@@ -138,6 +139,7 @@ export function MobileNav() {
 export function Shell({ children }: { children: ReactNode }) {
   return (
     <div className="diggr min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+      <WebAwesomeLoader />
       <Header />
       <main className="min-h-screen w-full pt-28 pb-20 xl:pb-0">{children}</main>
       <MobileNav />
