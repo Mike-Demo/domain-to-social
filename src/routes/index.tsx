@@ -123,10 +123,10 @@ function RadarScanner() {
               <div className="p-space-md text-paper-distressed flex rotate-2 flex-col border-[3px] border-grit-black bg-electric-magenta text-right shadow-[6px_6px_0px_#cdf200]">
                 <span className="font-label-stamp text-label-stamp tracking-widest uppercase">DISCOVERY LATENCY</span>
                 <span className="font-headline text-headline-lg tracking-tighter">
-                  {busy ? "…" : result ? "0.428s" : "IDLE"}
+                  {busy ? "…" : elapsed !== null ? `${elapsed.toFixed(2)}s` : "IDLE"}
                 </span>
                 <span className="font-code-terminal text-code-terminal text-grit-black mt-1 bg-paper-distressed px-1 font-bold uppercase">
-                  100% RECON GUARANTEE
+                  EVIDENCE OR NOTHING
                 </span>
               </div>
             </div>
