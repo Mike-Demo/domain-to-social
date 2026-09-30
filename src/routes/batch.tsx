@@ -54,7 +54,7 @@ function BatchSniffer() {
         <div className="gap-space-md flex flex-col">
           <h1 className="font-display-hero text-display-hero-mobile lg:text-display-hero text-paper-distressed leading-none uppercase">
             BATCH{" "}
-            <span className="text-on-primary-container inline-block -rotate-1 bg-primary-container px-2 shadow-[4px_4px_0px_#FF007A]">
+            <span className="text-on-primary-container inline-block -rotate-1 bg-primary-container px-2 shadow-stamp-magenta">
               SNIFFER
             </span>
           </h1>
@@ -65,7 +65,7 @@ function BatchSniffer() {
         </div>
 
         <div className="gap-space-lg grid lg:grid-cols-2">
-          <div className="p-space-md gap-space-md flex flex-col border-[3px] border-primary-container bg-slate-charcoal shadow-[6px_6px_0px_#000000]">
+          <div className="p-space-md gap-space-md flex flex-col border-3 border-primary-container bg-slate-charcoal shadow-stamp-lg">
             <span className="font-label-stamp text-label-stamp text-primary-container uppercase">
               PASTE TARGETS // ONE PER LINE
             </span>
@@ -77,19 +77,19 @@ function BatchSniffer() {
               className="font-code-terminal text-code-terminal text-paper-distressed p-space-sm border-2 border-outline-variant bg-grit-black outline-none"
             />
             <div className="gap-space-sm flex flex-wrap">
-              <button className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-3 uppercase shadow-[4px_4px_0px_#000000]">
+              <button className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-3 uppercase shadow-stamp">
                 Run batch (premium)
               </button>
               <button className="font-label-stamp text-label-stamp text-paper-distressed border-2 border-paper-distressed px-4 py-3 uppercase hover:bg-paper-distressed hover:text-grit-black">
                 Upload CSV
               </button>
             </div>
-            <p className="font-code-terminal text-[11px] text-on-surface-variant uppercase">
+            <p className="font-code-terminal text-body-sm text-on-surface-variant uppercase">
               Single lookups stay free forever. Batch runs are part of the premium tier.
             </p>
           </div>
 
-          <div className="p-space-md gap-space-sm scanlines flex flex-col border-[3px] border-outline-variant bg-grit-black shadow-[6px_6px_0px_#000000]">
+          <div className="p-space-md gap-space-sm scanlines flex flex-col border-3 border-outline-variant bg-grit-black shadow-stamp-lg">
             <span className="font-label-stamp text-label-stamp text-acid-lime uppercase">LIVE RECON CONSOLE</span>
             <div className="font-code-terminal text-code-terminal text-acid-lime space-y-1">
               {CONSOLE.map((line) => (
@@ -104,7 +104,7 @@ function BatchSniffer() {
 
         <div className="gap-space-sm flex flex-col">
           <h2 className="font-headline text-headline-md text-paper-distressed uppercase">QUEUE STATUS</h2>
-          <div className="border-[3px] border-outline-variant bg-surface-low shadow-[6px_6px_0px_#000000]">
+          <div className="border-3 border-outline-variant bg-surface-low shadow-stamp-lg">
             {QUEUE.map((row) => (
               <div
                 key={row.domain}

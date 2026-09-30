@@ -26,7 +26,7 @@ const PLATFORM_GLYPH: Record<string, string> = {
 function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div className="border-2 border-outline-variant bg-grit-black px-2 py-1.5">
-      <p className="font-label-stamp text-[10px] tracking-widest text-on-surface-variant uppercase">{label}</p>
+      <p className="font-label-stamp text-micro tracking-widest text-on-surface-variant uppercase">{label}</p>
       <p className="font-code-terminal text-code-terminal text-primary-container mt-0.5 break-all">{value}</p>
     </div>
   );
@@ -77,7 +77,7 @@ function Entry({ entry }: { entry: ProfileEntry }) {
       <div className="mt-space-sm gap-space-xs flex flex-wrap">
         <button
           onClick={() => copyText(entry.tag, entry.tag)}
-          className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-3 py-2 uppercase shadow-[3px_3px_0px_#000000] transition-transform hover:-translate-y-0.5"
+          className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-3 py-2 uppercase shadow-stamp-sm transition-transform hover:-translate-y-0.5"
         >
           Copy handle
         </button>
@@ -103,7 +103,7 @@ function Entry({ entry }: { entry: ProfileEntry }) {
 export function ProfileSlab({ result }: { result: PlatformResult }) {
   const verified = result.status === "verified";
   return (
-    <article className="p-space-md gap-space-md flex flex-col border-[3px] border-outline-variant bg-surface-low shadow-[6px_6px_0px_#000000]">
+    <article className="p-space-md gap-space-md flex flex-col border-3 border-outline-variant bg-surface-low shadow-stamp-lg">
       <header className="gap-space-sm flex items-start justify-between border-b-2 border-outline-variant pb-2">
         <div className="gap-space-sm flex items-center">
           <span className="font-headline text-headline-md flex h-10 w-10 items-center justify-center border-2 border-primary-container bg-grit-black text-primary-container">
@@ -111,14 +111,14 @@ export function ProfileSlab({ result }: { result: PlatformResult }) {
           </span>
           <div>
             <h3 className="font-headline text-headline-sm text-paper-distressed uppercase">{result.platformName}</h3>
-            <p className="font-code-terminal text-[11px] text-on-surface-variant uppercase">
+            <p className="font-code-terminal text-body-sm text-on-surface-variant uppercase">
               {result.entries.length} node{result.entries.length === 1 ? "" : "s"} resolved
             </p>
           </div>
         </div>
         <div className="flex flex-col items-end gap-1">
           <span
-            className={`font-label-stamp text-label-stamp px-2 py-1 uppercase shadow-[2px_2px_0px_#000000] ${
+            className={`font-label-stamp text-label-stamp px-2 py-1 uppercase shadow-stamp-xs ${
               verified ? "bg-primary-container text-on-primary-container" : "bg-hazard-orange text-grit-black"
             }`}
           >
@@ -144,7 +144,7 @@ export function ProfileSlab({ result }: { result: PlatformResult }) {
         ))}
       </div>
 
-      <footer className="font-code-terminal mt-auto text-[11px] text-on-surface-variant uppercase">
+      <footer className="font-code-terminal mt-auto text-body-sm text-on-surface-variant uppercase">
         Last pulse: {formatCheckedAt(result.checkedAt)}
       </footer>
     </article>

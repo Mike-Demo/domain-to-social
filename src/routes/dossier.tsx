@@ -51,7 +51,7 @@ function Dossier() {
         right={<span>[CLASSIFICATION: OPEN SOURCE]</span>}
       />
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-lg mx-auto flex max-w-4xl flex-col">
-        <div className="p-space-lg gap-space-lg text-grit-black flex flex-col border-[3px] border-grit-black bg-paper-distressed shadow-[8px_8px_0px_#cdf200]">
+        <div className="p-space-lg gap-space-lg text-grit-black flex flex-col border-3 border-grit-black bg-paper-distressed shadow-stamp-lime-xl">
           <div className="flex flex-wrap items-start justify-between gap-4 border-b-2 border-grit-black pb-4">
             <div>
               <p className="font-label-stamp text-label-stamp uppercase">INTEL SHEET // TARGET</p>
@@ -95,7 +95,7 @@ function Dossier() {
         <div className="gap-space-sm flex flex-wrap">
           <button
             onClick={() => window.print()}
-            className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-3 uppercase shadow-[4px_4px_0px_#000000]"
+            className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-3 uppercase shadow-stamp"
           >
             Export PDF
           </button>
@@ -105,7 +105,7 @@ function Dossier() {
           >
             Copy JSON
           </button>
-          <button className="font-label-stamp text-label-stamp bg-error-container text-on-error-container px-4 py-3 uppercase shadow-[4px_4px_0px_#000000]">
+          <button className="font-label-stamp text-label-stamp bg-error-container text-on-error-container px-4 py-3 uppercase shadow-stamp">
             Flag target
           </button>
         </div>

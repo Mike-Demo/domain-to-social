@@ -66,13 +66,13 @@ function HallOfFame() {
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-xl mx-auto flex max-w-7xl flex-col">
         <h1 className="font-display-hero text-display-hero-mobile lg:text-display-hero text-paper-distressed leading-none uppercase">
           HALL OF{" "}
-          <span className="text-on-primary-container inline-block -rotate-2 bg-acid-lime px-2 shadow-[4px_4px_0px_#FF007A]">
+          <span className="text-on-primary-container inline-block -rotate-2 bg-acid-lime px-2 shadow-stamp-magenta">
             FAME
           </span>
         </h1>
 
         <div className="gap-space-lg grid lg:grid-cols-2">
-          <div className="border-[3px] border-primary-container bg-surface-low shadow-[6px_6px_0px_#000000]">
+          <div className="border-3 border-primary-container bg-surface-low shadow-stamp-lg">
             <div className="p-space-md border-b-2 border-outline-variant">
               <span className="font-label-stamp text-label-stamp text-primary-container uppercase">
                 TOP DIGGERS // CONFIRMED HANDLES
@@ -89,7 +89,7 @@ function HallOfFame() {
                   </span>
                   <div>
                     <p className="font-code-terminal text-body-lg text-paper-distressed">{r.op}</p>
-                    <p className="font-label-stamp text-[10px] tracking-widest text-on-surface-variant uppercase">
+                    <p className="font-label-stamp text-micro tracking-widest text-on-surface-variant uppercase">
                       RANK: {r.rankName} // STREAK {r.streak}
                     </p>
                   </div>
@@ -104,7 +104,7 @@ function HallOfFame() {
             {BOUNTIES.map((b) => (
               <div
                 key={b.target}
-                className="p-space-md border-[3px] border-outline-variant bg-grit-black shadow-[5px_5px_0px_#000000]"
+                className="p-space-md border-3 border-outline-variant bg-grit-black shadow-stamp-md"
               >
                 <div className="gap-space-sm flex flex-wrap items-center justify-between">
                   <span className="font-code-terminal text-body-lg text-paper-distressed break-all">{b.target}</span>

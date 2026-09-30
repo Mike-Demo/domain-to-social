@@ -44,7 +44,7 @@ function Offline() {
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-lg mx-auto flex max-w-4xl flex-col">
         <h1 className="font-display-hero text-display-hero-mobile lg:text-display-hero text-paper-distressed leading-none uppercase">
           NO SIGNAL.{" "}
-          <span className="text-on-error-container inline-block rotate-1 bg-error-container px-2 shadow-[4px_4px_0px_#000000]">
+          <span className="text-on-error-container inline-block rotate-1 bg-error-container px-2 shadow-stamp">
             STILL DIGGING.
           </span>
         </h1>
@@ -52,7 +52,7 @@ function Offline() {
           New sweeps need a connection, but everything you already pulled stays in the local vault.
         </p>
 
-        <div className="p-space-md scanlines border-[3px] border-outline-variant bg-grit-black shadow-[6px_6px_0px_#000000]">
+        <div className="p-space-md scanlines border-3 border-outline-variant bg-grit-black shadow-stamp-lg">
           <p className="font-label-stamp text-label-stamp text-acid-lime uppercase">BOOT LOG</p>
           <div className="font-code-terminal text-code-terminal text-acid-lime mt-2 space-y-1">
             {BOOT.map((l) => (
@@ -63,7 +63,7 @@ function Offline() {
           </div>
         </div>
 
-        <div className="border-[3px] border-outline-variant bg-surface-low shadow-[6px_6px_0px_#000000]">
+        <div className="border-3 border-outline-variant bg-surface-low shadow-stamp-lg">
           <div className="p-space-md border-b-2 border-outline-variant">
             <span className="font-label-stamp text-label-stamp text-primary-container uppercase">CACHED DOSSIERS</span>
           </div>

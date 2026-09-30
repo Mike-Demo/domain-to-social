@@ -98,17 +98,17 @@ function RadarScanner() {
           <div className="gap-space-lg flex flex-col items-start justify-between lg:flex-row lg:items-end">
             <div className="gap-space-xs flex max-w-3xl flex-col">
               <div className="gap-space-sm inline-flex flex-wrap items-center">
-                <span className="font-label-stamp text-label-stamp bg-hazard-orange text-grit-black -rotate-2 px-2 py-1 tracking-widest uppercase shadow-[3px_3px_0px_#000000]">
+                <span className="font-label-stamp text-label-stamp bg-hazard-orange text-grit-black -rotate-2 px-2 py-1 tracking-widest uppercase shadow-stamp-sm">
                   WARNING: ZERO CORPORATE SILOS SPARED
                 </span>
                 <span className="font-code-terminal text-code-terminal text-acid-lime">
                   [NODE // OSINT_SNIFFER_v4]
                 </span>
               </div>
-              <h1 className="font-display-hero text-display-hero-mobile sm:text-display-hero text-paper-distressed leading-none tracking-tight uppercase drop-shadow-[4px_4px_0px_#0B0C0E]">
+              <h1 className="font-display-hero text-display-hero-mobile sm:text-display-hero text-paper-distressed leading-none tracking-tight uppercase drop-shadow-stamp">
                 DIG UP THE CORPO TRAILS
                 <br />
-                <span className="text-primary-container inline-block -rotate-1 border-2 border-primary-container bg-slate-charcoal px-2 shadow-[4px_4px_0px_#FF007A]">
+                <span className="text-primary-container inline-block -rotate-1 border-2 border-primary-container bg-slate-charcoal px-2 shadow-stamp-magenta">
                   HUNT DOWN ANY PROFILE
                 </span>{" "}
                 IN SECONDS.
@@ -120,7 +120,7 @@ function RadarScanner() {
             </div>
 
             <div className="gap-space-xs flex shrink-0 flex-col items-end">
-              <div className="p-space-md text-paper-distressed flex rotate-2 flex-col border-[3px] border-grit-black bg-electric-magenta text-right shadow-[6px_6px_0px_#cdf200]">
+              <div className="p-space-md text-paper-distressed flex rotate-2 flex-col border-3 border-grit-black bg-electric-magenta text-right shadow-[6px_6px_0px_#cdf200]">
                 <span className="font-label-stamp text-label-stamp tracking-widest uppercase">DISCOVERY LATENCY</span>
                 <span className="font-headline text-headline-lg tracking-tighter">
                   {busy ? "…" : elapsed !== null ? `${elapsed.toFixed(2)}s` : "IDLE"}
@@ -133,7 +133,7 @@ function RadarScanner() {
           </div>
 
           {/* SCANNER SLAB */}
-          <div className="p-space-lg gap-space-md relative flex flex-col border-[3px] border-primary-container bg-slate-charcoal shadow-[8px_8px_0px_#FF007A]">
+          <div className="p-space-lg gap-space-md relative flex flex-col border-3 border-primary-container bg-slate-charcoal shadow-stamp-magenta-xl">
             <div className="pb-space-sm flex items-center justify-between border-b-2 border-outline-variant">
               <div className="gap-space-sm font-code-terminal text-code-terminal text-primary-container flex items-center">
                 <span className="h-3 w-3 bg-acid-lime" />
@@ -146,7 +146,7 @@ function RadarScanner() {
             </div>
 
             <form onSubmit={onSubmit} className="gap-space-sm flex flex-col lg:flex-row">
-              <div className="relative flex flex-1 items-center border-2 border-paper-distressed bg-grit-black shadow-[4px_4px_0px_#000000]">
+              <div className="relative flex flex-1 items-center border-2 border-paper-distressed bg-grit-black shadow-stamp">
                 <span className="bg-primary-container text-grit-black font-code-terminal text-code-terminal px-space-md shrink-0 border-r-2 border-paper-distressed py-4 font-black select-none">
                   TARGET://
                 </span>
@@ -161,10 +161,10 @@ function RadarScanner() {
               <button
                 type="submit"
                 disabled={busy}
-                className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-space-xl gap-space-sm flex items-center justify-center py-4 tracking-widest uppercase shadow-[4px_4px_0px_#000000] transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+                className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-space-xl gap-space-sm flex items-center justify-center py-4 tracking-widest uppercase shadow-stamp transition-transform hover:-translate-y-0.5 disabled:opacity-60"
               >
                 {busy ? "SWEEPING…" : "UNLEASH RADAR"}
-                <span className="font-code-terminal text-[10px] opacity-70">[ENTER ↵]</span>
+                <span className="font-code-terminal text-micro opacity-70">[ENTER ↵]</span>
               </button>
             </form>
 
@@ -215,7 +215,7 @@ function RadarScanner() {
                 <li key={c.domain}>
                   <button
                     onClick={() => runLookup(c.url)}
-                    className="p-space-md h-full w-full border-[3px] border-outline-variant bg-surface-low text-left shadow-[5px_5px_0px_#000000] transition-colors hover:border-primary-container"
+                    className="p-space-md h-full w-full border-3 border-outline-variant bg-surface-low text-left shadow-stamp-md transition-colors hover:border-primary-container"
                   >
                     <p className="font-code-terminal text-headline-sm text-primary-container break-all">{c.domain}</p>
                     <p className="font-label-stamp text-label-stamp text-paper-distressed mt-2 uppercase">{c.title}</p>
@@ -246,7 +246,7 @@ function RadarScanner() {
                 placeholder="example.com"
                 className="font-code-terminal text-code-terminal text-paper-distressed flex-1 border-2 border-outline-variant bg-grit-black px-3 py-2 outline-none"
               />
-              <button className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-2 uppercase shadow-[3px_3px_0px_#000000]">
+              <button className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-2 uppercase shadow-stamp-sm">
                 Sniff
               </button>
             </form>
@@ -259,7 +259,7 @@ function RadarScanner() {
         <section className="px-margin-mobile sm:px-margin py-space-xl bg-bg-deep">
           <div className="gap-space-xl mx-auto flex max-w-7xl flex-col">
             {/* target header */}
-            <div className="p-space-lg gap-space-lg flex flex-col border-[3px] border-primary-container bg-grit-black shadow-[8px_8px_0px_#000000] lg:flex-row lg:items-center lg:justify-between">
+            <div className="p-space-lg gap-space-lg flex flex-col border-3 border-primary-container bg-grit-black shadow-stamp-xl lg:flex-row lg:items-center lg:justify-between">
               <div className="gap-space-xs flex flex-col">
                 <span className="font-label-stamp text-label-stamp text-electric-magenta uppercase">
                   TARGET: {result.brandName}
@@ -281,7 +281,7 @@ function RadarScanner() {
                 </span>
               </div>
               <div className="gap-space-md flex flex-wrap items-center">
-                <div className="p-space-md text-paper-distressed border-[3px] border-grit-black bg-toxic-green text-right shadow-[5px_5px_0px_#cdf200]">
+                <div className="p-space-md text-paper-distressed border-3 border-grit-black bg-toxic-green text-right shadow-stamp-lime-md">
                   <span className="font-label-stamp text-label-stamp uppercase">VERIFIED FOOTPRINT</span>
                   <p className="font-headline text-headline-md">
                     {verified.length} / {signals} SIGNALS
@@ -290,7 +290,7 @@ function RadarScanner() {
                 {verified.length > 0 && (
                   <button
                     onClick={() => copyText(allVerifiedTags(result), "all verified handles")}
-                    className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-3 uppercase shadow-[4px_4px_0px_#000000] transition-transform hover:-translate-y-0.5"
+                    className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-3 uppercase shadow-stamp transition-transform hover:-translate-y-0.5"
                   >
                     Copy all verified handles
                   </button>

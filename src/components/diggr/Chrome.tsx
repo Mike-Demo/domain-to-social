@@ -24,7 +24,7 @@ export function Stamp({
 }) {
   return (
     <span
-      className={`font-label-stamp text-label-stamp inline-block px-2 py-1 uppercase shadow-[3px_3px_0px_#000000] ${className}`}
+      className={`font-label-stamp text-label-stamp inline-block px-2 py-1 uppercase shadow-stamp-sm ${className}`}
     >
       {children}
     </span>
@@ -80,7 +80,7 @@ export function Header() {
               activeOptions={{ exact: item.to === "/" }}
               activeProps={{
                 className:
-                  "bg-primary-container text-on-primary-container font-bold shadow-[2px_2px_0px_#000000]",
+                  "bg-primary-container text-on-primary-container font-bold shadow-stamp-xs",
               }}
             >
               {item.label}
@@ -89,16 +89,16 @@ export function Header() {
         </nav>
 
         <div className="gap-space-md flex items-center">
-          <div className="px-space-sm gap-space-sm hidden items-center border-2 border-outline-variant bg-surface-lowest py-1 shadow-[2px_2px_0px_#000000] sm:flex">
+          <div className="px-space-sm gap-space-sm hidden items-center border-2 border-outline-variant bg-surface-lowest py-1 shadow-stamp-xs sm:flex">
             <span className="font-code-terminal text-code-terminal text-primary-container">CMD://</span>
             <span className="font-code-terminal text-code-terminal text-on-surface-variant">QUICK_SNIFF</span>
-            <kbd className="font-code-terminal bg-surface-highest text-on-surface px-1 py-0.5 text-[10px]">⌘K</kbd>
+            <kbd className="font-code-terminal bg-surface-highest text-on-surface px-1 py-0.5 text-micro">⌘K</kbd>
           </div>
-          <div className="gap-space-sm flex items-center border-2 border-primary-container bg-surface-high p-0.5 shadow-[3px_3px_0px_#000000]">
+          <div className="gap-space-sm flex items-center border-2 border-primary-container bg-surface-high p-0.5 shadow-stamp-sm">
             <img alt="Operator avatar" className="h-8 w-8 rounded-full object-cover" src={AVATAR_SRC} />
             <div className="pr-space-xs hidden flex-col text-left lg:flex">
               <span className="font-label-stamp text-label-stamp text-on-surface leading-none">OP_HEX</span>
-              <span className="font-code-terminal text-primary-container mt-0.5 text-[10px] leading-none uppercase">
+              <span className="font-code-terminal text-primary-container mt-0.5 text-micro leading-none uppercase">
                 RANK: DOXXER
               </span>
             </div>
@@ -120,7 +120,7 @@ export function MobileNav() {
           className="font-label-stamp text-label-stamp text-on-surface-variant flex flex-1 flex-col items-center gap-1 py-2 uppercase"
           activeProps={{ className: "text-primary-container" }}
         >
-          <span aria-hidden className="material-symbols-outlined text-[20px]">
+          <span aria-hidden className="material-symbols-outlined text-headline-sm">
             {item.to === "/"
               ? "radar"
               : item.to === "/batch"
@@ -162,7 +162,7 @@ export function SubHeader({
     <div className="px-margin-mobile sm:px-margin py-space-sm gap-space-sm flex w-full flex-wrap items-center justify-between border-b-2 border-primary-container bg-grit-black">
       <div className="gap-space-sm flex items-center">
         <span
-          className={`font-label-stamp text-label-stamp inline-block -rotate-1 px-2 py-0.5 uppercase shadow-[2px_2px_0px_#000000] ${badgeClass}`}
+          className={`font-label-stamp text-label-stamp inline-block -rotate-1 px-2 py-0.5 uppercase shadow-stamp-xs ${badgeClass}`}
         >
           {badge}
         </span>

@@ -41,7 +41,7 @@ const MCP_SNIPPET = `{
 
 function Snippet({ title, code, accent }: { title: string; code: string; accent: string }) {
   return (
-    <div className="p-space-md gap-space-sm flex flex-col border-[3px] border-outline-variant bg-grit-black shadow-[6px_6px_0px_#000000]">
+    <div className="p-space-md gap-space-sm flex flex-col border-3 border-outline-variant bg-grit-black shadow-stamp-lg">
       <div className="flex items-center justify-between">
         <span className={`font-label-stamp text-label-stamp px-2 py-1 uppercase ${accent}`}>{title}</span>
         <button
@@ -76,7 +76,7 @@ function Adapters() {
         <div className="gap-space-md flex flex-col">
           <h1 className="font-display-hero text-display-hero-mobile lg:text-display-hero text-paper-distressed leading-none uppercase">
             AWESOME{" "}
-            <span className="text-paper-distressed inline-block rotate-1 bg-electric-magenta px-2 shadow-[4px_4px_0px_#cdf200]">
+            <span className="text-paper-distressed inline-block rotate-1 bg-electric-magenta px-2 shadow-stamp-lime">
               FRAMEWORK
             </span>
           </h1>
@@ -95,7 +95,7 @@ function Adapters() {
           {FEATURES.map((f) => (
             <div
               key={f.t}
-              className="p-space-md border-[3px] border-outline-variant bg-surface-low shadow-[5px_5px_0px_#000000]"
+              className="p-space-md border-3 border-outline-variant bg-surface-low shadow-stamp-md"
             >
               <p className="font-label-stamp text-label-stamp text-primary-container uppercase">{f.t}</p>
               <p className="font-body-md text-body-md text-on-surface-variant mt-2">{f.d}</p>
