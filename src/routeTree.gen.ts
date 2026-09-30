@@ -10,33 +10,90 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdaptersRouteImport } from './routes/adapters'
+import { Route as BatchRouteImport } from './routes/batch'
+import { Route as DossierRouteImport } from './routes/dossier'
+import { Route as HallRouteImport } from './routes/hall'
+import { Route as OfflineRouteImport } from './routes/offline'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdaptersRoute = AdaptersRouteImport.update({
+  id: '/adapters',
+  path: '/adapters',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BatchRoute = BatchRouteImport.update({
+  id: '/batch',
+  path: '/batch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DossierRoute = DossierRouteImport.update({
+  id: '/dossier',
+  path: '/dossier',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HallRoute = HallRouteImport.update({
+  id: '/hall',
+  path: '/hall',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OfflineRoute = OfflineRouteImport.update({
+  id: '/offline',
+  path: '/offline',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/adapters': typeof AdaptersRoute
+  '/batch': typeof BatchRoute
+  '/dossier': typeof DossierRoute
+  '/hall': typeof HallRoute
+  '/offline': typeof OfflineRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/adapters': typeof AdaptersRoute
+  '/batch': typeof BatchRoute
+  '/dossier': typeof DossierRoute
+  '/hall': typeof HallRoute
+  '/offline': typeof OfflineRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/adapters': typeof AdaptersRoute
+  '/batch': typeof BatchRoute
+  '/dossier': typeof DossierRoute
+  '/hall': typeof HallRoute
+  '/offline': typeof OfflineRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/adapters' | '/batch' | '/dossier' | '/hall' | '/offline'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/adapters' | '/batch' | '/dossier' | '/hall' | '/offline'
+  id:
+    | '__root__'
+    | '/'
+    | '/adapters'
+    | '/batch'
+    | '/dossier'
+    | '/hall'
+    | '/offline'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdaptersRoute: typeof AdaptersRoute
+  BatchRoute: typeof BatchRoute
+  DossierRoute: typeof DossierRoute
+  HallRoute: typeof HallRoute
+  OfflineRoute: typeof OfflineRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +105,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/adapters': {
+      id: '/adapters'
+      path: '/adapters'
+      fullPath: '/adapters'
+      preLoaderRoute: typeof AdaptersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/batch': {
+      id: '/batch'
+      path: '/batch'
+      fullPath: '/batch'
+      preLoaderRoute: typeof BatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dossier': {
+      id: '/dossier'
+      path: '/dossier'
+      fullPath: '/dossier'
+      preLoaderRoute: typeof DossierRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hall': {
+      id: '/hall'
+      path: '/hall'
+      fullPath: '/hall'
+      preLoaderRoute: typeof HallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/offline': {
+      id: '/offline'
+      path: '/offline'
+      fullPath: '/offline'
+      preLoaderRoute: typeof OfflineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdaptersRoute: AdaptersRoute,
+  BatchRoute: BatchRoute,
+  DossierRoute: DossierRoute,
+  HallRoute: HallRoute,
+  OfflineRoute: OfflineRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
