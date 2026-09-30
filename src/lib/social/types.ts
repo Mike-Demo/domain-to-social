@@ -37,6 +37,8 @@ export interface LookupResult {
   checkedAt: string;
   platforms: PlatformResult[];
   notFound: string[];
+  /** True when the site refused our automated visit, so only search/probe results were possible. */
+  blocked?: boolean;
 }
 
 export interface DomainCandidate {

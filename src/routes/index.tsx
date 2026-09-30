@@ -263,6 +263,14 @@ function RadarScanner() {
       {result && (
         <section className="px-margin-mobile sm:px-margin py-space-xl bg-bg-deep">
           <div className="gap-space-xl mx-auto flex max-w-7xl flex-col">
+            {result.blocked && (
+              <p className="p-space-md font-code-terminal text-code-terminal bg-error-container/30 text-on-error-container border-2 border-error-container">
+                ! {result.domain} blocked our automated visit, so its own links couldn't be read.
+                {result.platforms.length > 0
+                  ? " Results below come from web search only and are unconfirmed."
+                  : " Web search found no profiles either. Try again later."}
+              </p>
+            )}
             {/* target header */}
             <div className="p-space-lg gap-space-lg flex flex-col border-3 border-primary-container bg-grit-black shadow-stamp-xl lg:flex-row lg:items-center lg:justify-between">
               <div className="gap-space-xs flex flex-col">
