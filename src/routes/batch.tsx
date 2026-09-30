@@ -74,7 +74,7 @@ function BatchSniffer() {
               onChange={(e) => setPaste(e.target.value)}
               rows={8}
               aria-label="Batch targets"
-              className="font-code-terminal text-code-terminal text-paper-distressed p-space-sm border-2 border-outline-variant bg-grit-black outline-none"
+              className="font-code-terminal text-code-terminal text-paper-distressed! p-space-sm border-2 border-outline-variant bg-grit-black! outline-none"
             />
             <div className="gap-space-sm flex flex-wrap">
               <button className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-3 uppercase shadow-stamp">
