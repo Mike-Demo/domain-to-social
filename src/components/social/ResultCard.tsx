@@ -18,8 +18,10 @@ function EntryRow({ entry }: { entry: ProfileEntry }) {
         )}
       </div>
       {entry.rating && (
-        <p className="text-xs text-muted-foreground">
-          <span className="font-semibold capitalize text-foreground">{entry.rating} evidence</span>
+        <p style={{ margin: 0, fontSize: "var(--wa-font-size-xs)", color: "var(--wa-color-gray-40)" }}>
+          <span style={{ fontWeight: "var(--wa-font-weight-semibold)", textTransform: "capitalize" }}>
+            {entry.rating} evidence
+          </span>
           {entry.signals && entry.signals.length > 0 ? ` · ${entry.signals.join(", ")}` : " · search result only"}
         </p>
       )}
