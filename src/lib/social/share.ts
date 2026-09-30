@@ -15,7 +15,7 @@ const fromB64Url = (str: string): Uint8Array => {
 };
 
 const pipe = async (bytes: Uint8Array, stream: CompressionStream | DecompressionStream): Promise<Uint8Array> => {
-  const out = new Blob([new Uint8Array(bytes)]).stream().pipeThrough(stream);
+  const out = new Blob([bytes.slice().buffer as ArrayBuffer]).stream().pipeThrough(stream);
   return new Uint8Array(await new Response(out).arrayBuffer());
 };
 
