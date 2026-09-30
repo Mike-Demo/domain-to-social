@@ -59,13 +59,13 @@ export function Header() {
       <Ticker />
       <div className="px-space-lg flex h-20 w-full items-center justify-between">
         <div className="gap-space-md flex items-center">
-          <img alt="DIGGR logo" className="h-8 w-auto object-contain" src={LOGO_SRC} />
+          <img alt="DIGGR logo" className="h-11 w-11 shrink-0 object-contain" src={LOGO_SRC} />
           <Link
             to="/"
             className="gap-space-xs text-on-surface hover:text-primary-container flex items-baseline transition-colors"
           >
             <span className="font-headline text-headline-md tracking-tighter uppercase">DIGGR</span>
-            <span className="font-code-terminal text-code-terminal text-primary-container hidden tracking-widest sm:inline">
+            <span className="font-code-terminal text-code-terminal text-primary-container hidden tracking-widest 2xl:inline">
               // SOCIAL RADAR
             </span>
           </Link>
