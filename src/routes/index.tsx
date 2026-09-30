@@ -37,8 +37,17 @@ function RadarScanner() {
   const lookupFn = useServerFn(lookupSocials);
   const searchFn = useServerFn(searchBrand);
 
+  const [elapsed, setElapsed] = useState<number | null>(null);
+
   const lookup = useMutation<LookupResult, Error, string>({
-    mutationFn: (url) => lookupFn({ data: { url } }),
+    mutationFn: async (url) => {
+      const started = performance.now();
+      try {
+        return await lookupFn({ data: { url } });
+      } finally {
+        setElapsed((performance.now() - started) / 1000);
+      }
+    },
   });
   const search = useMutation<DomainCandidate[], Error, string>({
     mutationFn: (query) => searchFn({ data: { query } }),
