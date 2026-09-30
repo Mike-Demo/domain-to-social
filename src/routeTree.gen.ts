@@ -15,6 +15,7 @@ import { Route as BatchRouteImport } from './routes/batch'
 import { Route as DossierRouteImport } from './routes/dossier'
 import { Route as HallRouteImport } from './routes/hall'
 import { Route as OfflineRouteImport } from './routes/offline'
+import { Route as RRouteImport } from './routes/r'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const OfflineRoute = OfflineRouteImport.update({
   path: '/offline',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RRoute = RRouteImport.update({
+  id: '/r',
+  path: '/r',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/dossier': typeof DossierRoute
   '/hall': typeof HallRoute
   '/offline': typeof OfflineRoute
+  '/r': typeof RRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/dossier': typeof DossierRoute
   '/hall': typeof HallRoute
   '/offline': typeof OfflineRoute
+  '/r': typeof RRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,12 +79,14 @@ export interface FileRoutesById {
   '/dossier': typeof DossierRoute
   '/hall': typeof HallRoute
   '/offline': typeof OfflineRoute
+  '/r': typeof RRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/adapters' | '/batch' | '/dossier' | '/hall' | '/offline'
+  fullPaths:
+    '/' | '/adapters' | '/batch' | '/dossier' | '/hall' | '/offline' | '/r'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/adapters' | '/batch' | '/dossier' | '/hall' | '/offline'
+  to: '/' | '/adapters' | '/batch' | '/dossier' | '/hall' | '/offline' | '/r'
   id:
     | '__root__'
     | '/'
@@ -85,6 +95,7 @@ export interface FileRouteTypes {
     | '/dossier'
     | '/hall'
     | '/offline'
+    | '/r'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,6 +105,7 @@ export interface RootRouteChildren {
   DossierRoute: typeof DossierRoute
   HallRoute: typeof HallRoute
   OfflineRoute: typeof OfflineRoute
+  RRoute: typeof RRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -140,6 +152,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OfflineRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/r': {
+      id: '/r'
+      path: '/r'
+      fullPath: '/r'
+      preLoaderRoute: typeof RRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -150,6 +169,7 @@ const rootRouteChildren: RootRouteChildren = {
   DossierRoute: DossierRoute,
   HallRoute: HallRoute,
   OfflineRoute: OfflineRoute,
+  RRoute: RRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
