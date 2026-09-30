@@ -5,13 +5,13 @@ import { copyText } from "@/components/diggr/ProfileSlab";
 export const Route = createFileRoute("/adapters")({
   head: () => ({
     meta: [
-      { title: "DIGGR // Awesome Framework — adapters, SDK and MCP" },
+      { title: "M4G1C M4NT4 // Awesome Framework — adapters, SDK and MCP" },
       {
         name: "description",
         content:
-          "Drop DIGGR into your own stack: a typed React hook, a REST endpoint, and an MCP server so agents can run social recon.",
+          "Drop M4G1C M4NT4 into your own stack: a typed React hook, a REST endpoint, and an MCP server so agents can run social recon.",
       },
-      { property: "og:title", content: "DIGGR // Awesome Framework" },
+      { property: "og:title", content: "M4G1C M4NT4 // Awesome Framework" },
       { property: "og:description", content: "Typed hook, REST endpoint and MCP adapter for social recon." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -20,22 +20,22 @@ export const Route = createFileRoute("/adapters")({
   component: Adapters,
 });
 
-const HOOK_SNIPPET = `import { useDiggrRadar } from "@diggr/react";
+const HOOK_SNIPPET = `import { useMagicMantaRadar } from "@magicmanta/react";
 
-const { data, isPending } = useDiggrRadar({
+const { data, isPending } = useMagicMantaRadar({
   target: "magicmanta.com",
   include: ["x", "bluesky", "github"],
 });
 
 // data.platforms[0].entries[0].tag -> "@magicmanta"`;
 
-const CURL_SNIPPET = `curl -s https://diggr.dev/api/public/radar \\
+const CURL_SNIPPET = `curl -s https://magicmanta.com/api/public/radar \\
   -H "content-type: application/json" \\
   -d '{"url":"magicmanta.com"}'`;
 
 const MCP_SNIPPET = `{
   "mcpServers": {
-    "diggr": { "url": "https://diggr.dev/mcp" }
+    "magicmanta": { "url": "https://magicmanta.com/mcp" }
   }
 }`;
 
@@ -69,7 +69,7 @@ function Adapters() {
       <SubHeader
         badge="FRAMEWORK_ADAPTERS"
         badgeClass="bg-acid-lime text-grit-black"
-        note="// DROP DIGGR INTO YOUR OWN STACK //"
+        note="// DROP M4G1C M4NT4 INTO YOUR OWN STACK //"
         right={<span>[SDK v0.9.2]</span>}
       />
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-xl mx-auto flex max-w-7xl flex-col">

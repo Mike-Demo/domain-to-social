@@ -4,13 +4,13 @@ import { Shell, SubHeader } from "@/components/diggr/Chrome";
 export const Route = createFileRoute("/hall")({
   head: () => ({
     meta: [
-      { title: "DIGGR // Hall of Fame — top diggers and open bounties" },
+      { title: "M4G1C M4NT4 // Hall of Fame — top diggers and open bounties" },
       {
         name: "description",
         content:
-          "The DIGGR leaderboard: operators with the most confirmed brand handles, plus open bounties on hard-to-trace targets.",
+          "The M4G1C M4NT4 leaderboard: operators with the most confirmed brand handles, plus open bounties on hard-to-trace targets.",
       },
-      { property: "og:title", content: "DIGGR // Hall of Fame" },
+      { property: "og:title", content: "M4G1C M4NT4 // Hall of Fame" },
       { property: "og:description", content: "Leaderboard of top diggers and open recon bounties." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

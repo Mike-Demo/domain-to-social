@@ -5,13 +5,13 @@ import { copyText } from "@/components/diggr/ProfileSlab";
 export const Route = createFileRoute("/dossier")({
   head: () => ({
     meta: [
-      { title: "DIGGR // Dossier — the decrypted intel sheet" },
+      { title: "M4G1C M4NT4 // Dossier — the decrypted intel sheet" },
       {
         name: "description",
         content:
           "A printable dossier of every confirmed handle for a target, with the full evidence chain and export to PDF or JSON.",
       },
-      { property: "og:title", content: "DIGGR // Dossier" },
+      { property: "og:title", content: "M4G1C M4NT4 // Dossier" },
       { property: "og:description", content: "Printable intel sheet with the full evidence chain." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -22,20 +22,20 @@ export const Route = createFileRoute("/dossier")({
 
 const SHEET = {
   target: "MAGIC MANTA",
-  domain: "magicmanta.com",
+  domain: "stripe.com",
   handles: [
-    { platform: "X", tag: "@magicmanta", proof: "JSON-LD sameAs" },
-    { platform: "GitHub", tag: "@magicmanta", proof: "Footer link on magicmanta.com" },
-    { platform: "LinkedIn", tag: "company/magicmanta", proof: "JSON-LD sameAs" },
-    { platform: "Bluesky", tag: "@magicmanta.com", proof: "rel=me link" },
-    { platform: "YouTube", tag: "@magicmanta", proof: "Footer link on magicmanta.com" },
+    { platform: "X", tag: "@stripe", proof: "JSON-LD sameAs" },
+    { platform: "GitHub", tag: "@stripe", proof: "Footer link on stripe.com" },
+    { platform: "LinkedIn", tag: "company/stripe", proof: "JSON-LD sameAs" },
+    { platform: "Bluesky", tag: "@stripe.com", proof: "rel=me link" },
+    { platform: "YouTube", tag: "@stripe", proof: "Footer link on stripe.com" },
   ],
   chain: [
-    "FETCH magicmanta.com -> 200 OK (final URL https://magicmanta.com/)",
+    "FETCH stripe.com -> 200 OK (final URL https://stripe.com/)",
     "PARSE application/ld+json -> Organization.sameAs [4 urls]",
     "PARSE <a href> anchors -> 11 outbound social links, 6 unique platforms",
     "MERGE by handle -> no conflicts between structured data and DOM",
-    "RECIPROCAL CHECK -> 3 profiles link back to magicmanta.com",
+    "RECIPROCAL CHECK -> 3 profiles link back to stripe.com",
   ],
 };
 
