@@ -5,13 +5,13 @@ import { copyText } from "@/components/diggr/ProfileSlab";
 export const Route = createFileRoute("/dossier")({
   head: () => ({
     meta: [
-      { title: "DIGGR // Dossier — the decrypted intel sheet" },
+      { title: "M4G1C M4NT4 // Dossier — the decrypted intel sheet" },
       {
         name: "description",
         content:
           "A printable dossier of every confirmed handle for a target, with the full evidence chain and export to PDF or JSON.",
       },
-      { property: "og:title", content: "DIGGR // Dossier" },
+      { property: "og:title", content: "M4G1C M4NT4 // Dossier" },
       { property: "og:description", content: "Printable intel sheet with the full evidence chain." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

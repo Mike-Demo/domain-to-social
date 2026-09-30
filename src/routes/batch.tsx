@@ -5,13 +5,13 @@ import { Shell, SubHeader } from "@/components/diggr/Chrome";
 export const Route = createFileRoute("/batch")({
   head: () => ({
     meta: [
-      { title: "DIGGR // Batch Sniffer — bulk social recon pipeline" },
+      { title: "M4G1C M4NT4 // Batch Sniffer — bulk social recon pipeline" },
       {
         name: "description",
         content:
-          "Queue hundreds of domains, stream the recon console live, and export every resolved handle. Premium batch pipeline for DIGGR.",
+          "Queue hundreds of domains, stream the recon console live, and export every resolved handle. Premium batch pipeline for M4G1C M4NT4.",
       },
-      { property: "og:title", content: "DIGGR // Batch Sniffer" },
+      { property: "og:title", content: "M4G1C M4NT4 // Batch Sniffer" },
       { property: "og:description", content: "Bulk domain recon with a live streaming console." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

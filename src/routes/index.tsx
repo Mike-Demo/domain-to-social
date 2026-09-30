@@ -11,13 +11,13 @@ import type { DomainCandidate, LookupResult } from "@/lib/social/types";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "DIGGR // Radar Scanner — hunt any brand's social footprint" },
+      { title: "M4G1C M4NT4 // Radar Scanner — hunt any brand's social footprint" },
       {
         name: "description",
         content:
-          "Drop a domain and DIGGR sweeps X, Threads, Instagram, LinkedIn, Bluesky, GitHub and more for verified brand handles with evidence.",
+          "Drop a domain and M4G1C M4NT4 sweeps X, Threads, Instagram, LinkedIn, Bluesky, GitHub and more for verified brand handles with evidence.",
       },
-      { property: "og:title", content: "DIGGR // Radar Scanner" },
+      { property: "og:title", content: "M4G1C M4NT4 // Radar Scanner" },
       {
         property: "og:description",
         content: "Drop a domain. Get every verified social handle, with the receipts.",
@@ -114,7 +114,7 @@ function RadarScanner() {
                 IN SECONDS.
               </h1>
               <p className="font-body-md text-body-lg text-on-surface-variant mt-space-xs max-w-2xl">
-                Drop any domain, startup tag, or shadow brand. DIGGR's crawler swarms sweep the networks, repos,
+                Drop any domain, startup tag, or shadow brand. M4G1C M4NT4's crawler swarms sweep the networks, repos,
                 federated nodes, and rogue vanity handles before they can scrub their footprint.
               </p>
             </div>

@@ -4,12 +4,12 @@ import { Shell, SubHeader } from "@/components/diggr/Chrome";
 export const Route = createFileRoute("/offline")({
   head: () => ({
     meta: [
-      { title: "DIGGR // Air-gap mode — cached dossiers offline" },
+      { title: "M4G1C M4NT4 // Air-gap mode — cached dossiers offline" },
       {
         name: "description",
-        content: "Carrier lost? DIGGR keeps your recent dossiers cached locally so you can read and export offline.",
+        content: "Carrier lost? M4G1C M4NT4 keeps your recent dossiers cached locally so you can read and export offline.",
       },
-      { property: "og:title", content: "DIGGR // Air-gap mode" },
+      { property: "og:title", content: "M4G1C M4NT4 // Air-gap mode" },
       { property: "og:description", content: "Cached dossiers and vault export while offline." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
