@@ -13,7 +13,7 @@ Brand Connector Pro at https://magicmanta.com finds and verifies a company's soc
 - / — single domain lookup
 - /batch — look up multiple domains
 - /dossier — result dossier view
-- /hall — hall of fame
+- /source — source board
 - /adapters — platform adapters
 - /licenses — open source credits and digital carbon disclosure
 - /offline — offline fallback
@@ -29,3 +29,4 @@ No public REST API and no MCP server. No documented rate limits; automated looku
 
 ## Contact
 Built by MikeDemo — https://mikedemo.com
+
