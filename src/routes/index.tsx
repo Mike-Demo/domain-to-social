@@ -188,6 +188,15 @@ function RadarScanner() {
             </div>
           </div>
 
+          <p role="status" aria-live="polite" className="sr-only">
+            {busy
+              ? "Scanning…"
+              : lookup.error || search.error
+                ? (lookup.error ?? search.error)?.message
+                : result
+                  ? `${result.blocked ? `${result.domain} blocked our visit. ` : ""}Found ${verified.length + unverified.length} profiles for ${result.domain}.`
+                  : ""}
+          </p>
           {busy && (
             <div className="p-space-md font-code-terminal text-code-terminal text-acid-lime scanlines border-2 border-outline-variant bg-grit-black">
               <p>&gt; RESOLVING TARGET SURFACE…</p>

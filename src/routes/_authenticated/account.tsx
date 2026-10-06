@@ -100,7 +100,7 @@ function Account() {
                   }}
                   className="font-code-terminal text-cyber-cyan text-left underline"
                 >
-                  Manage billing →
+                  Manage billing →<span className="sr-only"> (opens in new tab)</span>
                 </button>
               )}
               {data.entitlements.plan !== "brand_command" && (

@@ -116,6 +116,9 @@ function BatchSniffer() {
             >
               {busy ? "Sweeping…" : "Run batch"}
             </button>
+            <span role="status" aria-live="polite" className="sr-only">
+              {busy ? `Running batch of ${urls.length}…` : rows.length ? `${rows.length} of ${rows.length} done.` : ""}
+            </span>
             <label className={`${btn} text-paper-distressed cursor-pointer border-2 border-paper-distressed`}>
               Upload CSV
               <input type="file" aria-label="Upload a CSV or text list of target domains" accept=".csv,.txt" className="hidden" onChange={(e) => e.target.files?.[0] && onCsv(e.target.files[0])} />
