@@ -142,11 +142,29 @@ export const getList = createServerFn({ method: "GET" })
     };
   });
 
+const MEMBER_WINDOW_MS = 60_000;
+const MEMBER_MAX_SITES_PER_WINDOW = 30;
+const memberBuckets = new Map<string, { count: number; resetAt: number }>();
+
+/** Per-account cap on how many sites the server fetches per minute, so lookups can't be used as a bulk fetch proxy. */
+function assertMemberQuota(userId: string, sites: number): void {
+  const now = Date.now();
+  const b = memberBuckets.get(userId);
+  if (!b || b.resetAt <= now) {
+    memberBuckets.set(userId, { count: sites, resetAt: now + MEMBER_WINDOW_MS });
+    if (sites > MEMBER_MAX_SITES_PER_WINDOW) throw new Error("Too many lookups — please wait a minute and try again.");
+    return;
+  }
+  if (b.count + sites > MEMBER_MAX_SITES_PER_WINDOW) throw new Error("Too many lookups — please wait a minute and try again.");
+  b.count += sites;
+}
+
 /** Signed-in single lookup: Deep Recon plans get Firecrawl enrichment, others get the standard lookup. */
 export const memberLookup = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ url: z.string().trim().min(3).max(500) }).parse(d))
   .handler(async ({ data, context }) => {
+    assertMemberQuota(context.userId, 1);
     const ent = await loadEntitlements(context);
     const { lookupDomain } = await import("@/lib/social/lookup.server");
     return lookupDomain(data.url, { enrich: ent.enrichment });
@@ -159,6 +177,7 @@ export const runBatch = createServerFn({ method: "POST" })
     const ent = await loadEntitlements(context);
     if (ent.batchSize === 0) throw new Error("Bulk searching needs the Operative plan.");
     if (data.urls.length > ent.batchSize) throw new Error(`Your plan allows ${ent.batchSize} domains per run.`);
+    assertMemberQuota(context.userId, data.urls.length);
     const { lookupDomain } = await import("@/lib/social/lookup.server");
     const settled = await Promise.allSettled(data.urls.map((u) => lookupDomain(u, { enrich: ent.enrichment })));
     const out = settled.map((s, i) =>
