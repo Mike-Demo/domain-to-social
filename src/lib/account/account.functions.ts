@@ -142,6 +142,16 @@ export const getList = createServerFn({ method: "GET" })
     };
   });
 
+/** Signed-in single lookup: Deep Recon plans get Firecrawl enrichment, others get the standard lookup. */
+export const memberLookup = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ url: z.string().trim().min(3).max(500) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const ent = await loadEntitlements(context);
+    const { lookupDomain } = await import("@/lib/social/lookup.server");
+    return lookupDomain(data.url, { enrich: ent.enrichment });
+  });
+
 export const runBatch = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ urls: z.array(z.string().trim().min(3).max(500)).min(1).max(25) }).parse(d))
@@ -150,7 +160,7 @@ export const runBatch = createServerFn({ method: "POST" })
     if (ent.batchSize === 0) throw new Error("Bulk searching needs the Operative plan.");
     if (data.urls.length > ent.batchSize) throw new Error(`Your plan allows ${ent.batchSize} domains per run.`);
     const { lookupDomain } = await import("@/lib/social/lookup.server");
-    const settled = await Promise.allSettled(data.urls.map((u) => lookupDomain(u)));
+    const settled = await Promise.allSettled(data.urls.map((u) => lookupDomain(u, { enrich: ent.enrichment })));
     const out = settled.map((s, i) =>
       s.status === "fulfilled"
         ? { input: data.urls[i] ?? "", ok: true as const, result: s.value }

@@ -381,17 +381,48 @@ async function fetchSite(url: string): Promise<{ text: string; finalUrl: string 
   return fetchText(u.toString());
 }
 
-export async function lookupDomain(input: string): Promise<LookupResult> {
+export interface LookupOptions {
+  /** Deep Recon: render via Firecrawl when the site blocks us or exposes no social links. */
+  enrich?: boolean;
+}
+
+export async function lookupDomain(input: string, opts: LookupOptions = {}): Promise<LookupResult> {
   const url = normalizeInputUrl(input);
   if (!isPublicHttpUrl(url)) throw new Error("Please enter a public website address.");
-  const page = await fetchSite(url);
+  let page = await fetchSite(url);
   const checkedAt = new Date().toISOString();
   // Some sites (e.g. behind bot protection) block automated fetches.
   // Fall back to search-only results instead of failing the lookup.
-  const domain = normalizeHost(new URL(page?.finalUrl ?? url).hostname);
-  const { findings, brandName } = page
+  let domain = normalizeHost(new URL(page?.finalUrl ?? url).hostname);
+  let { findings, brandName } = page
     ? extractFromHtml(page.text, page.finalUrl, domain)
     : { findings: [] as RawFinding[], brandName: domain.split(".")[0] ?? domain };
+
+  let enrichment: LookupResult["enrichment"];
+  if (opts.enrich && (!page || findings.length === 0)) {
+    const { firecrawlScrape } = await import("./firecrawl.server");
+    const reason = page ? "no social links in plain HTML" : "site blocked plain visit";
+    const fc = await firecrawlScrape(page?.finalUrl ?? url);
+    if (fc && isPublicHttpUrl(fc.finalUrl)) {
+      domain = normalizeHost(new URL(fc.finalUrl).hostname);
+      const linkHtml = fc.links.map((l) => `<a href="${l.replace(/"/g, "&quot;")}"></a>`).join("");
+      const ex = extractFromHtml(`${fc.html}<div>${linkHtml}</div>`, fc.finalUrl, domain);
+      findings = ex.findings.map((f) => ({ ...f, evidence: `${f.evidence} (via Firecrawl render)` }));
+      brandName = ex.brandName;
+      page = { text: fc.html, finalUrl: fc.finalUrl };
+      enrichment = {
+        via: "firecrawl",
+        used: true,
+        reason,
+        logo: fc.branding?.logo,
+        description: fc.description,
+        colors: fc.branding?.colors ? Object.values(fc.branding.colors).slice(0, 6) : undefined,
+        fonts: fc.branding?.fonts?.map((f) => f.family).slice(0, 3),
+      };
+    } else {
+      enrichment = { via: "firecrawl", used: false, reason: `${reason}; Firecrawl render failed` };
+    }
+  }
   const verified = groupFindings(findings, checkedAt);
   const found = new Set(verified.map((v) => v.platformId));
   const missing = PLATFORMS.map((p) => p.id).filter((id) => !found.has(id));
@@ -420,6 +451,7 @@ export async function lookupDomain(input: string): Promise<LookupResult> {
     platforms: all,
     notFound: PLATFORMS.filter((p) => !allFound.has(p.id)).map((p) => p.name),
     blocked: !page,
+    ...(enrichment ? { enrichment } : {}),
   };
 }
 

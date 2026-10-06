@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
 import { lookupSocials, searchBrand } from "@/lib/social/lookup.functions";
-import { saveLookup } from "@/lib/account/account.functions";
+import { memberLookup, saveLookup } from "@/lib/account/account.functions";
 import { useAuth } from "@/hooks/useAuth";
 import { allVerifiedTags, formatCheckedAt, looksLikeUrl } from "@/lib/social/format";
 import { buildShareUrl } from "@/lib/social/share";
@@ -44,6 +44,7 @@ function RadarScanner() {
   const lookupFn = useServerFn(lookupSocials);
   const searchFn = useServerFn(searchBrand);
   const saveFn = useServerFn(saveLookup);
+  const memberFn = useServerFn(memberLookup);
   const { user } = useAuth();
 
   const [elapsed, setElapsed] = useState<number | null>(null);
@@ -52,7 +53,7 @@ function RadarScanner() {
     mutationFn: async (url) => {
       const started = performance.now();
       try {
-        const res = await lookupFn({ data: { url } });
+        const res = user ? await memberFn({ data: { url } }) : await lookupFn({ data: { url } });
         if (user) void saveFn({ data: { result: res } }).catch(() => undefined);
         return res;
       } finally {
@@ -269,12 +270,31 @@ function RadarScanner() {
       {result && (
         <section className="px-margin-mobile sm:px-margin py-space-xl bg-bg-deep">
           <div className="gap-space-xl mx-auto flex max-w-7xl flex-col">
+            {result.enrichment?.used && (
+              <div className="p-space-md gap-space-md flex items-center border-2 border-cyber-cyan bg-grit-black">
+                {result.enrichment.logo && (
+                  <img src={result.enrichment.logo} alt={`${result.brandName} logo`} className="h-10 w-10 shrink-0 object-contain" loading="lazy" />
+                )}
+                <div className="gap-space-xs flex flex-col">
+                  <span className="font-label-stamp text-label-stamp text-cyber-cyan uppercase">
+                    DEEP RECON // RENDERED VIA FIRECRAWL ({result.enrichment.reason})
+                  </span>
+                  {result.enrichment.description && (
+                    <span className="font-code-terminal text-code-terminal text-on-surface-variant">{result.enrichment.description}</span>
+                  )}
+                  {result.enrichment.fonts?.length ? (
+                    <span className="font-code-terminal text-micro text-on-surface-variant">FONTS: {result.enrichment.fonts.join(", ")}</span>
+                  ) : null}
+                </div>
+              </div>
+            )}
             {result.blocked && (
               <p className="p-space-md font-code-terminal text-code-terminal bg-error-container/30 text-on-error-container border-2 border-error-container">
                 ! {result.domain} blocked our automated visit, so its own links couldn't be read.
                 {result.platforms.length > 0
                   ? " Results below come from web search only and are unconfirmed."
                   : " Web search found no profiles either. Try again later."}
+                {!result.enrichment && " Deep Recon members get a full browser render that usually gets past these blocks."}
               </p>
             )}
             {/* target header */}
