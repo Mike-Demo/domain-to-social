@@ -2,17 +2,17 @@
 const GATEWAY_V2 = "https://connector-gateway.lovable.dev/firecrawl/v2";
 
 export interface FirecrawlBranding {
-  logo?: string;
-  colors?: Record<string, string>;
-  fonts?: { family: string }[];
+  logo?: string | undefined;
+  colors?: Record<string, string> | undefined;
+  fonts?: { family: string }[] | undefined;
 }
 
 export interface FirecrawlPage {
   html: string;
   links: string[];
   finalUrl: string;
-  description?: string;
-  branding?: FirecrawlBranding;
+  description?: string | undefined;
+  branding?: FirecrawlBranding | undefined;
 }
 
 interface ScrapeDoc {

@@ -44,10 +44,10 @@ export interface LookupResult {
     via: "firecrawl";
     used: boolean;
     reason: string;
-    logo?: string;
-    description?: string;
-    colors?: string[];
-    fonts?: string[];
+    logo?: string | undefined;
+    description?: string | undefined;
+    colors?: string[] | undefined;
+    fonts?: string[] | undefined;
   };
 }
 
