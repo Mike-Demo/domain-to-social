@@ -49,7 +49,8 @@ async function requireLists(ctx: Ctx): Promise<void> {
 export const getMyAccount = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const ent = await loadEntitlements(context);
+    const sub = await loadSubscription(context);
+    const ent = entitlementsFromSub(sub);
     const [{ data: history }, { data: lists }] = await Promise.all([
       context.supabase.from("lookups").select("id,domain,checked_at").order("checked_at", { ascending: false }).limit(50),
       context.supabase.from("lists").select("id,name,created_at,list_items(count)").order("created_at", { ascending: false }),
