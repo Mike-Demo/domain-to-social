@@ -39,6 +39,16 @@ export interface LookupResult {
   notFound: string[];
   /** True when the site refused our automated visit, so only search/probe results were possible. */
   blocked?: boolean;
+  /** Deep Recon: set when Firecrawl rendered the site (bot-wall bypass / JS links / brand data). */
+  enrichment?: {
+    via: "firecrawl";
+    used: boolean;
+    reason: string;
+    logo?: string;
+    description?: string;
+    colors?: string[];
+    fonts?: string[];
+  };
 }
 
 export interface DomainCandidate {
