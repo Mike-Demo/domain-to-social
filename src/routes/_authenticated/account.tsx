@@ -100,7 +100,7 @@ function Account() {
                   }}
                   className="font-code-terminal text-cyber-cyan text-left underline"
                 >
-                  Manage billing →
+                  Manage billing →<span className="sr-only"> (opens in new tab)</span>
                 </button>
               )}
               {data.entitlements.plan !== "brand_command" && (
@@ -118,7 +118,7 @@ function Account() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="New list name"
-                  className="font-code-terminal text-code-terminal text-paper-distressed! p-space-sm border-2 border-outline-variant bg-grit-black! flex-1 outline-none"
+                  className="font-code-terminal text-code-terminal text-paper-distressed! p-space-sm border-2 border-outline-variant bg-grit-black! flex-1 outline-none focus-visible:ring-2 focus-visible:ring-primary-container"
                 />
                 <button
                   onClick={addList}

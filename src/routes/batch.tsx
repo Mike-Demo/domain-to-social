@@ -106,7 +106,7 @@ function BatchSniffer() {
             onChange={(e) => setPaste(e.target.value)}
             rows={6}
             aria-label="Batch targets"
-            className="font-code-terminal text-code-terminal text-paper-distressed! p-space-sm border-2 border-outline-variant bg-grit-black! outline-none"
+            className="font-code-terminal text-code-terminal text-paper-distressed! p-space-sm border-2 border-outline-variant bg-grit-black! outline-none focus-visible:ring-2 focus-visible:ring-primary-container"
           />
           <div className="gap-space-sm flex flex-wrap items-center">
             <button
@@ -116,9 +116,12 @@ function BatchSniffer() {
             >
               {busy ? "Sweeping…" : "Run batch"}
             </button>
+            <span role="status" aria-live="polite" className="sr-only">
+              {busy ? `Running batch of ${urls.length}…` : rows.length ? `${rows.length} of ${rows.length} done.` : ""}
+            </span>
             <label className={`${btn} text-paper-distressed cursor-pointer border-2 border-paper-distressed`}>
               Upload CSV
-              <input type="file" accept=".csv,.txt" className="hidden" onChange={(e) => e.target.files?.[0] && onCsv(e.target.files[0])} />
+              <input type="file" aria-label="Upload a CSV or text list of target domains" accept=".csv,.txt" className="hidden" onChange={(e) => e.target.files?.[0] && onCsv(e.target.files[0])} />
             </label>
           </div>
           {msg && <p className="font-code-terminal text-body-sm text-hazard-orange">{msg}</p>}

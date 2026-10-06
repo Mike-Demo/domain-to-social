@@ -93,7 +93,7 @@ function Entry({ entry }: { entry: ProfileEntry }) {
           rel="noreferrer noopener"
           className="font-label-stamp text-label-stamp text-cyber-cyan border-2 border-cyber-cyan px-3 py-2 uppercase hover:bg-cyber-cyan hover:text-grit-black"
         >
-          Inspect stream ↗
+          Inspect stream ↗<span className="sr-only"> (opens in new tab)</span>
         </a>
       </div>
     </div>

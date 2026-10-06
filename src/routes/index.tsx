@@ -167,7 +167,7 @@ function RadarScanner() {
                   onChange={(e) => setInput(e.target.value)}
                   aria-label="Target domain or brand name"
                   placeholder="stripe.com  //  or a brand name"
-                  className="px-space-md text-paper-distressed! font-code-terminal text-body-lg placeholder:text-on-surface-variant/60 w-full bg-transparent! py-4 outline-none"
+                  className="px-space-md text-paper-distressed! font-code-terminal text-body-lg placeholder:text-on-surface-variant/60 w-full bg-transparent! py-4 outline-none focus-visible:ring-2 focus-visible:ring-primary-container"
                 />
               </div>
               <button
@@ -188,6 +188,15 @@ function RadarScanner() {
             </div>
           </div>
 
+          <p role="status" aria-live="polite" className="sr-only">
+            {busy
+              ? "Scanning…"
+              : lookup.error || search.error
+                ? (lookup.error ?? search.error)?.message
+                : result
+                  ? `${result.blocked ? `${result.domain} blocked our visit. ` : ""}Found ${verified.length + unverified.length} profiles for ${result.domain}.`
+                  : ""}
+          </p>
           {busy && (
             <div className="p-space-md font-code-terminal text-code-terminal text-acid-lime scanlines border-2 border-outline-variant bg-grit-black">
               <p>&gt; RESOLVING TARGET SURFACE…</p>
@@ -256,7 +265,7 @@ function RadarScanner() {
                 value={manualUrl}
                 onChange={(e) => setManualUrl(e.target.value)}
                 placeholder="example.com"
-                className="font-code-terminal text-code-terminal text-paper-distressed! flex-1 border-2 border-outline-variant bg-grit-black! px-3 py-2 outline-none"
+                className="font-code-terminal text-code-terminal text-paper-distressed! flex-1 border-2 border-outline-variant bg-grit-black! px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary-container"
               />
               <button className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-2 uppercase shadow-stamp-sm">
                 Sniff
@@ -314,7 +323,7 @@ function RadarScanner() {
                     target="_blank"
                     rel="noreferrer noopener"
                   >
-                    {result.domain}
+                    {result.domain}<span className="sr-only"> (opens in new tab)</span>
                   </a>{" "}
                   // LAST CHECKED: {formatCheckedAt(result.checkedAt)}
                 </span>

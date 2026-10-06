@@ -36,7 +36,7 @@ export function Ticker() {
         <span className="bg-grit-black text-primary-container px-1 py-0.5 font-bold tracking-widest">
           LIVE STREAM
         </span>
-        <span className="animate-pulse">●</span>
+        <span className="animate-pulse" aria-hidden="true">●</span>
         <span className="truncate">TARGET // SNIFFING FOOTPRINTS ON 1,482 CORPS</span>
         <span className="hidden opacity-50 sm:inline">|</span>
         <span className="hidden sm:inline">NODE_09: ACTIVE</span>
@@ -105,7 +105,7 @@ function AccountChip() {
   return (
     <Link
       to={signedIn ? "/account" : "/auth"}
-      className="gap-space-sm px-space-sm py-space-xs flex items-center border-2 border-primary-container bg-surface-high shadow-stamp-sm"
+      className="gap-space-sm px-space-sm py-space-xs min-h-11 flex items-center border-2 border-primary-container bg-surface-high shadow-stamp-sm"
     >
       <span aria-hidden className="material-symbols-outlined text-primary-container">
         {signedIn ? "badge" : "login"}
@@ -125,7 +125,7 @@ export function MobileNav() {
           key={item.to}
           to={item.to}
           activeOptions={{ exact: item.to === "/" }}
-          className="font-label-stamp text-label-stamp text-on-surface-variant flex flex-1 flex-col items-center gap-1 py-2 uppercase"
+          className="font-label-stamp text-label-stamp text-on-surface-variant flex min-h-11 flex-1 flex-col items-center gap-1 py-2 uppercase"
           activeProps={{ className: "text-primary-container" }}
         >
           <span aria-hidden className="material-symbols-outlined text-headline-sm">
@@ -148,10 +148,10 @@ export function MobileNav() {
 
 export function Shell({ children }: { children: ReactNode }) {
   return (
-    <div className="diggr min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+    <div className="diggr min-h-dvh selection:bg-primary-container selection:text-on-primary-container">
       <WebAwesomeLoader />
       <Header />
-      <main className="min-h-screen w-full pt-28 pb-20 xl:pb-0">{children}</main>
+      <main className="min-h-dvh w-full pt-28 pb-20 xl:pb-0">{children}</main>
       <MobileNav />
     </div>
   );

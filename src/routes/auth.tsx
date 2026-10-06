@@ -21,7 +21,7 @@ export const Route = createFileRoute("/auth")({
 
 const btn = "font-label-stamp text-label-stamp px-space-md py-space-sm uppercase";
 const input =
-  "font-code-terminal text-code-terminal text-paper-distressed! p-space-sm border-2 border-outline-variant bg-grit-black! outline-none";
+  "font-code-terminal text-code-terminal text-paper-distressed! p-space-sm border-2 border-outline-variant bg-grit-black! outline-none focus-visible:ring-2 focus-visible:ring-primary-container";
 
 function AuthPage() {
   const navigate = useNavigate();
