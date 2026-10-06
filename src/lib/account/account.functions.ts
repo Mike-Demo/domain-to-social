@@ -116,8 +116,8 @@ export const runBatch = createServerFn({ method: "POST" })
     const settled = await Promise.allSettled(data.urls.map((u) => lookupDomain(u)));
     const out = settled.map((s, i) =>
       s.status === "fulfilled"
-        ? { input: data.urls[i], ok: true as const, result: s.value }
-        : { input: data.urls[i], ok: false as const, error: s.reason instanceof Error ? s.reason.message : "Lookup failed" },
+        ? { input: data.urls[i] ?? "", ok: true as const, result: s.value }
+        : { input: data.urls[i] ?? "", ok: false as const, error: s.reason instanceof Error ? s.reason.message : "Lookup failed" },
     );
     const ok = out.flatMap((o) => (o.ok ? [o.result] : []));
     if (ok.length) {
