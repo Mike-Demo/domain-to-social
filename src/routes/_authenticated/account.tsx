@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { createList, deleteList, getMyAccount } from "@/lib/account/account.functions";
+import { createPortalSession } from "@/lib/account/payments.functions";
 import { PLAN_LABEL } from "@/lib/account/entitlements";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
 
@@ -28,6 +29,7 @@ function Account() {
   const fetchAccount = useServerFn(getMyAccount);
   const create = useServerFn(createList);
   const remove = useServerFn(deleteList);
+  const portal = useServerFn(createPortalSession);
   const qc = useQueryClient();
   const navigate = useNavigate();
   const { data, error } = useQuery({ queryKey: ["account"], queryFn: () => fetchAccount() });
@@ -72,9 +74,21 @@ function Account() {
               <span className="font-headline text-headline-sm text-primary-container uppercase">
                 {PLAN_LABEL[data.entitlements.plan]}
               </span>
-              {data.entitlements.plan === "free" && (
+              {data.entitlements.plan !== "free" && (
+                <button
+                  onClick={async () => {
+                    const r = await portal({ data: { returnUrl: window.location.href } });
+                    if ("error" in r) setErr(r.error);
+                    else window.open(r.url, "_blank");
+                  }}
+                  className="font-code-terminal text-cyber-cyan text-left underline"
+                >
+                  Manage billing →
+                </button>
+              )}
+              {data.entitlements.plan !== "brand_command" && (
                 <Link to="/pricing" className="font-code-terminal text-cyber-cyan underline">
-                  Upgrade to unlock saved lists and bulk sweeps →
+                  Upgrade your plan →
                 </Link>
               )}
             </div>
@@ -92,7 +106,7 @@ function Account() {
                 <button
                   onClick={addList}
                   disabled={!name.trim()}
-                  className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-2 uppercase"
+                  className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-space-md py-space-xs uppercase"
                 >
                   Create
                 </button>
@@ -100,7 +114,7 @@ function Account() {
               {err && <p className="font-code-terminal text-body-sm text-hazard-orange">{err}</p>}
               {data.lists.length === 0 && <p className="font-code-terminal text-body-sm text-on-surface-variant">No lists yet.</p>}
               {data.lists.map((l) => (
-                <div key={l.id} className="gap-space-sm flex items-center justify-between border-t-2 border-outline-variant pt-2">
+                <div key={l.id} className="gap-space-sm flex items-center justify-between border-t-2 border-outline-variant pt-space-sm">
                   <Link to="/lists/$id" params={{ id: l.id }} className="font-code-terminal text-paper-distressed underline">
                     {l.name} ({l.count})
                   </Link>
@@ -123,7 +137,7 @@ function Account() {
                 <p className="font-code-terminal text-body-sm text-on-surface-variant">Lookups you run while signed in show up here.</p>
               )}
               {data.history.map((h) => (
-                <div key={h.id} className="font-code-terminal text-code-terminal flex justify-between border-t-2 border-outline-variant pt-2">
+                <div key={h.id} className="font-code-terminal text-code-terminal flex justify-between border-t-2 border-outline-variant pt-space-sm">
                   <span className="text-paper-distressed break-all">{h.domain}</span>
                   <span className="text-on-surface-variant">{new Date(h.checked_at).toLocaleString()}</span>
                 </div>

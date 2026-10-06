@@ -26,7 +26,7 @@ export const Route = createFileRoute("/batch")({
 
 type Row = { input: string; ok: true; result: LookupResult } | { input: string; ok: false; error: string };
 
-const btn = "font-label-stamp text-label-stamp px-4 py-3 uppercase";
+const btn = "font-label-stamp text-label-stamp px-space-md py-space-sm uppercase";
 
 function BatchSniffer() {
   const { user, ready } = useAuth();
@@ -81,7 +81,7 @@ function BatchSniffer() {
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-xl mx-auto flex max-w-7xl flex-col">
         <h1 className="font-display-hero text-display-hero-mobile lg:text-display-hero text-paper-distressed leading-none uppercase">
           BATCH{" "}
-          <span className="text-on-primary-container inline-block -rotate-1 bg-primary-container px-2 shadow-stamp-magenta">
+          <span className="text-on-primary-container inline-block -rotate-1 bg-primary-container px-space-sm shadow-stamp-magenta">
             SNIFFER
           </span>
         </h1>

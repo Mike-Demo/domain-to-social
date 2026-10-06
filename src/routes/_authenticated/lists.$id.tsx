@@ -37,7 +37,7 @@ function download(name: string, body: string, type: string) {
   URL.revokeObjectURL(a.href);
 }
 
-const btn = "font-label-stamp text-label-stamp text-paper-distressed border-2 border-paper-distressed px-4 py-2 uppercase";
+const btn = "font-label-stamp text-label-stamp text-paper-distressed border-2 border-paper-distressed px-space-md py-space-xs uppercase";
 
 function ListPage() {
   const { id } = Route.useParams();
