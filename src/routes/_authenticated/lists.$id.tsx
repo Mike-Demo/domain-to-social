@@ -54,7 +54,7 @@ function ListPage() {
           <>
             <h1 className="font-headline text-headline-lg text-paper-distressed uppercase">{data.list.name}</h1>
             <div className="gap-space-sm flex flex-wrap">
-              <button className={btn} onClick={() => copyText(results.flatMap(allVerifiedTags).join(" "), "verified handles")}>
+              <button className={btn} onClick={() => copyText(results.map(allVerifiedTags).filter(Boolean).join("\n"), "verified handles")}>
                 Copy all verified handles
               </button>
               <button className={btn} onClick={() => download(`${data.list.name}.csv`, toCsv(results), "text/csv")}>
