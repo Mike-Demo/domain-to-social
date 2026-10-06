@@ -20,7 +20,7 @@ export function Checkout({ priceId }: { priceId: (typeof PRICE_IDS)[number] }) {
   );
 }
 
-const token = import.meta.env.VITE_PAYMENTS_CLIENT_TOKEN as string | undefined;
+const token = import.meta.env["VITE_PAYMENTS_CLIENT_TOKEN"] as string | undefined;
 
 export function PaymentTestModeBanner() {
   if (!token)

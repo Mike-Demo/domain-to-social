@@ -33,8 +33,8 @@ async function upsertSubscription(sub: Obj, env: StripeEnv, deleted: boolean) {
       plan: PRICE_TO_PLAN[priceId] ?? "free",
       status,
       price_id: priceId,
-      stripe_subscription_id: str(sub["id"]),
-      stripe_customer_id: str(sub["customer"]),
+      stripe_subscription_id: str(sub["id"]) ?? null,
+      stripe_customer_id: str(sub["customer"]) ?? null,
       cancel_at_period_end: Boolean(sub["cancel_at_period_end"]),
       current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
       updated_at: new Date().toISOString(),
@@ -52,7 +52,7 @@ async function grantOperative(session: Obj, env: StripeEnv) {
   await db
     .from("subscriptions")
     .upsert(
-      { user_id: userId, environment: env, operative_lifetime: true, stripe_customer_id: str(session["customer"]), updated_at: new Date().toISOString() },
+      { user_id: userId, environment: env, operative_lifetime: true, stripe_customer_id: str(session["customer"]) ?? null, updated_at: new Date().toISOString() },
       { onConflict: "user_id,environment" },
     );
 }
