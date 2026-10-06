@@ -4,7 +4,7 @@ import type Stripe from "stripe";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-export const PRICE_IDS = ["operative_once", "deep_recon_monthly", "brand_command_monthly"] as const;
+export const PRICE_IDS = ["operative_onetime", "deep_recon_monthly", "brand_command_monthly"] as const;
 
 type CheckoutResult = { clientSecret: string } | { error: string };
 

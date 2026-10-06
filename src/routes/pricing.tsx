@@ -25,7 +25,7 @@ export const Route = createFileRoute("/pricing")({
 
 const TIERS = [
   { priceId: null, name: "Free Radar", price: "$0", items: ["1 domain at a time", "No account needed", "Share links"] },
-  { priceId: "operative_once" as const, name: "Operative", price: "$5 once", items: ["Account + lookup history", "Saved lists + CSV/JSON export", "Bulk: 5 domains per run"] },
+  { priceId: "operative_onetime" as const, name: "Operative", price: "$5 once", items: ["Account + lookup history", "Saved lists + CSV/JSON export", "Bulk: 5 domains per run"] },
   { priceId: "deep_recon_monthly" as const, name: "Deep Recon", price: "$10 / mo", items: ["Everything in Operative", "Firecrawl for blocked sites", "Browser checks on X / Instagram / LinkedIn", "Bulk: 25 per run"] },
   { priceId: "brand_command_monthly" as const, name: "Brand Command", price: "$20 / mo", items: ["Everything in Deep Recon", "Claim your domain", "Public verified brand page", "Weekly monitoring + alerts"] },
 ];

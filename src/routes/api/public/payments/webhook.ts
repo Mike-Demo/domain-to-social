@@ -47,7 +47,7 @@ async function grantOperative(session: Obj, env: StripeEnv) {
   if (session["mode"] !== "payment" || session["payment_status"] === "unpaid") return;
   const meta = (session["metadata"] ?? {}) as Obj;
   const userId = str(meta["userId"]);
-  if (!userId || meta["priceId"] !== "operative_once") return;
+  if (!userId || meta["priceId"] !== "operative_onetime") return;
   const db = await admin();
   await db
     .from("subscriptions")
