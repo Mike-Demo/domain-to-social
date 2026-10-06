@@ -26,7 +26,7 @@ export const Route = createFileRoute("/batch")({
 
 type Row = { input: string; ok: true; result: LookupResult } | { input: string; ok: false; error: string };
 
-const btn = "font-label-stamp text-label-stamp px-4 py-3 uppercase";
+const btn = "font-label-stamp text-label-stamp px-space-md py-space-sm uppercase";
 
 function BatchSniffer() {
   const { user, ready } = useAuth();

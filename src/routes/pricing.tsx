@@ -56,7 +56,7 @@ function Pricing() {
                 (user ? (
                   <button
                     onClick={() => setSelected(t.priceId)}
-                    className={`font-label-stamp text-label-stamp mt-auto px-4 py-3 uppercase ${i === 1 ? "bg-primary-container text-on-primary-container shadow-stamp" : "text-paper-distressed border-2 border-paper-distressed"}`}
+                    className={`font-label-stamp text-label-stamp mt-auto px-space-md py-space-sm uppercase ${i === 1 ? "bg-primary-container text-on-primary-container shadow-stamp" : "text-paper-distressed border-2 border-paper-distressed"}`}
                   >
                     Get {t.name}
                   </button>

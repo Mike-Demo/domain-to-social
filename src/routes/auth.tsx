@@ -19,7 +19,7 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const btn = "font-label-stamp text-label-stamp px-4 py-3 uppercase";
+const btn = "font-label-stamp text-label-stamp px-space-md py-space-sm uppercase";
 const input =
   "font-code-terminal text-code-terminal text-paper-distressed! p-space-sm border-2 border-outline-variant bg-grit-black! outline-none";
 

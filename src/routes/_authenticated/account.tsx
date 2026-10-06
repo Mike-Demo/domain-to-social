@@ -106,7 +106,7 @@ function Account() {
                 <button
                   onClick={addList}
                   disabled={!name.trim()}
-                  className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-2 uppercase"
+                  className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-space-md py-space-xs uppercase"
                 >
                   Create
                 </button>
@@ -114,7 +114,7 @@ function Account() {
               {err && <p className="font-code-terminal text-body-sm text-hazard-orange">{err}</p>}
               {data.lists.length === 0 && <p className="font-code-terminal text-body-sm text-on-surface-variant">No lists yet.</p>}
               {data.lists.map((l) => (
-                <div key={l.id} className="gap-space-sm flex items-center justify-between border-t-2 border-outline-variant pt-2">
+                <div key={l.id} className="gap-space-sm flex items-center justify-between border-t-2 border-outline-variant pt-space-sm">
                   <Link to="/lists/$id" params={{ id: l.id }} className="font-code-terminal text-paper-distressed underline">
                     {l.name} ({l.count})
                   </Link>
@@ -137,7 +137,7 @@ function Account() {
                 <p className="font-code-terminal text-body-sm text-on-surface-variant">Lookups you run while signed in show up here.</p>
               )}
               {data.history.map((h) => (
-                <div key={h.id} className="font-code-terminal text-code-terminal flex justify-between border-t-2 border-outline-variant pt-2">
+                <div key={h.id} className="font-code-terminal text-code-terminal flex justify-between border-t-2 border-outline-variant pt-space-sm">
                   <span className="text-paper-distressed break-all">{h.domain}</span>
                   <span className="text-on-surface-variant">{new Date(h.checked_at).toLocaleString()}</span>
                 </div>

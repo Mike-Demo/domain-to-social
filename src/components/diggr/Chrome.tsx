@@ -105,7 +105,7 @@ function AccountChip() {
   return (
     <Link
       to={signedIn ? "/account" : "/auth"}
-      className="gap-space-sm px-space-sm flex items-center border-2 border-primary-container bg-surface-high py-1 shadow-stamp-sm"
+      className="gap-space-sm px-space-sm py-space-xs flex items-center border-2 border-primary-container bg-surface-high shadow-stamp-sm"
     >
       <span aria-hidden className="material-symbols-outlined text-primary-container">
         {signedIn ? "badge" : "login"}
