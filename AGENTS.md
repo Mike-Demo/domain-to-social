@@ -17,3 +17,4 @@
 - Evidence strength is a computed label (strong/moderate/weak from counted signals via `rateEntry`), never a percentage. Why: honest, explainable confidence.
 - Share links are self-contained snapshots: the lookup result is deflate-compressed into the `/r#<token>` hash (`src/lib/social/share.ts`). Why: read-only, tamper-evident-by-design links with no backend storage.
 - Plan limits are enforced server-side via `entitlementsFor` in `src/lib/account/entitlements.ts`, read from the `subscriptions` table (written only by the payment webhook). Why: UI gating is never a security boundary.
+- Deep Recon enrichment calls Firecrawl only from `lookupDomain(url, { enrich })` via `firecrawl.server.ts`, and only when the plain fetch is blocked or finds no links; enrich is decided server-side from entitlements. Why: caps Firecrawl spend and keeps gating server-side.
