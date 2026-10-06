@@ -168,7 +168,7 @@ function Licenses() {
               rel="noopener noreferrer"
               className="text-primary-container underline underline-offset-4"
             >
-              GitHub
+              GitHub<span className="sr-only"> (opens in new tab)</span>
             </a>
             .
           </p>

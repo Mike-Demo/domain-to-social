@@ -125,7 +125,7 @@ export function MobileNav() {
           key={item.to}
           to={item.to}
           activeOptions={{ exact: item.to === "/" }}
-          className="font-label-stamp text-label-stamp text-on-surface-variant flex flex-1 flex-col items-center gap-1 py-2 uppercase"
+          className="font-label-stamp text-label-stamp text-on-surface-variant flex min-h-11 flex-1 flex-col items-center gap-1 py-2 uppercase"
           activeProps={{ className: "text-primary-container" }}
         >
           <span aria-hidden className="material-symbols-outlined text-headline-sm">

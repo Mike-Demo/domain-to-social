@@ -314,7 +314,7 @@ function RadarScanner() {
                     target="_blank"
                     rel="noreferrer noopener"
                   >
-                    {result.domain}
+                    {result.domain}<span className="sr-only"> (opens in new tab)</span>
                   </a>{" "}
                   // LAST CHECKED: {formatCheckedAt(result.checkedAt)}
                 </span>
