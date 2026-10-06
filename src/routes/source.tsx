@@ -115,6 +115,35 @@ function SourceBoard() {
             ))}
           </div>
         </div>
+
+        <footer className="p-space-md gap-space-md flex flex-col border-3 border-outline-variant bg-surface-low shadow-stamp-md">
+          <div className="gap-space-sm flex flex-wrap items-center justify-between">
+            <span className="font-label-stamp text-label-stamp text-primary-container uppercase">
+              CREDITS // SIGNAL LINKS
+            </span>
+            <span className="font-code-terminal text-body-sm text-on-surface-variant">
+              Made by MikeDemo · © {new Date().getFullYear()}
+            </span>
+          </div>
+          <nav aria-label="Social links" className="gap-space-md flex flex-wrap items-center">
+            {SOCIAL_LINKS.map((link) => {
+              const isExternal = /^https?:\/\//.test(link.href);
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
+                  aria-label={isExternal ? `${link.label} (opens in new tab)` : link.label}
+                  className="gap-space-xs font-code-terminal text-body-sm text-paper-distressed hover:text-acid-lime flex items-center"
+                >
+                  <WaIcon family="brands" name={link.icon} aria-hidden="true" />
+                  {link.text}
+                </a>
+              );
+            })}
+          </nav>
+        </footer>
       </section>
     </Shell>
   );
