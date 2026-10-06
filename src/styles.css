@@ -310,6 +310,7 @@
 
 @layer base {
   .diggr {
+    --wa-color-text-link: var(--color-cyber-cyan);
     background-color: var(--color-bg-deep);
     color: var(--color-on-surface);
     font-family: var(--font-body-md);
