@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { WaIcon } from "@/design-system/font-awsome-web-awesome-171158";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
 
 export const Route = createFileRoute("/source")({
