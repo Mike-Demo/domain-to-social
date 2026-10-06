@@ -1,9 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { WebAwesomeLoader } from "@/design-system/font-awsome-web-awesome-171158/webawesome/setup";
 import LOGO_SRC from "@/assets/favicon-src.png";
-const AVATAR_SRC =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBUloobL9HW88fEsYPyyZ9mkRAJfsP59UKsEGH5jF40d_qG89qUDowXCQZeR1iX6s3d7HOAhOhtA7n3hKkX8-FD5YLS8BmQ1wfE_pyVKhH85dYjHQWg6MyZP2rGkev19YjRlSuGkgZX9Uh7m61a-uApdg2azH6YAbV0ffvhRYHPBUP15XhFzCU8r3OosRtUPusWYpGAQCU-4znMHaygitcBms141w_AbCWDSE_BRTted3kQiP9hbUiILg";
 
 export const NAV_ITEMS = [
   { to: "/", label: "Radar Scanner", short: "Radar" },
@@ -11,6 +10,7 @@ export const NAV_ITEMS = [
   { to: "/adapters", label: "Awesome Framework", short: "Adapters" },
   { to: "/source", label: "Source", short: "Source" },
   { to: "/dossier", label: "Dossier Export", short: "Dossier" },
+  { to: "/pricing", label: "Pricing", short: "Pricing" },
 ] as const;
 
 export function Stamp({
@@ -92,18 +92,28 @@ export function Header() {
             <span className="font-code-terminal text-code-terminal text-on-surface-variant">QUICK_SNIFF</span>
             <kbd className="font-code-terminal bg-surface-highest text-on-surface px-1 py-0.5 text-micro">⌘K</kbd>
           </div>
-          <div className="gap-space-sm flex items-center border-2 border-primary-container bg-surface-high p-0.5 shadow-stamp-sm">
-            <img alt="Operator avatar" className="h-8 w-8 rounded-full object-cover" src={AVATAR_SRC} />
-            <div className="pr-space-xs hidden flex-col text-left lg:flex">
-              <span className="font-label-stamp text-label-stamp text-on-surface leading-none">OP_HEX</span>
-              <span className="font-code-terminal text-primary-container mt-0.5 text-micro leading-none uppercase">
-                RANK: DOXXER
-              </span>
-            </div>
-          </div>
+          <AccountChip />
         </div>
       </div>
     </header>
+  );
+}
+
+function AccountChip() {
+  const { user, ready } = useAuth();
+  const signedIn = ready && user;
+  return (
+    <Link
+      to={signedIn ? "/account" : "/auth"}
+      className="gap-space-sm px-space-sm flex items-center border-2 border-primary-container bg-surface-high py-1 shadow-stamp-sm"
+    >
+      <span aria-hidden className="material-symbols-outlined text-primary-container">
+        {signedIn ? "badge" : "login"}
+      </span>
+      <span className="font-label-stamp text-label-stamp text-on-surface hidden leading-none uppercase sm:inline">
+        {signedIn ? "Console" : "Sign in"}
+      </span>
+    </Link>
   );
 }
 

@@ -3,6 +3,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
 import { lookupSocials, searchBrand } from "@/lib/social/lookup.functions";
+import { saveLookup } from "@/lib/account/account.functions";
+import { useAuth } from "@/hooks/useAuth";
 import { allVerifiedTags, formatCheckedAt, looksLikeUrl } from "@/lib/social/format";
 import { buildShareUrl } from "@/lib/social/share";
 import { ProfileSlab, copyText } from "@/components/diggr/ProfileSlab";
@@ -41,6 +43,8 @@ function RadarScanner() {
   const [manualUrl, setManualUrl] = useState("");
   const lookupFn = useServerFn(lookupSocials);
   const searchFn = useServerFn(searchBrand);
+  const saveFn = useServerFn(saveLookup);
+  const { user } = useAuth();
 
   const [elapsed, setElapsed] = useState<number | null>(null);
 
@@ -48,7 +52,9 @@ function RadarScanner() {
     mutationFn: async (url) => {
       const started = performance.now();
       try {
-        return await lookupFn({ data: { url } });
+        const res = await lookupFn({ data: { url } });
+        if (user) void saveFn({ data: { result: res } }).catch(() => undefined);
+        return res;
       } finally {
         setElapsed((performance.now() - started) / 1000);
       }

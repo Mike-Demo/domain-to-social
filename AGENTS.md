@@ -16,3 +16,4 @@
 - qeeqbox/social-analyzer is reference-only, never a dependency; if a probe library is ever needed, prefer MIT Sherlock. Why: AGPL-3.0 conflicts with a hosted premium service, and it pulls Firefox/Selenium/tesseract.
 - Evidence strength is a computed label (strong/moderate/weak from counted signals via `rateEntry`), never a percentage. Why: honest, explainable confidence.
 - Share links are self-contained snapshots: the lookup result is deflate-compressed into the `/r#<token>` hash (`src/lib/social/share.ts`). Why: read-only, tamper-evident-by-design links with no backend storage.
+- Plan limits are enforced server-side via `entitlementsFor` in `src/lib/account/entitlements.ts`, read from the `subscriptions` table (written only by the payment webhook). Why: UI gating is never a security boundary.

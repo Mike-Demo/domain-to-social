@@ -10,22 +10,36 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AdaptersRouteImport } from './routes/adapters'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BatchRouteImport } from './routes/batch'
 import { Route as DossierRouteImport } from './routes/dossier'
 import { Route as LicensesRouteImport } from './routes/licenses'
 import { Route as OfflineRouteImport } from './routes/offline'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as RRouteImport } from './routes/r'
 import { Route as SourceRouteImport } from './routes/source'
+import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
+import { Route as AuthenticatedListsIdRouteImport } from './routes/_authenticated/lists.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdaptersRoute = AdaptersRouteImport.update({
   id: '/adapters',
   path: '/adapters',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BatchRoute = BatchRouteImport.update({
@@ -48,6 +62,11 @@ const OfflineRoute = OfflineRouteImport.update({
   path: '/offline',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RRoute = RRouteImport.update({
   id: '/r',
   path: '/r',
@@ -58,78 +77,117 @@ const SourceRoute = SourceRouteImport.update({
   path: '/source',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedListsIdRoute = AuthenticatedListsIdRouteImport.update({
+  id: '/lists/$id',
+  path: '/lists/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/adapters': typeof AdaptersRoute
+  '/auth': typeof AuthRoute
   '/batch': typeof BatchRoute
   '/dossier': typeof DossierRoute
   '/licenses': typeof LicensesRoute
   '/offline': typeof OfflineRoute
+  '/pricing': typeof PricingRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
+  '/account': typeof AuthenticatedAccountRoute
+  '/lists/$id': typeof AuthenticatedListsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/adapters': typeof AdaptersRoute
+  '/auth': typeof AuthRoute
   '/batch': typeof BatchRoute
   '/dossier': typeof DossierRoute
   '/licenses': typeof LicensesRoute
   '/offline': typeof OfflineRoute
+  '/pricing': typeof PricingRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
+  '/account': typeof AuthenticatedAccountRoute
+  '/lists/$id': typeof AuthenticatedListsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/adapters': typeof AdaptersRoute
+  '/auth': typeof AuthRoute
   '/batch': typeof BatchRoute
   '/dossier': typeof DossierRoute
   '/licenses': typeof LicensesRoute
   '/offline': typeof OfflineRoute
+  '/pricing': typeof PricingRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
+  '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/_authenticated/lists/$id': typeof AuthenticatedListsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/adapters'
+    | '/auth'
     | '/batch'
     | '/dossier'
     | '/licenses'
     | '/offline'
+    | '/pricing'
     | '/r'
     | '/source'
+    | '/account'
+    | '/lists/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/adapters'
+    | '/auth'
     | '/batch'
     | '/dossier'
     | '/licenses'
     | '/offline'
+    | '/pricing'
     | '/r'
     | '/source'
+    | '/account'
+    | '/lists/$id'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/adapters'
+    | '/auth'
     | '/batch'
     | '/dossier'
     | '/licenses'
     | '/offline'
+    | '/pricing'
     | '/r'
     | '/source'
+    | '/_authenticated/account'
+    | '/_authenticated/lists/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AdaptersRoute: typeof AdaptersRoute
+  AuthRoute: typeof AuthRoute
   BatchRoute: typeof BatchRoute
   DossierRoute: typeof DossierRoute
   LicensesRoute: typeof LicensesRoute
   OfflineRoute: typeof OfflineRoute
+  PricingRoute: typeof PricingRoute
   RRoute: typeof RRoute
   SourceRoute: typeof SourceRoute
 }
@@ -143,11 +201,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/adapters': {
       id: '/adapters'
       path: '/adapters'
       fullPath: '/adapters'
       preLoaderRoute: typeof AdaptersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/batch': {
@@ -178,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OfflineRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/r': {
       id: '/r'
       path: '/r'
@@ -192,16 +271,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SourceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/account': {
+      id: '/_authenticated/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AuthenticatedAccountRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/lists/$id': {
+      id: '/_authenticated/lists/$id'
+      path: '/lists/$id'
+      fullPath: '/lists/$id'
+      preLoaderRoute: typeof AuthenticatedListsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
+  AuthenticatedListsIdRoute: typeof AuthenticatedListsIdRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  AuthenticatedListsIdRoute: AuthenticatedListsIdRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AdaptersRoute: AdaptersRoute,
+  AuthRoute: AuthRoute,
   BatchRoute: BatchRoute,
   DossierRoute: DossierRoute,
   LicensesRoute: LicensesRoute,
   OfflineRoute: OfflineRoute,
+  PricingRoute: PricingRoute,
   RRoute: RRoute,
   SourceRoute: SourceRoute,
 }
