@@ -55,6 +55,19 @@ const BOUNTIES = [
   },
 ];
 
+const SOCIAL_LINKS = [
+  { label: "Open source page", href: "/licenses", icon: "github", text: "Open Source" },
+  { label: "MikeDemo on LinkedIn", href: "https://www.linkedin.com/in/mikedemopoulos", icon: "linkedin", text: "LinkedIn" },
+  { label: "MikeDemo on X", href: "https://x.com/mike_demo", icon: "x-twitter", text: "X" },
+  {
+    label: "@demo on tweet.app",
+    href: "https://app.tweet.app/post/92206629-1525-4a74-8f51-39e226fc9e75",
+    icon: "twitter",
+    text: "tweet.app",
+  },
+  { label: "MikeDemo on Threads", href: "https://www.threads.com/@mdemop", icon: "threads", text: "Threads" },
+] as const;
+
 function SourceBoard() {
   return (
     <Shell>
