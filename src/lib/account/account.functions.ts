@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequestHeaders } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Json } from "@/integrations/supabase/types";
@@ -8,8 +9,20 @@ import type { LookupResult } from "@/lib/social/types";
 type Ctx = { supabase: import("@supabase/supabase-js").SupabaseClient<import("@/integrations/supabase/types").Database>; userId: string };
 
 async function loadEntitlements({ supabase, userId }: Ctx): Promise<Entitlements> {
-  const { data } = await supabase.from("subscriptions").select("plan,status").eq("user_id", userId).maybeSingle();
-  const plan: PlanTier = data && data.status === "active" ? data.plan : "free";
+  const { stripeEnvForHost } = await import("@/lib/stripe.server");
+  const env = stripeEnvForHost(getRequestHeaders().get("host"));
+  const { data } = await supabase
+    .from("subscriptions")
+    .select("plan,status,current_period_end,operative_lifetime")
+    .eq("user_id", userId)
+    .eq("environment", env)
+    .maybeSingle();
+  if (!data) return entitlementsFor("free");
+  const periodOk = !data.current_period_end || new Date(data.current_period_end) > new Date();
+  const subActive =
+    (["active", "trialing", "past_due"].includes(data.status) && periodOk) ||
+    (data.status === "canceled" && !!data.current_period_end && periodOk);
+  const plan: PlanTier = subActive && data.plan !== "free" ? data.plan : data.operative_lifetime ? "operative" : "free";
   return entitlementsFor(plan);
 }
 
