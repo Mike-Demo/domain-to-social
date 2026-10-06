@@ -72,7 +72,13 @@ export const createPortalSession = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => z.object({ returnUrl: z.string().url().max(500) }).parse(d))
   .handler(async ({ data, context }): Promise<{ url: string } | { error: string }> => {
     const { createStripeClient, getStripeErrorMessage, stripeEnvForHost } = await import("@/lib/stripe.server");
-    const env = stripeEnvForHost(getRequestHeaders().get("host"));
+    const host = getRequestHeaders().get("host");
+    const env = stripeEnvForHost(host);
+    const requested = new URL(data.returnUrl);
+    const returnUrl =
+      host && requested.host === host && requested.protocol === "https:"
+        ? requested.toString()
+        : `https://${host ?? "magicmanta.com"}/account`;
     const { data: sub } = await context.supabase
       .from("subscriptions")
       .select("stripe_customer_id")
@@ -83,7 +89,7 @@ export const createPortalSession = createServerFn({ method: "POST" })
     try {
       const portal = await createStripeClient(env).billingPortal.sessions.create({
         customer: sub.stripe_customer_id,
-        return_url: data.returnUrl,
+        return_url: returnUrl,
       });
       return { url: portal.url };
     } catch (error) {
