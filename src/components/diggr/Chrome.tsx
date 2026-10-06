@@ -151,7 +151,7 @@ export function Shell({ children }: { children: ReactNode }) {
     <div className="diggr min-h-dvh selection:bg-primary-container selection:text-on-primary-container">
       <WebAwesomeLoader />
       <Header />
-      <main className="min-h-dvh w-full pt-28 pb-20 xl:pb-0">{children}</main>
+      <main className="min-h-dvh w-full pt-32 pb-20 xl:pb-0">{children}</main>
       <MobileNav />
     </div>
   );
