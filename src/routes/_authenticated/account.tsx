@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { createList, deleteList, getMyAccount } from "@/lib/account/account.functions";
+import { createPortalSession } from "@/lib/account/payments.functions";
 import { PLAN_LABEL } from "@/lib/account/entitlements";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
 
@@ -28,6 +29,7 @@ function Account() {
   const fetchAccount = useServerFn(getMyAccount);
   const create = useServerFn(createList);
   const remove = useServerFn(deleteList);
+  const portal = useServerFn(createPortalSession);
   const qc = useQueryClient();
   const navigate = useNavigate();
   const { data, error } = useQuery({ queryKey: ["account"], queryFn: () => fetchAccount() });
@@ -72,9 +74,21 @@ function Account() {
               <span className="font-headline text-headline-sm text-primary-container uppercase">
                 {PLAN_LABEL[data.entitlements.plan]}
               </span>
-              {data.entitlements.plan === "free" && (
+              {data.entitlements.plan !== "free" && (
+                <button
+                  onClick={async () => {
+                    const r = await portal({ data: { returnUrl: window.location.href } });
+                    if ("error" in r) setErr(r.error);
+                    else window.open(r.url, "_blank");
+                  }}
+                  className="font-code-terminal text-cyber-cyan text-left underline"
+                >
+                  Manage billing →
+                </button>
+              )}
+              {data.entitlements.plan !== "brand_command" && (
                 <Link to="/pricing" className="font-code-terminal text-cyber-cyan underline">
-                  Upgrade to unlock saved lists and bulk sweeps →
+                  Upgrade your plan →
                 </Link>
               )}
             </div>
