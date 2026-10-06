@@ -76,7 +76,7 @@ export const createPortalSession = createServerFn({ method: "POST" })
     const env = stripeEnvForHost(host);
     const requested = new URL(data.returnUrl);
     const returnUrl =
-      host && requested.host === host && requested.protocol === "https:"
+      host && requested.host === host && (requested.protocol === "https:" || host.startsWith("localhost"))
         ? requested.toString()
         : `https://${host ?? "magicmanta.com"}/account`;
     const { data: sub } = await context.supabase
