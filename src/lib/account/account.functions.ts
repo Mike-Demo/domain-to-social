@@ -57,6 +57,13 @@ export const getMyAccount = createServerFn({ method: "GET" })
     ]);
     return {
       entitlements: ent,
+      subscription: sub
+        ? {
+            status: sub.status,
+            currentPeriodEnd: sub.current_period_end,
+            cancelAtPeriodEnd: sub.cancel_at_period_end,
+          }
+        : null,
       history: history ?? [],
       lists: (lists ?? []).map((l) => ({
         id: l.id,
