@@ -67,6 +67,23 @@ function Account() {
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-lg mx-auto flex max-w-5xl flex-col">
         <h1 className="font-headline text-headline-lg text-paper-distressed uppercase">Operator console</h1>
         {error && <p className="font-code-terminal text-hazard-orange">{error.message}</p>}
+        {data?.subscription?.status === "past_due" && (
+          <div className="p-space-md border-3 border-hazard-orange bg-hazard-orange/10">
+            <p className="font-headline text-headline-sm text-hazard-orange uppercase">Payment failed</p>
+            <p className="font-code-terminal text-body-sm text-paper-distressed">
+              Your last renewal payment didn't go through. We'll keep retrying for a few days and your features stay on
+              in the meantime — update your card via "Manage billing" to avoid losing access.
+            </p>
+          </div>
+        )}
+        {data?.subscription?.cancelAtPeriodEnd && data.subscription.currentPeriodEnd && (
+          <div className="p-space-md border-3 border-outline-variant bg-slate-charcoal">
+            <p className="font-code-terminal text-body-sm text-on-surface-variant">
+              Your plan is set to cancel — you keep access until{" "}
+              {new Date(data.subscription.currentPeriodEnd).toLocaleDateString()}.
+            </p>
+          </div>
+        )}
         {data && (
           <>
             <div className={panel}>

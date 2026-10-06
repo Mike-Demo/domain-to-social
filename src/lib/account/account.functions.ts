@@ -8,15 +8,27 @@ import type { LookupResult } from "@/lib/social/types";
 
 type Ctx = { supabase: import("@supabase/supabase-js").SupabaseClient<import("@/integrations/supabase/types").Database>; userId: string };
 
-async function loadEntitlements({ supabase, userId }: Ctx): Promise<Entitlements> {
+interface SubRow {
+  plan: PlanTier;
+  status: string;
+  current_period_end: string | null;
+  operative_lifetime: boolean;
+  cancel_at_period_end: boolean;
+}
+
+async function loadSubscription({ supabase, userId }: Ctx): Promise<SubRow | null> {
   const { stripeEnvForHost } = await import("@/lib/stripe.server");
   const env = stripeEnvForHost(getRequestHeaders().get("host"));
   const { data } = await supabase
     .from("subscriptions")
-    .select("plan,status,current_period_end,operative_lifetime")
+    .select("plan,status,current_period_end,operative_lifetime,cancel_at_period_end")
     .eq("user_id", userId)
     .eq("environment", env)
     .maybeSingle();
+  return data;
+}
+
+function entitlementsFromSub(data: SubRow | null): Entitlements {
   if (!data) return entitlementsFor("free");
   const periodOk = !data.current_period_end || new Date(data.current_period_end) > new Date();
   const subActive =
@@ -26,6 +38,10 @@ async function loadEntitlements({ supabase, userId }: Ctx): Promise<Entitlements
   return entitlementsFor(plan);
 }
 
+async function loadEntitlements(ctx: Ctx): Promise<Entitlements> {
+  return entitlementsFromSub(await loadSubscription(ctx));
+}
+
 async function requireLists(ctx: Ctx): Promise<void> {
   if (!(await loadEntitlements(ctx)).savedLists) throw new Error("Saved lists need the Operative plan.");
 }
@@ -33,13 +49,21 @@ async function requireLists(ctx: Ctx): Promise<void> {
 export const getMyAccount = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const ent = await loadEntitlements(context);
+    const sub = await loadSubscription(context);
+    const ent = entitlementsFromSub(sub);
     const [{ data: history }, { data: lists }] = await Promise.all([
       context.supabase.from("lookups").select("id,domain,checked_at").order("checked_at", { ascending: false }).limit(50),
       context.supabase.from("lists").select("id,name,created_at,list_items(count)").order("created_at", { ascending: false }),
     ]);
     return {
       entitlements: ent,
+      subscription: sub
+        ? {
+            status: sub.status,
+            currentPeriodEnd: sub.current_period_end,
+            cancelAtPeriodEnd: sub.cancel_at_period_end,
+          }
+        : null,
       history: history ?? [],
       lists: (lists ?? []).map((l) => ({
         id: l.id,
