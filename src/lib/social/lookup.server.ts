@@ -393,6 +393,8 @@ export interface LookupOptions {
   browserAgent?: boolean;
   /** Records a live-browser run against the caller's daily cap; false = cap reached. */
   reserveBrowserRun?: (domain: string) => Promise<boolean>;
+  /** Records a paid page render against the caller's monthly cap; false = cap reached. */
+  reserveEnrichment?: (domain: string) => Promise<boolean>;
 }
 
 export async function lookupDomain(input: string, opts: LookupOptions = {}): Promise<LookupResult> {
@@ -408,7 +410,16 @@ export async function lookupDomain(input: string, opts: LookupOptions = {}): Pro
     : { findings: [] as RawFinding[], brandName: domain.split(".")[0] ?? domain };
 
   let enrichment: LookupResult["enrichment"];
-  if (opts.enrich && (!page || findings.length === 0)) {
+  // One reservation per lookup covers every paid render/search it makes.
+  let enrichGranted: boolean | undefined;
+  const canEnrich = async (): Promise<boolean> => {
+    if (!opts.enrich) return false;
+    if (enrichGranted === undefined) enrichGranted = opts.reserveEnrichment ? await opts.reserveEnrichment(domain) : true;
+    return enrichGranted;
+  };
+  if (opts.enrich && (!page || findings.length === 0) && !(await canEnrich())) {
+    enrichment = { via: "firecrawl", used: false, reason: "monthly enriched-lookup allowance used up" };
+  } else if (opts.enrich && (!page || findings.length === 0)) {
     const { firecrawlScrape } = await import("./firecrawl.server");
     const reason = page ? "no social links in plain HTML" : "site blocked plain visit";
     const fc = await firecrawlScrape(page?.finalUrl ?? url);
@@ -470,7 +481,7 @@ export async function lookupDomain(input: string, opts: LookupOptions = {}): Pro
   const verified = groupFindings(findings, checkedAt);
   const found = new Set(verified.map((v) => v.platformId));
   const missing = PLATFORMS.map((p) => p.id).filter((id) => !found.has(id));
-  const searched = await fallbackSearch(missing, brandName, domain, checkedAt, opts.enrich === true);
+  const searched = await fallbackSearch(missing, brandName, domain, checkedAt, missing.length > 0 && (await canEnrich()));
   const searchedIds = new Set(searched.map((r) => r.platformId));
   const probed = await probePlatforms(
     missing.filter((id) => !searchedIds.has(id)),
