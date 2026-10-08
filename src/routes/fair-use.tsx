@@ -33,7 +33,7 @@ function FairUse() {
   return (
     <Shell>
       <SubHeader badge="FAIR USE" note="// KEEP THE MANTA FED, NOT FLOODED //" />
-      <article className="px-margin-mobile sm:px-margin py-space-xl gap-space-md mx-auto flex max-w-3xl flex-col font-code-terminal text-body-md text-paper-distressed">
+      <article className="px-margin-mobile sm:px-margin py-space-xl gap-space-md mx-auto flex max-w-md flex-col font-code-terminal text-body-md text-paper-distressed">
         <h1 className="font-headline text-headline-md uppercase">Fair use policy</h1>
         <p>
           M4G1C M4NT4 is built for people finding and tagging brand accounts. Some checks cost us real money per page, so
