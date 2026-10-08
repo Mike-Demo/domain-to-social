@@ -2,14 +2,14 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import type Stripe from "stripe";
 import { z } from "zod";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { requireMfaAuth } from "./mfa-middleware";
 
 export const PRICE_IDS = ["operative_onetime", "deep_recon_monthly", "brand_command_monthly"] as const;
 
 type CheckoutResult = { clientSecret: string } | { error: string };
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireMfaAuth])
   .inputValidator((d: unknown) =>
     z.object({ priceId: z.enum(PRICE_IDS), returnUrl: z.string().url().max(500) }).parse(d),
   )
@@ -68,7 +68,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
   });
 
 export const createPortalSession = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireMfaAuth])
   .inputValidator((d: unknown) => z.object({ returnUrl: z.string().url().max(500) }).parse(d))
   .handler(async ({ data, context }): Promise<{ url: string } | { error: string }> => {
     const { createStripeClient, getStripeErrorMessage, stripeEnvForHost } = await import("@/lib/stripe.server");

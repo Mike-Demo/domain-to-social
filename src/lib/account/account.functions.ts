@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { z } from "zod";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { requireMfaAuth } from "./mfa-middleware";
 import type { Json } from "@/integrations/supabase/types";
-import { browserRunAllowed, entitlementsFor, type Entitlements, type PlanTier } from "./entitlements";
+import { browserRunAllowed, enrichmentAllowed, entitlementsFor, type Entitlements, type PlanTier } from "./entitlements";
 import type { LookupResult } from "@/lib/social/types";
 
 type Ctx = { supabase: import("@supabase/supabase-js").SupabaseClient<import("@/integrations/supabase/types").Database>; userId: string };
@@ -50,9 +50,29 @@ function browserReserver(ctx: Ctx): (domain: string) => Promise<boolean> {
       .from("browser_runs")
       .select("id", { count: "exact", head: true })
       .eq("user_id", ctx.userId)
+      .not("domain", "like", `${ENRICH_PREFIX}%`)
       .gte("run_at", since);
     if (!browserRunAllowed(count ?? 0)) return false;
     const { error } = await ctx.supabase.from("browser_runs").insert({ user_id: ctx.userId, domain });
+    return !error;
+  };
+}
+
+// Paid page renders are logged in the same append-only usage log as browser runs, tagged with this prefix.
+const ENRICH_PREFIX = "enrich:";
+
+/** Server-side rolling 30-day cap on paid page renders; logs the run when allowed. */
+function enrichmentReserver(ctx: Ctx, plan: PlanTier): (domain: string) => Promise<boolean> {
+  return async (domain) => {
+    const since = new Date(Date.now() - 30 * 86_400_000).toISOString();
+    const { count } = await ctx.supabase
+      .from("browser_runs")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", ctx.userId)
+      .like("domain", `${ENRICH_PREFIX}%`)
+      .gte("run_at", since);
+    if (!enrichmentAllowed(plan, count ?? 0)) return false;
+    const { error } = await ctx.supabase.from("browser_runs").insert({ user_id: ctx.userId, domain: `${ENRICH_PREFIX}${domain}` });
     return !error;
   };
 }
@@ -62,7 +82,7 @@ async function requireLists(ctx: Ctx): Promise<void> {
 }
 
 export const getMyAccount = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireMfaAuth])
   .handler(async ({ context }) => {
     const sub = await loadSubscription(context);
     const ent = entitlementsFromSub(sub);
@@ -90,7 +110,7 @@ export const getMyAccount = createServerFn({ method: "GET" })
   });
 
 export const saveLookup = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireMfaAuth])
   .inputValidator((d: { result: LookupResult }) => d)
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.from("lookups").insert({
@@ -103,7 +123,7 @@ export const saveLookup = createServerFn({ method: "POST" })
   });
 
 export const createList = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireMfaAuth])
   .inputValidator((d: unknown) => z.object({ name: z.string().trim().min(1).max(80) }).parse(d))
   .handler(async ({ data, context }) => {
     await requireLists(context);
@@ -117,7 +137,7 @@ export const createList = createServerFn({ method: "POST" })
   });
 
 export const deleteList = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireMfaAuth])
   .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     await context.supabase.from("lists").delete().eq("id", data.id);
@@ -125,7 +145,7 @@ export const deleteList = createServerFn({ method: "POST" })
   });
 
 export const addToList = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireMfaAuth])
   .inputValidator((d: { listId: string; results: LookupResult[] }) => d)
   .handler(async ({ data, context }) => {
     await requireLists(context);
@@ -141,7 +161,7 @@ export const addToList = createServerFn({ method: "POST" })
   });
 
 export const getList = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireMfaAuth])
   .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { data: list } = await context.supabase.from("lists").select("id,name").eq("id", data.id).maybeSingle();
@@ -176,17 +196,17 @@ function assertMemberQuota(userId: string, sites: number): void {
 
 /** Signed-in single lookup: Deep Recon plans get Firecrawl enrichment, others get the standard lookup. */
 export const memberLookup = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireMfaAuth])
   .inputValidator((d: unknown) => z.object({ url: z.string().trim().min(3).max(500) }).parse(d))
   .handler(async ({ data, context }) => {
     assertMemberQuota(context.userId, 1);
     const ent = await loadEntitlements(context);
     const { lookupDomain } = await import("@/lib/social/lookup.server");
-    return lookupDomain(data.url, { enrich: ent.enrichment, browserAgent: ent.browserAgent, reserveBrowserRun: browserReserver(context) });
+    return lookupDomain(data.url, { enrich: ent.enrichment, browserAgent: ent.browserAgent, reserveBrowserRun: browserReserver(context), reserveEnrichment: enrichmentReserver(context, ent.plan) });
   });
 
 export const runBatch = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireMfaAuth])
   .inputValidator((d: unknown) => z.object({ urls: z.array(z.string().trim().min(3).max(500)).min(1).max(25) }).parse(d))
   .handler(async ({ data, context }) => {
     const ent = await loadEntitlements(context);
@@ -194,7 +214,7 @@ export const runBatch = createServerFn({ method: "POST" })
     if (data.urls.length > ent.batchSize) throw new Error(`Your plan allows ${ent.batchSize} domains per run.`);
     assertMemberQuota(context.userId, data.urls.length);
     const { lookupDomain } = await import("@/lib/social/lookup.server");
-    const settled = await Promise.allSettled(data.urls.map((u) => lookupDomain(u, { enrich: ent.enrichment, browserAgent: ent.browserAgent, reserveBrowserRun: browserReserver(context) })));
+    const settled = await Promise.allSettled(data.urls.map((u) => lookupDomain(u, { enrich: ent.enrichment, browserAgent: ent.browserAgent, reserveBrowserRun: browserReserver(context), reserveEnrichment: enrichmentReserver(context, ent.plan) })));
     const out = settled.map((s, i) =>
       s.status === "fulfilled"
         ? { input: data.urls[i] ?? "", ok: true as const, result: s.value }
