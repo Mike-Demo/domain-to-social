@@ -107,6 +107,11 @@ function Dossier() {
         right={<span>[CLASSIFICATION: OPEN SOURCE]</span>}
       />
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-lg mx-auto flex max-w-4xl flex-col">
+        {!result && (
+          <h1 className="font-display-hero text-display-hero-mobile text-paper-distressed leading-none uppercase">
+            Dossier Lookup
+          </h1>
+        )}
         <form
           className="gap-space-sm flex flex-wrap"
           onSubmit={(e) => {
