@@ -10,6 +10,7 @@ import { buildShareUrl } from "@/lib/social/share";
 import { ProfileSlab, copyText } from "@/components/diggr/ProfileSlab";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
 import { FAQS, HOWTO_STEPS, HomeGuide, PLAIN_INTRO } from "@/components/diggr/HomeGuide";
+import { WebMcpTools } from "@/components/diggr/WebMcpTools";
 import type { DomainCandidate, LookupResult } from "@/lib/social/types";
 
 export const Route = createFileRoute("/")({
