@@ -130,7 +130,7 @@ function Pricing() {
                   <li key={x}>&gt; {x}</li>
                 ))}
               </ul>
-              <div className="mt-auto flex min-h-[var(--wa-form-control-height)] w-full min-w-0 items-end">
+              <div className="mt-auto flex w-full min-w-0 items-end">
                 {action(t)}
               </div>
             </div>

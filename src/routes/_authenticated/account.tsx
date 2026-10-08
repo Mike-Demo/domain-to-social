@@ -132,7 +132,7 @@ function Account() {
                       }
                       window.location.assign(r.url);
                     }}
-                    className="font-code-terminal text-cyber-cyan text-left underline disabled:opacity-50"
+                    className="font-code-terminal text-cyber-cyan text-left underline"
                   >
                     {portalBusy ? "Opening billing…" : "Manage billing →"}
                   </button>
