@@ -57,6 +57,7 @@ const BOUNTIES = [
 
 const SOCIAL_LINKS = [
   { label: "Open source page", href: "/licenses", icon: "github", text: "Open Source" },
+  { label: "Fair use policy", href: "/fair-use", icon: "scale-balanced", text: "Fair Use" },
   { label: "MikeDemo on LinkedIn", href: "https://www.linkedin.com/in/mikedemopoulos", icon: "linkedin", text: "LinkedIn" },
   { label: "MikeDemo on X", href: "https://x.com/mike_demo", icon: "x-twitter", text: "X" },
   {
