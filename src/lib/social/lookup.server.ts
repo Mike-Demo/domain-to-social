@@ -415,10 +415,25 @@ export async function lookupDomain(input: string, opts: LookupOptions = {}): Pro
       findings = ex.findings.map((f) => ({ ...f, evidence: `${f.evidence} (via Firecrawl render)` }));
       brandName = ex.brandName;
       page = { text: fc.html, finalUrl: fc.finalUrl };
+      // Still nothing on the homepage: check up to two about/contact-style subpages.
+      const subpagesChecked: string[] = [];
+      if (findings.length === 0) {
+        const { pickSocialSubpages } = await import("./firecrawl.server");
+        const subs = pickSocialSubpages(fc.links, domain).filter(isPublicHttpUrl);
+        const pages = await Promise.all(subs.map((s) => firecrawlScrape(s)));
+        pages.forEach((sp, i) => {
+          if (!sp) return;
+          subpagesChecked.push(subs[i] ?? sp.finalUrl);
+          const sl = sp.links.map((l) => `<a href="${l.replace(/"/g, "&quot;")}"></a>`).join("");
+          const sx = extractFromHtml(`${sp.html}<div>${sl}</div>`, sp.finalUrl, domain);
+          const path = new URL(sp.finalUrl).pathname;
+          findings.push(...sx.findings.map((f) => ({ ...f, evidence: `${f.evidence} (on ${path}, via Firecrawl)` })));
+        });
+      }
       enrichment = {
         via: "firecrawl",
         used: true,
-        reason,
+        reason: subpagesChecked.length ? `${reason}; also checked ${subpagesChecked.length} subpage(s)` : reason,
         logo: fc.branding?.logo,
         description: fc.description,
         colors: fc.branding?.colors ? Object.values(fc.branding.colors).slice(0, 6) : undefined,
@@ -431,7 +446,7 @@ export async function lookupDomain(input: string, opts: LookupOptions = {}): Pro
   const verified = groupFindings(findings, checkedAt);
   const found = new Set(verified.map((v) => v.platformId));
   const missing = PLATFORMS.map((p) => p.id).filter((id) => !found.has(id));
-  const searched = await fallbackSearch(missing, brandName, domain, checkedAt);
+  const searched = await fallbackSearch(missing, brandName, domain, checkedAt, opts.enrich === true);
   const searchedIds = new Set(searched.map((r) => r.platformId));
   const probed = await probePlatforms(
     missing.filter((id) => !searchedIds.has(id)),
