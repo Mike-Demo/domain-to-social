@@ -50,6 +50,7 @@ export const Route = createFileRoute("/")({
               url: "https://magicmanta.com/",
               logo: "https://magicmanta.com/icon-512.png",
               contactPoint: { "@type": "ContactPoint", email: "support-magicmanta@agentmail.to", contactType: "customer support", url: "https://magicmanta.com/contact" },
+              sameAs: ["https://www.linkedin.com/in/mikedemopoulos", "https://x.com/mike_demo", "https://www.threads.com/@mdemop"],
               founder: { "@type": "Person", name: "MikeDemo", url: "https://mikedemo.com", sameAs: ["https://www.linkedin.com/in/mikedemopoulos", "https://x.com/mike_demo", "https://www.threads.com/@mdemop"] },
             },
             {

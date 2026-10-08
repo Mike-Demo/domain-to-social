@@ -14,3 +14,5 @@ User-agent: *
 Allow: /
 
 Sitemap: https://magicmanta.com/sitemap.xml
+
+schemamap: https://magicmanta.com/schemamap.xml
