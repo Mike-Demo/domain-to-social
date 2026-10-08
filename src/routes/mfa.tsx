@@ -6,6 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { BackupCodes } from "@/components/diggr/BackupCodes";
 import { generateRecoveryCodes, redeemRecoveryCode } from "@/lib/account/recovery.functions";
 import { safeNext } from "./auth";
+import { isAgentIdUser } from "@/lib/account/mfa";
 
 export const Route = createFileRoute("/mfa")({
   ssr: false,
@@ -53,6 +54,8 @@ function MfaPage() {
     {
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) return void navigate({ to: "/auth", search: next ? { next: `/mfa?next=${encodeURIComponent(next)}` } : {} });
+      // AgentID sign-ins skip the authenticator-app step entirely.
+      if (isAgentIdUser(u.user)) return done();
       const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
       if (aal?.currentLevel === "aal2") return done();
       const { data: factors, error } = await supabase.auth.mfa.listFactors();
