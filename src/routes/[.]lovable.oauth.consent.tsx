@@ -47,7 +47,7 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
   errorComponent: ({ error }) => (
     <Shell>
       <main className="p-space-md font-code-terminal text-hazard-orange">
-        Could not load this request: {error.message}
+        Could not load this request: {String((error as Error).message)}
       </main>
     </Shell>
   ),
