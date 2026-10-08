@@ -496,6 +496,7 @@ export async function lookupDomain(input: string, opts: LookupOptions = {}): Pro
     notFound: PLATFORMS.filter((p) => !allFound.has(p.id)).map((p) => p.name),
     blocked: !page,
     ...(enrichment ? { enrichment } : {}),
+    ...(browserUse ? { browserUse } : {}),
   };
 }
 
