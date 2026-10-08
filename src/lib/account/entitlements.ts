@@ -5,6 +5,19 @@ const RANK: Record<PlanTier, number> = { free: 0, operative: 1, deep_recon: 2, b
 /** Daily cap on live-browser (Browser Use) fallback runs per account. */
 export const BROWSER_RUNS_PER_DAY = 20;
 
+/** Monthly cap on paid page-render (Firecrawl) lookups, by plan. 0 = no access. */
+export const ENRICHED_LOOKUPS_PER_MONTH: Record<PlanTier, number> = {
+  free: 0,
+  operative: 0,
+  deep_recon: 300,
+  brand_command: 1000,
+};
+
+/** True when another enriched lookup fits in the plan's rolling 30-day allowance. */
+export function enrichmentAllowed(plan: PlanTier, usedLast30d: number): boolean {
+  return usedLast30d < ENRICHED_LOOKUPS_PER_MONTH[plan];
+}
+
 export interface Entitlements {
   plan: PlanTier;
   savedLists: boolean;
