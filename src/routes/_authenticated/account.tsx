@@ -6,6 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { createList, deleteList, getMyAccount } from "@/lib/account/account.functions";
 import { createPortalSession } from "@/lib/account/payments.functions";
 import { PLAN_LABEL } from "@/lib/account/entitlements";
+import { generateRecoveryCodes, recoveryCodeStatus } from "@/lib/account/recovery.functions";
+import { BackupCodes } from "@/components/diggr/BackupCodes";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
 
 export const Route = createFileRoute("/_authenticated/account")({
@@ -35,6 +37,10 @@ function Account() {
   const { data, error } = useQuery({ queryKey: ["account"], queryFn: () => fetchAccount() });
   const [name, setName] = useState("");
   const [err, setErr] = useState<string | null>(null);
+  const fetchRecovery = useServerFn(recoveryCodeStatus);
+  const makeCodes = useServerFn(generateRecoveryCodes);
+  const recovery = useQuery({ queryKey: ["recovery"], queryFn: () => fetchRecovery() });
+  const [newCodes, setNewCodes] = useState<string[] | null>(null);
 
   async function addList() {
     setErr(null);
@@ -107,6 +113,34 @@ function Account() {
                 <Link to="/pricing" className="font-code-terminal text-cyber-cyan underline">
                   Upgrade your plan →
                 </Link>
+              )}
+            </div>
+
+            <div className={panel}>
+              <h2 className="font-headline text-headline-sm text-paper-distressed uppercase">Two-factor backup codes</h2>
+              {newCodes ? (
+                <BackupCodes codes={newCodes} onDone={() => setNewCodes(null)} />
+              ) : (
+                <>
+                  <p className="font-code-terminal text-body-sm text-on-surface-variant">
+                    {recovery.data ? `${recovery.data.remaining} unused backup code(s) left.` : "Checking backup codes…"} Making new
+                    codes cancels the old ones.
+                  </p>
+                  <button
+                    onClick={async () => {
+                      setErr(null);
+                      try {
+                        setNewCodes((await makeCodes()).codes);
+                        await qc.invalidateQueries({ queryKey: ["recovery"] });
+                      } catch (e) {
+                        setErr(e instanceof Error ? e.message : "Failed");
+                      }
+                    }}
+                    className="font-code-terminal text-cyber-cyan text-left underline"
+                  >
+                    Make new backup codes →
+                  </button>
+                </>
               )}
             </div>
 
