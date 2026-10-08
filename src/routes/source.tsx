@@ -81,15 +81,16 @@ function SourceBoard() {
         <h1 className="font-display-hero text-display-hero-mobile lg:text-display-hero text-paper-distressed leading-none uppercase">
           <span className="text-on-primary-container inline-block -rotate-2 bg-acid-lime px-2 shadow-stamp-magenta">
             SOURCE
-          </span>
+          </span>{" "}
+          <span className="text-headline-lg align-middle">— Leaderboard and Bounties</span>
         </h1>
 
         <div className="gap-space-lg grid lg:grid-cols-2">
           <div className="border-3 border-primary-container bg-surface-low shadow-stamp-lg">
             <div className="p-space-md border-b-2 border-outline-variant">
-              <span className="font-label-stamp text-label-stamp text-primary-container uppercase">
+              <h2 className="font-label-stamp text-label-stamp text-primary-container uppercase">
                 TOP DIGGERS // CONFIRMED HANDLES
-              </span>
+              </h2>
             </div>
             {BOARD.map((r) => (
               <div
@@ -113,7 +114,7 @@ function SourceBoard() {
           </div>
 
           <div className="gap-space-md flex flex-col">
-            <span className="font-label-stamp text-label-stamp text-hazard-orange uppercase">OPEN BOUNTIES</span>
+            <h2 className="font-label-stamp text-label-stamp text-hazard-orange uppercase">OPEN BOUNTIES</h2>
             {BOUNTIES.map((b) => (
               <div
                 key={b.target}

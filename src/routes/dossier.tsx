@@ -55,7 +55,7 @@ function Dossier() {
           <div className="flex flex-wrap items-start justify-between gap-4 border-b-2 border-grit-black pb-4">
             <div>
               <p className="font-label-stamp text-label-stamp uppercase">INTEL SHEET // TARGET</p>
-              <h1 className="font-display-hero text-headline-lg uppercase">{SHEET.target}</h1>
+              <h1 className="font-display-hero text-headline-lg uppercase">{SHEET.target} Intel Dossier</h1>
               <p className="font-code-terminal text-code-terminal">{SHEET.domain}</p>
             </div>
             <span className="font-label-stamp text-label-stamp text-paper-distressed rotate-3 border-2 border-grit-black bg-electric-magenta px-3 py-2 uppercase">
