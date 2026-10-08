@@ -12,7 +12,8 @@
     "format": "prettier --write ."
   },
   "overrides": {
-    "rolldown": "1.2.1"
+    "rolldown": "1.2.1",
+    "@modelcontextprotocol/sdk": "^1.31.0"
   },
   "dependencies": {
     "@eslint/eslintrc": "^3.3.7",
