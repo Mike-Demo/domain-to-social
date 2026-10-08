@@ -389,6 +389,10 @@ async function fetchSite(url: string): Promise<{ text: string; finalUrl: string 
 export interface LookupOptions {
   /** Deep Recon: render via Firecrawl when the site blocks us or exposes no social links. */
   enrich?: boolean;
+  /** Brand Command: live-browser fallback when Firecrawl still finds nothing. */
+  browserAgent?: boolean;
+  /** Records a live-browser run against the caller's daily cap; false = cap reached. */
+  reserveBrowserRun?: (domain: string) => Promise<boolean>;
 }
 
 export async function lookupDomain(input: string, opts: LookupOptions = {}): Promise<LookupResult> {
@@ -441,6 +445,26 @@ export async function lookupDomain(input: string, opts: LookupOptions = {}): Pro
       };
     } else {
       enrichment = { via: "firecrawl", used: false, reason: `${reason}; Firecrawl render failed` };
+    }
+  }
+  let browserUse: LookupResult["browserUse"];
+  if (opts.browserAgent && findings.length === 0) {
+    const allowed = opts.reserveBrowserRun ? await opts.reserveBrowserRun(domain) : true;
+    if (!allowed) {
+      browserUse = { used: false, reason: "daily live-browser limit reached" };
+    } else {
+      const { browserUseLinks } = await import("./browseruse.server");
+      const bu = await browserUseLinks(page?.finalUrl ?? url);
+      const finalUrl = bu && isPublicHttpUrl(bu.finalUrl) ? bu.finalUrl : (page?.finalUrl ?? url);
+      const links = (bu?.links ?? []).filter(isPublicHttpUrl);
+      if (links.length) {
+        const html = links.map((l) => `<a href="${l.replace(/"/g, "&quot;")}"></a>`).join("");
+        const ex = extractFromHtml(`<div>${html}</div>`, finalUrl, domain);
+        findings = ex.findings.map((f) => ({ ...f, evidence: `Found by live browser on ${domain}` }));
+      }
+      browserUse = bu
+        ? { used: true, reason: findings.length ? "Firecrawl found nothing; opened the site in a live browser" : "live browser found no social links" }
+        : { used: false, reason: "live browser run failed" };
     }
   }
   const verified = groupFindings(findings, checkedAt);
