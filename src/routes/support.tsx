@@ -28,7 +28,7 @@ export const Route = createFileRoute("/support")({
 
 const btn = "font-label-stamp text-label-stamp px-space-md py-space-sm uppercase";
 const input =
-  "font-code-terminal text-code-terminal text-paper-distressed! p-space-sm border-2 border-outline-variant bg-grit-black! outline-none focus-visible:ring-2 focus-visible:ring-primary-container";
+  "font-code-terminal text-code-terminal text-paper-distressed p-space-sm border-2 border-outline-variant bg-grit-black outline-none focus-visible:ring-2 focus-visible:ring-primary-container";
 const labelText = "font-label-stamp text-label-stamp text-on-surface-variant uppercase";
 const card = "p-space-md gap-space-md flex flex-col border-3 border-primary-container bg-slate-charcoal shadow-stamp-lg";
 
