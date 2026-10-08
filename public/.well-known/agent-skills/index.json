@@ -1,0 +1,7 @@
+{
+  "skills": [
+    { "name": "lookup_socials", "description": "Find a company's social media profiles from its website address, with evidence for each match.", "url": "https://magicmanta.com/mcp" },
+    { "name": "list_my_lookups", "description": "List the signed-in user's 50 most recent saved lookups.", "url": "https://magicmanta.com/mcp" },
+    { "name": "list_my_lists", "description": "List the signed-in user's saved lists.", "url": "https://magicmanta.com/mcp" }
+  ]
+}

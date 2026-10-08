@@ -2,6 +2,7 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { AGENT_VIEW, INDEX_MD, LINK_HEADER, NOT_FOUND_MD, markdownResponse, wantsMarkdown } from "./lib/agent/docs";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -47,9 +48,31 @@ function isH3SwallowedErrorBody(body: string): boolean {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const url = new URL(request.url);
+      if (request.method === "GET" && url.pathname === "/") {
+        if (url.searchParams.get("mode") === "agent") return Response.json(AGENT_VIEW, { headers: { link: LINK_HEADER } });
+        if (wantsMarkdown(request.headers.get("accept"), request.headers.get("user-agent"))) {
+          const res = markdownResponse(INDEX_MD);
+          res.headers.set("link", LINK_HEADER);
+          res.headers.set("vary", "Accept, User-Agent");
+          return res;
+        }
+      }
       const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      const raw = await normalizeCatastrophicSsrResponse(await handler.fetch(request, env, ctx));
+      if (/text\/markdown/i.test(request.headers.get("accept") ?? "") && (raw.status === 404 || raw.status === 406)) {
+        // Markdown-only requests are refused (406) by the page renderer; re-check as HTML to tell a missing page apart.
+        const headers = new Headers(request.headers);
+        headers.set("accept", "text/html");
+        const probe = raw.status === 404 ? raw : await handler.fetch(new Request(request, { headers }), env, ctx);
+        if (probe.status === 404) return markdownResponse(NOT_FOUND_MD, 404);
+        if (raw.status === 406) return probe;
+      }
+      const type = raw.headers.get("content-type") ?? "";
+      if (!type.includes("text/html")) return raw;
+      const response = new Response(raw.body, raw);
+      response.headers.append("link", LINK_HEADER);
+      return response;
     } catch (error) {
       console.error(error);
       return new Response(renderErrorPage(), {

@@ -10,6 +10,7 @@ import { buildShareUrl } from "@/lib/social/share";
 import { ProfileSlab, copyText } from "@/components/diggr/ProfileSlab";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
 import { FAQS, HOWTO_STEPS, HomeGuide, PLAIN_INTRO } from "@/components/diggr/HomeGuide";
+import { WebMcpTools } from "@/components/diggr/WebMcpTools";
 import type { DomainCandidate, LookupResult } from "@/lib/social/types";
 
 export const Route = createFileRoute("/")({
@@ -32,8 +33,45 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: "https://magicmanta.com/og-image.png" },
     ],
-    links: [{ rel: "canonical", href: "https://magicmanta.com/" }],
+    links: [
+      { rel: "canonical", href: "https://magicmanta.com/" },
+      { rel: "alternate", type: "text/markdown", href: "https://magicmanta.com/index.md" },
+    ],
     scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://magicmanta.com/#org",
+              name: "M4G1C M4NT4",
+              url: "https://magicmanta.com/",
+              logo: "https://magicmanta.com/icon-512.png",
+              contactPoint: { "@type": "ContactPoint", email: "support-magicmanta@agentmail.to", contactType: "customer support", url: "https://magicmanta.com/contact" },
+              founder: { "@type": "Person", name: "MikeDemo", url: "https://mikedemo.com", sameAs: ["https://www.linkedin.com/in/mikedemopoulos", "https://x.com/mike_demo", "https://www.threads.com/@mdemop"] },
+            },
+            {
+              "@type": "SoftwareApplication",
+              name: "M4G1C M4NT4",
+              url: "https://magicmanta.com/",
+              applicationCategory: "BusinessApplication",
+              operatingSystem: "Web",
+              description: "Finds and verifies a company's social media profiles from its website URL, with evidence for each handle.",
+              publisher: { "@id": "https://magicmanta.com/#org" },
+              offers: { "@type": "Offer", price: "0", priceCurrency: "USD", name: "Free Radar", url: "https://magicmanta.com/pricing" },
+            },
+            {
+              "@type": "Service",
+              name: "Brand social profile lookup",
+              serviceType: "Social media profile discovery and verification",
+              provider: { "@id": "https://magicmanta.com/#org" },
+              url: "https://magicmanta.com/",
+            },
+          ],
+        }),
+      },
       {
         type: "application/ld+json",
         children: JSON.stringify({
@@ -120,6 +158,7 @@ function RadarScanner() {
 
   return (
     <Shell>
+      <WebMcpTools />
       <SubHeader
         badge="OSINT_RADAR_ENGAGED"
         note="// DEEP CORPO TRACE v2.8 //"

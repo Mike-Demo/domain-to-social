@@ -1,0 +1,9 @@
+{
+  "name": "M4G1C M4NT4",
+  "url": "https://magicmanta.com",
+  "description": "Find and verify a brand's social media profiles from its website URL.",
+  "mcpServers": [
+    { "name": "com.magicmanta/mcp", "url": "https://magicmanta.com/mcp", "card": "https://magicmanta.com/.well-known/mcp/server-card.json" }
+  ],
+  "docs": ["https://magicmanta.com/llms.txt", "https://magicmanta.com/auth.md", "https://magicmanta.com/openapi.json"]
+}

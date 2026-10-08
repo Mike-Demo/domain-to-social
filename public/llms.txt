@@ -1,6 +1,12 @@
-# Brand Connector Pro (Magic Manta)
+# M4G1C M4NT4
 
-Brand Connector Pro at https://magicmanta.com finds and verifies a company's social media profiles from its website URL.
+> M4G1C M4NT4 at https://magicmanta.com finds and verifies a company's social media profiles from its website URL.
+
+## When to use this
+- Use M4G1C M4NT4 when you need a company's official social media accounts (to tag, cite, or contact a brand) and you have its website or domain.
+- Best fit: verifying which handles really belong to a brand, finding handles across many platforms at once, and seeing the evidence for each.
+- Not for: people search, private accounts, or general web scraping.
+- How to call it: connect an MCP client to https://magicmanta.com/mcp, complete OAuth sign-in (see [auth.md](https://magicmanta.com/auth.md)), then call `lookup_socials` with `{"url": "example.com"}`. Without sign-in, a human can use the homepage.
 
 ## How it works
 - Enter a brand's domain on the homepage to retrieve associated social handles across X, Instagram, LinkedIn, and other platforms.
@@ -10,17 +16,17 @@ Brand Connector Pro at https://magicmanta.com finds and verifies a company's soc
 - One-click copying for individual handles or the whole set.
 
 ## Pages
-- / — single domain lookup
-- /batch — look up multiple domains
-- /dossier — result dossier view
-- /source — source board
-- /adapters — integration options (MCP available now; REST endpoint and React SDK are marked coming soon)
-- /auth — sign in or create an account
-- /pricing — plans and prices
-- /fair-use — usage limits and fair-use policy
-- /support — support form (signed-in users) and support email
-- /licenses — open source credits and digital carbon disclosure
-- /offline — offline fallback
+- [Home](https://magicmanta.com/): single domain lookup ([markdown](https://magicmanta.com/index.md); `?mode=agent` returns JSON)
+- [Batch](https://magicmanta.com/batch): look up multiple domains
+- [Dossier](https://magicmanta.com/dossier): result dossier view
+- [Source](https://magicmanta.com/source): source board
+- [Adapters](https://magicmanta.com/adapters): integration options (MCP available now; REST endpoint and React SDK coming soon)
+- [Sign in](https://magicmanta.com/auth)
+- [Pricing](https://magicmanta.com/pricing) ([markdown](https://magicmanta.com/pricing.md))
+- [Fair use](https://magicmanta.com/fair-use)
+- [Support](https://magicmanta.com/support)
+- [About](https://magicmanta.com/about), [Contact](https://magicmanta.com/contact), [Privacy](https://magicmanta.com/privacy)
+- [Licenses](https://magicmanta.com/licenses)
 
 ## MCP server
 - Endpoint: https://magicmanta.com/mcp (MCP Streamable HTTP)
@@ -30,11 +36,13 @@ Brand Connector Pro at https://magicmanta.com finds and verifies a company's soc
 - Tools: lookup_socials (find a site's social profiles with evidence), list_my_lookups (the user's 50 most recent saved lookups), list_my_lists (the user's saved lists).
 
 ## Machine-readable
-- /llms.txt — this file
-- /.well-known/agent.json — agent card
-- /.well-known/oauth-protected-resource — OAuth metadata for the MCP endpoint
-- /carbon.txt — digital carbon disclosure (carbon.txt v0.5)
-- /sitemap.xml and /robots.txt
+- [auth.md](https://magicmanta.com/auth.md): how agents get credentials
+- [openapi.json](https://magicmanta.com/openapi.json): MCP endpoint and discovery documents only (no REST API)
+- [API catalog](https://magicmanta.com/.well-known/api-catalog) (RFC 9727)
+- [MCP server card](https://magicmanta.com/.well-known/mcp/server-card.json), [AI catalog](https://magicmanta.com/.well-known/ai-catalog.json)
+- [Agent card](https://magicmanta.com/.well-known/agent-card.json), [agent.json](https://magicmanta.com/.well-known/agent.json), [agent skills](https://magicmanta.com/.well-known/agent-skills/index.json)
+- [OAuth protected resource metadata](https://magicmanta.com/.well-known/oauth-protected-resource)
+- [carbon.txt](https://magicmanta.com/carbon.txt), [sitemap.xml](https://magicmanta.com/sitemap.xml), [robots.txt](https://magicmanta.com/robots.txt)
 
 ## Limits
 - No public REST API exists today; /api/public/radar is not available.
