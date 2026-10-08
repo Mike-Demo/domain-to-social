@@ -61,19 +61,19 @@ function AuthPage() {
   async function google() {
     const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: returnUrl() });
     if (r.error) setMsg(r.error.message);
-    else if (!r.redirected) void navigate({ to: "/account" });
+    else if (!r.redirected) done();
   }
 
   async function apple() {
     const r = await lovable.auth.signInWithOAuth("apple", { redirect_uri: returnUrl() });
     if (r.error) setMsg(r.error.message);
-    else if (!r.redirected) void navigate({ to: "/account" });
+    else if (!r.redirected) done();
   }
 
   async function microsoft() {
     const r = await lovable.auth.signInWithOAuth("microsoft", { redirect_uri: returnUrl() });
     if (r.error) setMsg(r.error.message);
-    else if (!r.redirected) void navigate({ to: "/account" });
+    else if (!r.redirected) done();
   }
 
   async function agentId() {
