@@ -95,73 +95,9 @@ function SourceBoard() {
               </div>
             </div>
 
-            <div className="gap-space-lg grid lg:grid-cols-2">
-              <div className="border-3 border-primary-container bg-surface-low shadow-stamp-lg">
-                <div className="p-space-md border-b-2 border-outline-variant">
-                  <h2 className="font-label-stamp text-label-stamp text-primary-container uppercase">
-                    MOST-RESEARCHED TARGETS
-                  </h2>
-                </div>
-                {stats.topTargets.length === 0 ? (
-                  <p className="p-space-md font-code-terminal text-code-terminal text-on-surface-variant">
-                    &gt; No lookups yet — be the first.
-                  </p>
-                ) : (
-                  stats.topTargets.map((t, i) => (
-                    <div
-                      key={t.domain}
-                      className="p-space-md gap-space-sm flex items-center justify-between border-b-2 border-outline-variant last:border-b-0"
-                    >
-                      <div className="gap-space-md flex items-center">
-                        <span className="font-headline text-headline-md text-grit-black bg-primary-container px-space-xs">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <Link
-                          to="/dossier"
-                          search={{ target: t.domain }}
-                          className="font-code-terminal text-body-lg text-paper-distressed hover:text-acid-lime break-all"
-                        >
-                          {t.domain}
-                        </Link>
-                      </div>
-                      <span className="font-code-terminal text-headline-sm text-acid-lime">{t.lookups}</span>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              <div className="gap-space-md flex flex-col">
-                <h2 className="font-label-stamp text-label-stamp text-hazard-orange uppercase">LATEST INTEL</h2>
-                {stats.recentTargets.length === 0 ? (
-                  <p className="font-code-terminal text-code-terminal text-on-surface-variant">
-                    &gt; Nothing decrypted yet.
-                  </p>
-                ) : (
-                  stats.recentTargets.map((t) => (
-                    <div
-                      key={t.domain}
-                      className="p-space-md border-3 border-outline-variant bg-grit-black shadow-stamp-md"
-                    >
-                      <div className="gap-space-sm flex flex-wrap items-center justify-between">
-                        <Link
-                          to="/dossier"
-                          search={{ target: t.domain }}
-                          className="font-code-terminal text-body-lg text-paper-distressed hover:text-acid-lime break-all"
-                        >
-                          {t.domain}
-                        </Link>
-                        <span className="font-label-stamp text-label-stamp bg-cyber-cyan text-grit-black px-space-xs py-space-2xs uppercase">
-                          DECRYPTED
-                        </span>
-                      </div>
-                      <p className="font-body-md text-body-md text-on-surface-variant mt-space-xs">
-                        Last checked {new Date(t.checkedAt).toLocaleString()}
-                      </p>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+            <p className="font-code-terminal text-code-terminal text-on-surface-variant">
+              &gt; Per-target details are private — only aggregate counts are shown.
+            </p>
           </>
         )}
 
