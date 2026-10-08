@@ -16,7 +16,10 @@ export const Route = createFileRoute("/auth")({
       { name: "robots", content: "noindex" },
     ],
   }),
-  validateSearch: (s: Record<string, unknown>): { next?: string } => ({ next: safeNext(s["next"]) }),
+  validateSearch: (s: Record<string, unknown>): { next?: string } => {
+    const next = safeNext(s["next"]);
+    return next ? { next } : {};
+  },
   component: AuthPage,
 });
 
