@@ -15,7 +15,9 @@ export const Route = createFileRoute("/adapters")({
       { property: "og:description", content: "MCP server available now; REST endpoint and React SDK coming soon." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://magicmanta.com/adapters" },
     ],
+    links: [{ rel: "canonical", href: "https://magicmanta.com/adapters" }],
   }),
   component: Adapters,
 });
@@ -45,7 +47,7 @@ function Snippet({ title, code, accent, soon = false }: { title: string; code: s
       <div className="flex items-center justify-between">
         <span className={`font-label-stamp text-label-stamp px-2 py-1 uppercase ${accent}`}>{title}</span>
         {soon ? (
-          <span className="font-label-stamp text-label-stamp text-on-surface-variant border-2 border-outline-variant px-2 py-1 uppercase">
+          <span className="font-label-stamp text-label-stamp text-on-surface-variant border-2 border-outline-variant px-space-xs py-space-xs uppercase">
             Coming soon
           </span>
         ) : (

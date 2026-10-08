@@ -16,7 +16,7 @@ const Checkout = lazy(() => import("@/components/payments/Checkout").then((m) =>
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "M4G1C M4NT4 // Pricing — free radar, Operative, Deep Recon, Brand Command" },
+      { title: "M4G1C M4NT4 // Pricing — Free, Operative, Deep Recon" },
       {
         name: "description",
         content: "Single lookups are free. Unlock saved lists and bulk sweeps for $5 once, deep recon for $10/mo, live browser checks for $20/mo.",

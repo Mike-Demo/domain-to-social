@@ -9,14 +9,16 @@ import type { LookupResult } from "@/lib/social/types";
 export const Route = createFileRoute("/r")({
   head: () => ({
     meta: [
-      { title: "M4G1C M4NT4 // Shared Footprint — read-only lookup snapshot" },
+      { title: "M4G1C M4NT4 // Shared Footprint — lookup snapshot" },
       { name: "description", content: "A read-only snapshot of a brand's social profiles found by M4G1C M4NT4." },
       { property: "og:title", content: "M4G1C M4NT4 // Shared Footprint" },
       { property: "og:description", content: "Read-only snapshot of a brand's verified social handles." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "robots", content: "noindex" },
+      { property: "og:url", content: "https://magicmanta.com/r" },
     ],
+    links: [{ rel: "canonical", href: "https://magicmanta.com/r" }],
   }),
   component: SharedResult,
 });

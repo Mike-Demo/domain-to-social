@@ -17,7 +17,9 @@ export const Route = createFileRoute("/source")({
       { property: "og:description", content: "Live stats from real lookups: most-researched targets and latest intel." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://magicmanta.com/source" },
     ],
+    links: [{ rel: "canonical", href: "https://magicmanta.com/source" }],
   }),
   component: SourceBoard,
 });

@@ -13,7 +13,9 @@ export const Route = createFileRoute("/offline")({
       { property: "og:description", content: "Cached dossiers and vault export while offline." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://magicmanta.com/offline" },
     ],
+    links: [{ rel: "canonical", href: "https://magicmanta.com/offline" }],
   }),
   component: Offline,
 });
