@@ -212,6 +212,39 @@ function Account() {
                 </div>
               ))}
             </div>
+            <div className={panel}>
+              <h2 className="font-headline text-headline-sm text-paper-distressed uppercase">Delete account</h2>
+              <p className="font-code-terminal text-body-sm text-on-surface-variant">
+                Cancels any monthly plan immediately (no refund for the rest of the month) and permanently erases your lists,
+                history and sign-in. Type DELETE to confirm.
+              </p>
+              <div className="gap-space-sm flex flex-wrap">
+                <input
+                  aria-label="Type DELETE to confirm"
+                  value={confirmText}
+                  onChange={(e) => setConfirmText(e.target.value)}
+                  className="font-code-terminal text-code-terminal text-paper-distressed! p-space-sm border-2 border-outline-variant bg-grit-black! flex-1 outline-none focus-visible:ring-2 focus-visible:ring-primary-container"
+                />
+                <button
+                  disabled={confirmText !== "DELETE" || deleting}
+                  onClick={async () => {
+                    setDeleting(true);
+                    setErr(null);
+                    const r = await destroy({ data: { confirm: "DELETE" } });
+                    if ("error" in r) {
+                      setDeleting(false);
+                      return setErr(r.error);
+                    }
+                    await supabase.auth.signOut();
+                    qc.clear();
+                    void navigate({ to: "/" });
+                  }}
+                  className="font-label-stamp text-label-stamp border-2 border-hazard-orange text-hazard-orange px-space-md py-space-xs uppercase"
+                >
+                  {deleting ? "Deleting…" : "Delete forever"}
+                </button>
+              </div>
+            </div>
           </>
         )}
       </section>
