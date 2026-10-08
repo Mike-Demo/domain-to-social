@@ -114,21 +114,21 @@ function TicketForm() {
 
   return (
     <form onSubmit={onSubmit} className={card}>
-      <label className="gap-space-xs flex flex-col">
+      <label htmlFor="support-category" className="gap-space-xs flex flex-col">
         <span className={labelText}>Category</span>
-        <select value={category} onChange={(e) => setCategory(e.target.value as SupportCategory)} className={input}>
+        <select id="support-category" value={category} onChange={(e) => setCategory(e.target.value as SupportCategory)} className={input}>
           {SUPPORT_CATEGORIES.map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
         </select>
       </label>
-      <label className="gap-space-xs flex flex-col">
+      <label htmlFor="support-subject" className="gap-space-xs flex flex-col">
         <span className={labelText}>Subject</span>
-        <input required minLength={3} maxLength={140} value={subject} onChange={(e) => setSubject(e.target.value)} className={input} />
+        <input required minLength={3} id="support-subject"  maxLength={140} value={subject} onChange={(e) => setSubject(e.target.value)} className={input} />
       </label>
-      <label className="gap-space-xs flex flex-col">
+      <label htmlFor="support-message" className="gap-space-xs flex flex-col">
         <span className={labelText}>Message</span>
-        <textarea required minLength={10} maxLength={5000} rows={7} value={message} onChange={(e) => setMessage(e.target.value)} className={input} />
+        <textarea id="support-message" required minLength={10} maxLength={5000} rows={7} value={message} onChange={(e) => setMessage(e.target.value)} className={input} />
       </label>
       <button disabled={busy} className={`${btn} bg-primary-container text-on-primary-container shadow-stamp`}>
         {busy ? "Sending…" : "Send ticket"}
