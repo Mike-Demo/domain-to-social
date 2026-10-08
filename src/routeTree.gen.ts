@@ -23,6 +23,7 @@ import { Route as OfflineRouteImport } from './routes/offline'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as RRouteImport } from './routes/r'
 import { Route as SourceRouteImport } from './routes/source'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
@@ -101,6 +102,11 @@ const SourceRoute = SourceRouteImport.update({
   path: '/source',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
   Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
     id: '/.well-known/oauth-protected-resource',
@@ -159,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
+  '/support': typeof SupportRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account': typeof AuthenticatedAccountRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -182,6 +189,7 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
+  '/support': typeof SupportRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account': typeof AuthenticatedAccountRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -207,6 +215,7 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
+  '/support': typeof SupportRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -232,6 +241,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/r'
     | '/source'
+    | '/support'
     | '/.well-known/oauth-protected-resource'
     | '/account'
     | '/.lovable/oauth/consent'
@@ -255,6 +265,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/r'
     | '/source'
+    | '/support'
     | '/.well-known/oauth-protected-resource'
     | '/account'
     | '/.lovable/oauth/consent'
@@ -279,6 +290,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/r'
     | '/source'
+    | '/support'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/account'
     | '/.lovable/oauth/consent'
@@ -304,6 +316,7 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   RRoute: typeof RRoute
   SourceRoute: typeof SourceRoute
+  SupportRoute: typeof SupportRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
@@ -412,6 +425,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SourceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/.well-known/oauth-protected-resource': {
       id: '/.well-known/oauth-protected-resource'
       path: '/.well-known/oauth-protected-resource'
@@ -499,6 +519,7 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   RRoute: RRoute,
   SourceRoute: SourceRoute,
+  SupportRoute: SupportRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
