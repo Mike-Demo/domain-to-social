@@ -1,59 +1,26 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { WaIcon } from "@/design-system/font-awsome-web-awesome-171158/webawesome/react/icon";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
+import { getSourceStats, type SourceStats } from "@/lib/social/source.functions";
 
 export const Route = createFileRoute("/source")({
   head: () => ({
     meta: [
-      { title: "M4G1C M4NT4 // Source — top diggers and open bounties" },
+      { title: "M4G1C M4NT4 // Source — live recon activity" },
       {
         name: "description",
         content:
-          "The M4G1C M4NT4 source board: operators with the most confirmed brand handles, plus open bounties on hard-to-trace targets.",
+          "The M4G1C M4NT4 source board: live stats from real lookups — the most-researched targets and the latest intel decrypted.",
       },
       { property: "og:title", content: "M4G1C M4NT4 // Source" },
-      { property: "og:description", content: "Leaderboard of top diggers and open recon bounties." },
+      { property: "og:description", content: "Live stats from real lookups: most-researched targets and latest intel." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: SourceBoard,
 });
-
-const BOARD = [
-  { rank: "01", op: "OP_HEX", rankName: "DOXXER", finds: 4821, streak: "132d" },
-  { rank: "02", op: "NULL_WITCH", rankName: "SNIFFER", finds: 3990, streak: "87d" },
-  { rank: "03", op: "GREY_MANTA", rankName: "SNIFFER", finds: 3104, streak: "64d" },
-  { rank: "04", op: "TAPE_DECK", rankName: "SCRAPER", finds: 2455, streak: "41d" },
-  { rank: "05", op: "V0LTAGE", rankName: "SCRAPER", finds: 1877, streak: "22d" },
-];
-
-const BOUNTIES = [
-  {
-    target: "manta.design",
-    note: "Studio handle rotated twice this quarter. Need reciprocal proof on Bluesky.",
-    reward: "1,200 XP",
-    tone: "bg-primary-container text-on-primary-container",
-  },
-  {
-    target: "Acme Robotics",
-    note: "Stealth handle suspected on Threads. Nothing linked from the marketing surface.",
-    reward: "900 XP",
-    tone: "bg-cyber-cyan text-grit-black",
-  },
-  {
-    target: "Neon Labs",
-    note: "Exec matrix incomplete — three founders, one confirmed LinkedIn.",
-    reward: "1,500 XP",
-    tone: "bg-electric-magenta text-paper-distressed",
-  },
-  {
-    target: "Synthia AI",
-    note: "Bot infrastructure spamming lookalike handles. Flag the spoofs.",
-    reward: "2,000 XP",
-    tone: "bg-hazard-orange text-grit-black",
-  },
-];
 
 const SOCIAL_LINKS = [
   { label: "Open source page", href: "/licenses", icon: "github", text: "Open Source" },
@@ -71,66 +38,132 @@ const SOCIAL_LINKS = [
 ] as const;
 
 function SourceBoard() {
+  const [stats, setStats] = useState<SourceStats | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getSourceStats()
+      .then((s) => {
+        if (!cancelled) setStats(s);
+      })
+      .catch((e: unknown) => {
+        if (!cancelled) setError(e instanceof Error ? e.message : "Could not load stats.");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <Shell>
       <SubHeader
         badge="SOURCE"
         badgeClass="bg-primary-container text-on-primary-container"
-        note="// LEADERBOARD + OPEN BOUNTIES //"
-        right={<span>[SEASON 04 // 18d LEFT]</span>}
+        note="// LIVE RECON ACTIVITY //"
+        right={<span>[ANONYMIZED // REAL-TIME]</span>}
       />
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-xl mx-auto flex max-w-7xl flex-col">
         <h1 className="font-display-hero text-display-hero-mobile lg:text-display-hero text-paper-distressed leading-none uppercase">
           <span className="text-on-primary-container inline-block -rotate-2 bg-acid-lime px-2 shadow-stamp-magenta">
             SOURCE
           </span>{" "}
-          <span className="text-headline-lg align-middle">— Leaderboard and Bounties</span>
+          <span className="text-headline-lg align-middle">— Live Recon Activity</span>
         </h1>
 
-        <div className="gap-space-lg grid lg:grid-cols-2">
-          <div className="border-3 border-primary-container bg-surface-low shadow-stamp-lg">
-            <div className="p-space-md border-b-2 border-outline-variant">
-              <h2 className="font-label-stamp text-label-stamp text-primary-container uppercase">
-                TOP DIGGERS // CONFIRMED HANDLES
-              </h2>
-            </div>
-            {BOARD.map((r) => (
-              <div
-                key={r.op}
-                className="p-space-md gap-space-sm flex items-center justify-between border-b-2 border-outline-variant last:border-b-0"
-              >
-                <div className="gap-space-md flex items-center">
-                  <span className="font-headline text-headline-md text-grit-black bg-primary-container px-2">
-                    {r.rank}
-                  </span>
-                  <div>
-                    <p className="font-code-terminal text-body-lg text-paper-distressed">{r.op}</p>
-                    <p className="font-label-stamp text-micro tracking-widest text-on-surface-variant uppercase">
-                      RANK: {r.rankName} // STREAK {r.streak}
-                    </p>
-                  </div>
-                </div>
-                <span className="font-code-terminal text-headline-sm text-acid-lime">{r.finds}</span>
-              </div>
-            ))}
-          </div>
+        {error && (
+          <p className="font-code-terminal text-code-terminal text-hazard-orange" role="alert">
+            &gt; {error}
+          </p>
+        )}
+        {!stats && !error && (
+          <p className="font-code-terminal text-code-terminal text-acid-lime" role="status">
+            &gt; Pulling live stats…
+          </p>
+        )}
 
-          <div className="gap-space-md flex flex-col">
-            <h2 className="font-label-stamp text-label-stamp text-hazard-orange uppercase">OPEN BOUNTIES</h2>
-            {BOUNTIES.map((b) => (
-              <div
-                key={b.target}
-                className="p-space-md border-3 border-outline-variant bg-grit-black shadow-stamp-md"
-              >
-                <div className="gap-space-sm flex flex-wrap items-center justify-between">
-                  <span className="font-code-terminal text-body-lg text-paper-distressed break-all">{b.target}</span>
-                  <span className={`font-label-stamp text-label-stamp px-2 py-1 uppercase ${b.tone}`}>{b.reward}</span>
-                </div>
-                <p className="font-body-md text-body-md text-on-surface-variant mt-2">{b.note}</p>
+        {stats && (
+          <>
+            <div className="gap-space-lg grid sm:grid-cols-2">
+              <div className="p-space-md border-3 border-primary-container bg-surface-low shadow-stamp-lg">
+                <p className="font-label-stamp text-label-stamp text-primary-container uppercase">LOOKUPS RUN</p>
+                <p className="font-display-hero text-display-hero-mobile text-acid-lime">{stats.totalLookups}</p>
               </div>
-            ))}
-          </div>
-        </div>
+              <div className="p-space-md border-3 border-primary-container bg-surface-low shadow-stamp-lg">
+                <p className="font-label-stamp text-label-stamp text-primary-container uppercase">TARGETS DECRYPTED</p>
+                <p className="font-display-hero text-display-hero-mobile text-acid-lime">{stats.distinctDomains}</p>
+              </div>
+            </div>
+
+            <div className="gap-space-lg grid lg:grid-cols-2">
+              <div className="border-3 border-primary-container bg-surface-low shadow-stamp-lg">
+                <div className="p-space-md border-b-2 border-outline-variant">
+                  <h2 className="font-label-stamp text-label-stamp text-primary-container uppercase">
+                    MOST-RESEARCHED TARGETS
+                  </h2>
+                </div>
+                {stats.topTargets.length === 0 ? (
+                  <p className="p-space-md font-code-terminal text-code-terminal text-on-surface-variant">
+                    &gt; No lookups yet — be the first.
+                  </p>
+                ) : (
+                  stats.topTargets.map((t, i) => (
+                    <div
+                      key={t.domain}
+                      className="p-space-md gap-space-sm flex items-center justify-between border-b-2 border-outline-variant last:border-b-0"
+                    >
+                      <div className="gap-space-md flex items-center">
+                        <span className="font-headline text-headline-md text-grit-black bg-primary-container px-2">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <Link
+                          to="/dossier"
+                          search={{ target: t.domain }}
+                          className="font-code-terminal text-body-lg text-paper-distressed hover:text-acid-lime break-all"
+                        >
+                          {t.domain}
+                        </Link>
+                      </div>
+                      <span className="font-code-terminal text-headline-sm text-acid-lime">{t.lookups}</span>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="gap-space-md flex flex-col">
+                <h2 className="font-label-stamp text-label-stamp text-hazard-orange uppercase">LATEST INTEL</h2>
+                {stats.recentTargets.length === 0 ? (
+                  <p className="font-code-terminal text-code-terminal text-on-surface-variant">
+                    &gt; Nothing decrypted yet.
+                  </p>
+                ) : (
+                  stats.recentTargets.map((t) => (
+                    <div
+                      key={t.domain}
+                      className="p-space-md border-3 border-outline-variant bg-grit-black shadow-stamp-md"
+                    >
+                      <div className="gap-space-sm flex flex-wrap items-center justify-between">
+                        <Link
+                          to="/dossier"
+                          search={{ target: t.domain }}
+                          className="font-code-terminal text-body-lg text-paper-distressed hover:text-acid-lime break-all"
+                        >
+                          {t.domain}
+                        </Link>
+                        <span className="font-label-stamp text-label-stamp bg-cyber-cyan text-grit-black px-2 py-1 uppercase">
+                          DECRYPTED
+                        </span>
+                      </div>
+                      <p className="font-body-md text-body-md text-on-surface-variant mt-2">
+                        Last checked {new Date(t.checkedAt).toLocaleString()}
+                      </p>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </>
+        )}
 
         <footer className="p-space-md gap-space-md flex flex-col border-3 border-outline-variant bg-surface-low shadow-stamp-md">
           <div className="gap-space-sm flex flex-wrap items-center justify-between">
