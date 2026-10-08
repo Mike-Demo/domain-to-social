@@ -22,13 +22,6 @@
       "when": 1791481741784,
       "tag": "0002_browser_runs",
       "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1791490238646,
-      "tag": "0003_enrichment_runs",
-      "breakpoints": true
     }
   ]
 }
