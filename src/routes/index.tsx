@@ -9,12 +9,13 @@ import { allVerifiedTags, formatCheckedAt, looksLikeUrl } from "@/lib/social/for
 import { buildShareUrl } from "@/lib/social/share";
 import { ProfileSlab, copyText } from "@/components/diggr/ProfileSlab";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
+import { FAQS, HOWTO_STEPS, HomeGuide, PLAIN_INTRO } from "@/components/diggr/HomeGuide";
 import type { DomainCandidate, LookupResult } from "@/lib/social/types";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "M4G1C M4NT4 // Radar Scanner — hunt any brand's social footprint" },
+      { title: "M4G1C M4NT4 // Radar Scanner — find any brand's socials" },
       {
         name: "description",
         content:
@@ -32,6 +33,25 @@ export const Route = createFileRoute("/")({
       { name: "twitter:image", content: "https://magicmanta.com/og-image.png" },
     ],
     links: [{ rel: "canonical", href: "https://magicmanta.com/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: FAQS.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          name: "Find a brand's social media profiles",
+          step: HOWTO_STEPS.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.name, text: s.text })),
+        }),
+      },
+    ],
   }),
   component: RadarScanner,
 });
@@ -136,6 +156,7 @@ function RadarScanner() {
                 </span>{" "}
                 IN SECONDS.
               </h1>
+              <p className="font-body-md text-body-lg text-paper-distressed mt-space-xs max-w-2xl">{PLAIN_INTRO}</p>
               <p className="font-body-md text-body-lg text-on-surface-variant mt-space-xs max-w-2xl">
                 Drop any domain, startup tag, or shadow brand. M4G1C M4NT4's crawler swarms sweep the networks, repos,
                 federated nodes, and rogue vanity handles before they can scrub their footprint.
@@ -428,6 +449,7 @@ function RadarScanner() {
           </div>
         </section>
       )}
+      <HomeGuide />
     </Shell>
   );
 }

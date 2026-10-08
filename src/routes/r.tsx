@@ -9,7 +9,7 @@ import type { LookupResult } from "@/lib/social/types";
 export const Route = createFileRoute("/r")({
   head: () => ({
     meta: [
-      { title: "M4G1C M4NT4 // Shared Footprint — read-only lookup snapshot" },
+      { title: "M4G1C M4NT4 // Shared Footprint — lookup snapshot" },
       { name: "description", content: "A read-only snapshot of a brand's social profiles found by M4G1C M4NT4." },
       { property: "og:title", content: "M4G1C M4NT4 // Shared Footprint" },
       { property: "og:description", content: "Read-only snapshot of a brand's verified social handles." },
