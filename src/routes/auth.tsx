@@ -59,7 +59,7 @@ function AuthPage() {
   async function agentId() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "custom:app-oidc",
-      options: { redirectTo: window.location.origin },
+      options: { redirectTo: window.location.origin, scopes: "openid email profile owner_email owner_profile" },
     });
     if (error) setMsg(error.message);
   }
