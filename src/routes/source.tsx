@@ -65,7 +65,7 @@ function SourceBoard() {
       />
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-xl mx-auto flex max-w-7xl flex-col">
         <h1 className="font-display-hero text-display-hero-mobile lg:text-display-hero text-paper-distressed leading-none uppercase">
-          <span className="text-on-primary-container inline-block -rotate-2 bg-acid-lime px-2 shadow-stamp-magenta">
+          <span className="text-on-primary-container px-space-xs inline-block -rotate-2 bg-acid-lime shadow-stamp-magenta">
             SOURCE
           </span>{" "}
           <span className="text-headline-lg align-middle">— Live Recon Activity</span>
@@ -113,7 +113,7 @@ function SourceBoard() {
                       className="p-space-md gap-space-sm flex items-center justify-between border-b-2 border-outline-variant last:border-b-0"
                     >
                       <div className="gap-space-md flex items-center">
-                        <span className="font-headline text-headline-md text-grit-black bg-primary-container px-2">
+                        <span className="font-headline text-headline-md text-grit-black bg-primary-container px-space-xs">
                           {String(i + 1).padStart(2, "0")}
                         </span>
                         <Link
@@ -150,11 +150,11 @@ function SourceBoard() {
                         >
                           {t.domain}
                         </Link>
-                        <span className="font-label-stamp text-label-stamp bg-cyber-cyan text-grit-black px-2 py-1 uppercase">
+                        <span className="font-label-stamp text-label-stamp bg-cyber-cyan text-grit-black px-space-xs py-space-2xs uppercase">
                           DECRYPTED
                         </span>
                       </div>
-                      <p className="font-body-md text-body-md text-on-surface-variant mt-2">
+                      <p className="font-body-md text-body-md text-on-surface-variant mt-space-xs">
                         Last checked {new Date(t.checkedAt).toLocaleString()}
                       </p>
                     </div>

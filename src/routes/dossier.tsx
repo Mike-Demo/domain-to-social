@@ -121,11 +121,11 @@ function Dossier() {
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="example.com"
-            className="font-code-terminal text-code-terminal text-paper-distressed border-2 border-outline-variant bg-grit-black px-3 py-2"
+            className="font-code-terminal text-code-terminal text-paper-distressed border-2 border-outline-variant bg-grit-black px-space-sm py-space-xs"
           />
           <button
             type="submit"
-            className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-2 uppercase shadow-stamp"
+            className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-space-md py-space-xs uppercase shadow-stamp"
           >
             Decrypt
           </button>
@@ -145,13 +145,13 @@ function Dossier() {
         {result && (
           <>
             <div className="p-space-lg gap-space-lg text-grit-black flex flex-col border-3 border-grit-black bg-paper-distressed shadow-stamp-lime-xl">
-              <div className="flex flex-wrap items-start justify-between gap-4 border-b-2 border-grit-black pb-4">
+              <div className="gap-space-md pb-space-md flex flex-wrap items-start justify-between border-b-2 border-grit-black">
                 <div>
                   <p className="font-label-stamp text-label-stamp uppercase">INTEL SHEET // TARGET</p>
                   <h1 className="font-display-hero text-headline-lg uppercase">{result.brandName} Intel Dossier</h1>
                   <p className="font-code-terminal text-code-terminal">{result.domain}</p>
                 </div>
-                <span className="font-label-stamp text-label-stamp text-paper-distressed rotate-3 border-2 border-grit-black bg-electric-magenta px-3 py-2 uppercase">
+                <span className="font-label-stamp text-label-stamp text-paper-distressed rotate-3 border-2 border-grit-black bg-electric-magenta px-space-sm py-space-xs uppercase">
                   DECRYPTED
                 </span>
               </div>
@@ -165,20 +165,20 @@ function Dossier() {
                 <table className="w-full text-left">
                   <thead>
                     <tr className="font-label-stamp text-label-stamp uppercase">
-                      <th className="pb-2">Platform</th>
-                      <th className="pb-2">Handle</th>
-                      <th className="hidden pb-2 sm:table-cell">Proof</th>
+                      <th className="pb-space-xs">Platform</th>
+                      <th className="pb-space-xs">Handle</th>
+                      <th className="pb-space-xs hidden sm:table-cell">Proof</th>
                     </tr>
                   </thead>
                   <tbody className="font-code-terminal text-code-terminal">
                     {entries.map((h) => (
                       <tr key={`${h.platform}-${h.tag}`} className="border-t-2 border-grit-black/20">
-                        <td className="py-2 uppercase">{h.platform}</td>
-                        <td className="py-2 break-all">
+                        <td className="py-space-xs uppercase">{h.platform}</td>
+                        <td className="py-space-xs break-all">
                           {h.tag}
                           {!h.verified && <span className="uppercase"> (unverified)</span>}
                         </td>
-                        <td className="hidden py-2 sm:table-cell">{h.proof}</td>
+                        <td className="py-space-xs hidden sm:table-cell">{h.proof}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -187,7 +187,7 @@ function Dossier() {
 
               <div>
                 <h2 className="font-headline text-headline-sm uppercase">EVIDENCE CHAIN</h2>
-                <ol className="font-code-terminal text-code-terminal mt-2 space-y-1">
+                <ol className="font-code-terminal text-code-terminal gap-space-2xs mt-space-xs flex flex-col">
                   {evidenceChain(result).map((c) => (
                     <li key={c}>&gt; {c}</li>
                   ))}
@@ -198,13 +198,13 @@ function Dossier() {
             <div className="gap-space-sm flex flex-wrap">
               <button
                 onClick={() => window.print()}
-                className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-3 uppercase shadow-stamp"
+                className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-space-md py-space-sm uppercase shadow-stamp"
               >
                 Export PDF
               </button>
               <button
                 onClick={() => copyText(JSON.stringify(result, null, 2), "dossier JSON")}
-                className="font-label-stamp text-label-stamp text-paper-distressed border-2 border-paper-distressed px-4 py-3 uppercase hover:bg-paper-distressed hover:text-grit-black"
+                className="font-label-stamp text-label-stamp text-paper-distressed border-2 border-paper-distressed px-space-md py-space-sm uppercase hover:bg-paper-distressed hover:text-grit-black"
               >
                 Copy JSON
               </button>
