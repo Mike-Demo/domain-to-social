@@ -99,16 +99,22 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          owner_email: string | null
+          owner_name: string | null
         }
         Insert: {
           created_at?: string
           display_name?: string | null
           id: string
+          owner_email?: string | null
+          owner_name?: string | null
         }
         Update: {
           created_at?: string
           display_name?: string | null
           id?: string
+          owner_email?: string | null
+          owner_name?: string | null
         }
         Relationships: []
       }
