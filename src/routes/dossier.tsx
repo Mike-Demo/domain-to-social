@@ -7,7 +7,7 @@ import type { LookupResult } from "@/lib/social/types";
 
 export const Route = createFileRoute("/dossier")({
   validateSearch: (search: Record<string, unknown>): { target?: string } => {
-    const target = typeof search.target === "string" ? search.target.trim() : "";
+    const target = typeof search["target"] === "string" ? search["target"].trim() : "";
     return target ? { target } : {};
   },
   head: () => ({
