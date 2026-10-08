@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { createList, deleteList, getMyAccount } from "@/lib/account/account.functions";
-import { createPortalSession } from "@/lib/account/payments.functions";
+import { createPortalSession, deleteMyAccount } from "@/lib/account/payments.functions";
 import { PLAN_LABEL } from "@/lib/account/entitlements";
 import { generateRecoveryCodes, recoveryCodeStatus } from "@/lib/account/recovery.functions";
 import { BackupCodes } from "@/components/diggr/BackupCodes";
@@ -83,6 +83,14 @@ function Account() {
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-lg mx-auto flex max-w-5xl flex-col">
         <h1 className="font-headline text-headline-lg text-paper-distressed uppercase">Operator console</h1>
         {error && <p className="font-code-terminal text-hazard-orange">{error.message}</p>}
+        {checkout && (
+          <div role="status" className="p-space-md border-3 border-primary-container bg-slate-charcoal">
+            <p className="font-headline text-headline-sm text-primary-container uppercase">Payment received</p>
+            <p className="font-code-terminal text-body-sm text-paper-distressed">
+              Thanks! Your plan below updates within a few seconds. If it still looks wrong after a minute, refresh the page.
+            </p>
+          </div>
+        )}
         {data?.subscription?.status === "past_due" && (
           <div className="p-space-md border-3 border-hazard-orange bg-hazard-orange/10">
             <p className="font-headline text-headline-sm text-hazard-orange uppercase">Payment failed</p>
