@@ -15,6 +15,7 @@ import { Route as AdaptersRouteImport } from './routes/adapters'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BatchRouteImport } from './routes/batch'
 import { Route as DossierRouteImport } from './routes/dossier'
+import { Route as FairUseRouteImport } from './routes/fair-use'
 import { Route as LicensesRouteImport } from './routes/licenses'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as MfaRouteImport } from './routes/mfa'
@@ -57,6 +58,11 @@ const BatchRoute = BatchRouteImport.update({
 const DossierRoute = DossierRouteImport.update({
   id: '/dossier',
   path: '/dossier',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FairUseRoute = FairUseRouteImport.update({
+  id: '/fair-use',
+  path: '/fair-use',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LicensesRoute = LicensesRouteImport.update({
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/batch': typeof BatchRoute
   '/dossier': typeof DossierRoute
+  '/fair-use': typeof FairUseRoute
   '/licenses': typeof LicensesRoute
   '/mcp': typeof McpRoute
   '/mfa': typeof MfaRoute
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/batch': typeof BatchRoute
   '/dossier': typeof DossierRoute
+  '/fair-use': typeof FairUseRoute
   '/licenses': typeof LicensesRoute
   '/mcp': typeof McpRoute
   '/mfa': typeof MfaRoute
@@ -182,6 +190,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/batch': typeof BatchRoute
   '/dossier': typeof DossierRoute
+  '/fair-use': typeof FairUseRoute
   '/licenses': typeof LicensesRoute
   '/mcp': typeof McpRoute
   '/mfa': typeof MfaRoute
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/batch'
     | '/dossier'
+    | '/fair-use'
     | '/licenses'
     | '/mcp'
     | '/mfa'
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/batch'
     | '/dossier'
+    | '/fair-use'
     | '/licenses'
     | '/mcp'
     | '/mfa'
@@ -248,6 +259,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/batch'
     | '/dossier'
+    | '/fair-use'
     | '/licenses'
     | '/mcp'
     | '/mfa'
@@ -271,6 +283,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BatchRoute: typeof BatchRoute
   DossierRoute: typeof DossierRoute
+  FairUseRoute: typeof FairUseRoute
   LicensesRoute: typeof LicensesRoute
   McpRoute: typeof McpRoute
   MfaRoute: typeof MfaRoute
@@ -327,6 +340,13 @@ declare module '@tanstack/react-router' {
       path: '/dossier'
       fullPath: '/dossier'
       preLoaderRoute: typeof DossierRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fair-use': {
+      id: '/fair-use'
+      path: '/fair-use'
+      fullPath: '/fair-use'
+      preLoaderRoute: typeof FairUseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/licenses': {
@@ -450,6 +470,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BatchRoute: BatchRoute,
   DossierRoute: DossierRoute,
+  FairUseRoute: FairUseRoute,
   LicensesRoute: LicensesRoute,
   McpRoute: McpRoute,
   MfaRoute: MfaRoute,
