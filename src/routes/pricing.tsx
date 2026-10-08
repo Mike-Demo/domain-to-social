@@ -71,24 +71,24 @@ function Pricing() {
 
   function action(t: (typeof TIERS)[number]) {
     if (!t.priceId) return null;
-    const btn = "font-label-stamp text-label-stamp mt-auto px-space-md py-space-sm uppercase";
+    const btn = "font-label-stamp text-label-stamp px-space-md py-space-sm w-full min-w-0 whitespace-normal break-words text-center uppercase";
     if (!user)
       return (
-        <Link to="/auth" search={{ next: "/pricing" }} className="font-label-stamp text-label-stamp text-cyber-cyan mt-auto uppercase underline">
+        <Link to="/auth" search={{ next: "/pricing" }} className="font-label-stamp text-label-stamp text-cyber-cyan block w-full text-center uppercase underline">
           Sign in to buy
         </Link>
       );
     if (aal2 === false)
       return (
-        <Link to="/mfa" search={{ next: "/pricing" }} className="font-label-stamp text-label-stamp text-cyber-cyan mt-auto uppercase underline">
+        <Link to="/mfa" search={{ next: "/pricing" }} className="font-label-stamp text-label-stamp text-cyber-cyan block w-full text-center uppercase underline">
           Enter your 6-digit code to buy
         </Link>
       );
-    if (!account.data) return <p className="font-code-terminal text-body-sm text-on-surface-variant mt-auto">Checking your plan…</p>;
+    if (!account.data) return <p className="font-code-terminal text-body-sm text-on-surface-variant w-full text-center">Checking your plan…</p>;
     const owned = t.priceId === "operative_onetime" ? plan !== "free" : monthly === t.plan;
     if (owned)
       return (
-        <p className="font-label-stamp text-label-stamp text-primary-container mt-auto uppercase">
+        <p className="font-label-stamp text-label-stamp text-primary-container w-full text-center uppercase">
           {t.priceId === "operative_onetime" && !operativeOwned ? "Included in your plan" : "Your plan"}
         </p>
       );
@@ -130,7 +130,9 @@ function Pricing() {
                   <li key={x}>&gt; {x}</li>
                 ))}
               </ul>
-              {action(t)}
+              <div className="mt-auto flex min-h-[var(--wa-form-control-height)] w-full min-w-0 items-end">
+                {action(t)}
+              </div>
             </div>
           ))}
         </div>
