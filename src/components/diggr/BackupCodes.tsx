@@ -1,4 +1,4 @@
-import { WaCopyButton } from "@/design-system/font-awsome-web-awesome-171158";
+import { WaCopyButton } from "@/design-system/font-awsome-web-awesome-171158/webawesome/react/copy-button";
 
 const btn = "font-label-stamp text-label-stamp px-space-md py-space-sm uppercase";
 

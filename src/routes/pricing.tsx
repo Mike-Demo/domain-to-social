@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getMyAccount } from "@/lib/account/account.functions";
 import { changePlan } from "@/lib/account/payments.functions";
 import type { PlanTier } from "@/lib/account/entitlements";
-import { WaButton } from "@/design-system/font-awsome-web-awesome-171158";
+import { WaButton } from "@/design-system/font-awsome-web-awesome-171158/webawesome/react/button";
 
 const Checkout = lazy(() => import("@/components/payments/Checkout").then((m) => ({ default: m.Checkout })));
 

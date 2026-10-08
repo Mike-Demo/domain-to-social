@@ -9,7 +9,7 @@ import { PLAN_LABEL } from "@/lib/account/entitlements";
 import { generateRecoveryCodes, recoveryCodeStatus } from "@/lib/account/recovery.functions";
 import { BackupCodes } from "@/components/diggr/BackupCodes";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
-import { WaButton } from "@/design-system/font-awsome-web-awesome-171158";
+import { WaButton } from "@/design-system/font-awsome-web-awesome-171158/webawesome/react/button";
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({

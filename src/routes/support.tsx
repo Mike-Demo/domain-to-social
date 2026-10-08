@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
 import { useAuth } from "@/hooks/useAuth";
-import { WaCopyButton } from "@/design-system/font-awsome-web-awesome-171158";
+import { WaCopyButton } from "@/design-system/font-awsome-web-awesome-171158/webawesome/react/copy-button";
 import { submitSupportTicket } from "@/lib/account/support.functions";
 import { SUPPORT_CATEGORIES, SUPPORT_EMAIL, type SupportCategory } from "@/lib/support";
 
