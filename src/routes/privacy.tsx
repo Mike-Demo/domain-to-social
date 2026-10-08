@@ -48,8 +48,7 @@ function Privacy() {
         <p>Support tickets are sent by email and are not stored on the site.</p>
         <h2 className="font-headline text-headline-sm uppercase">Deleting your data</h2>
         <p>
-          You can delete your account from your account page, which removes your saved lookups and lists. For anything
-          else, email <a href={`mailto:${SUPPORT_EMAIL}`} className="text-cyber-cyan underline">{SUPPORT_EMAIL}</a>.
+          You can delete your account from your account page. To ask about any data we hold about you, email <a href={`mailto:${SUPPORT_EMAIL}`} className="text-cyber-cyan underline">{SUPPORT_EMAIL}</a>.
         </p>
       </article>
     </Shell>

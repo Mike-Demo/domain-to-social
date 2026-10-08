@@ -72,7 +72,8 @@ export function HomeGuide() {
             <h2 className={h2}>Framework adapters</h2>
             <p className={body}>
               Point an assistant at the MCP server after signing in. REST and the React SDK are coming soon.{" "}
-              <Link to="/adapters" className={link}>See adapters</Link>.
+              <Link to="/adapters" className={link}>See adapters</Link> or the{" "}
+              <a href="/auth.md" className={link}>agent auth docs</a>.
             </p>
           </div>
           <div className={card}>
