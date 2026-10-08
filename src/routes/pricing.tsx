@@ -147,7 +147,7 @@ function Pricing() {
       <PaymentTestModeBanner />
       <SubHeader badge="PRICING" note="// SINGLE LOOKUPS STAY FREE //" />
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-lg mx-auto flex max-w-7xl flex-col">
-        <h1 className="font-display-hero text-display-hero-mobile text-paper-distressed uppercase">Pick your clearance</h1>
+        <h1 className="font-display-hero text-display-hero-mobile text-paper-distressed uppercase">M4G1C M4NT4 Pricing &amp; Plans</h1>
         {monthly && (
           <p className="font-code-terminal text-body-sm text-on-surface-variant">
             Switching takes effect right away. You're charged or credited the difference for the rest of this billing month.

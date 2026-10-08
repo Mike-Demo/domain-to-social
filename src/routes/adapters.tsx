@@ -75,9 +75,9 @@ function Adapters() {
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-xl mx-auto flex max-w-7xl flex-col">
         <div className="gap-space-md flex flex-col">
           <h1 className="font-display-hero text-display-hero-mobile lg:text-display-hero text-paper-distressed leading-none uppercase">
-            AWESOME{" "}
+            Awesome Framework:{" "}
             <span className="text-paper-distressed inline-block rotate-1 bg-electric-magenta px-2 shadow-stamp-lime">
-              FRAMEWORK
+              SDK &amp; API Adapters
             </span>
           </h1>
           <p className="font-body-md text-body-lg text-on-surface-variant max-w-2xl">
