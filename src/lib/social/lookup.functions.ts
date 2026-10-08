@@ -35,17 +35,30 @@ function assertWithinLimit(kind: "lookup" | "search"): void {
   }
 }
 
-// Free tier: single lookups. Bulk / MCP entry points can reuse lookupDomain behind auth.
+function failureMessage(e: unknown, fallback: string): string {
+  return e instanceof Error && e.message ? e.message : fallback;
+}
+
+// Free tier: single lookups. Expected failures (rate limit, unreachable or refused
+// address) come back as `{ error }` instead of a thrown 500.
 export const lookupSocials = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => z.object({ url: z.string().trim().min(3).max(500) }).parse(data))
   .handler(async ({ data }) => {
-    assertWithinLimit("lookup");
-    return lookupDomain(data.url);
+    try {
+      assertWithinLimit("lookup");
+      return { result: await lookupDomain(data.url) };
+    } catch (e) {
+      return { error: failureMessage(e, "Lookup failed.") };
+    }
   });
 
 export const searchBrand = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => z.object({ query: z.string().trim().min(2).max(120) }).parse(data))
   .handler(async ({ data }) => {
-    assertWithinLimit("search");
-    return searchBrandDomains(data.query);
+    try {
+      assertWithinLimit("search");
+      return { candidates: await searchBrandDomains(data.query) };
+    } catch (e) {
+      return { error: failureMessage(e, "Search failed.") };
+    }
   });
