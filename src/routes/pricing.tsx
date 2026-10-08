@@ -25,6 +25,36 @@ export const Route = createFileRoute("/pricing")({
       { property: "og:description", content: "Free radar forever. Upgrade for lists, bulk, deep recon and live browser checks." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { property: "og:url", content: "https://magicmanta.com/pricing" },
+    ],
+    links: [{ rel: "canonical", href: "https://magicmanta.com/pricing" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: "M4G1C M4NT4",
+          description: "Find every official social profile for a brand from its website.",
+          brand: { "@type": "Brand", name: "M4G1C M4NT4" },
+          url: "https://magicmanta.com/pricing",
+          offers: [
+            { name: "Free Radar", price: "0", description: "1 domain at a time, no account needed, share links" },
+            { name: "Operative", price: "5", description: "One-time: account, lookup history, saved lists, CSV/JSON export, bulk 5 domains per run" },
+            { name: "Deep Recon", price: "10", description: "Monthly: everything in Operative, deep page checks (300 / 30 days), bulk 25 per run", period: "P1M" },
+            { name: "Brand Command", price: "20", description: "Monthly: everything in Deep Recon, deep page checks (1,000 / 30 days), live browser checks (20 / day)", period: "P1M" },
+          ].map(({ period, ...o }) => ({
+            "@type": "Offer",
+            ...o,
+            priceCurrency: "USD",
+            availability: "https://schema.org/InStock",
+            url: "https://magicmanta.com/pricing",
+            ...(period
+              ? { priceSpecification: { "@type": "UnitPriceSpecification", price: o.price, priceCurrency: "USD", billingDuration: period } }
+              : {}),
+          })),
+        }),
+      },
     ],
   }),
   component: Pricing,
