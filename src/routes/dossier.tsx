@@ -1,8 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
 import { copyText } from "@/components/diggr/ProfileSlab";
+import { lookupSocials } from "@/lib/social/lookup.functions";
+import type { LookupResult } from "@/lib/social/types";
 
 export const Route = createFileRoute("/dossier")({
+  validateSearch: (search: Record<string, unknown>): { target?: string } => {
+    const target = typeof search.target === "string" ? search.target.trim() : "";
+    return target ? { target } : {};
+  },
   head: () => ({
     meta: [
       { title: "M4G1C M4NT4 // Dossier — the decrypted intel sheet" },
@@ -20,27 +27,74 @@ export const Route = createFileRoute("/dossier")({
   component: Dossier,
 });
 
-const SHEET = {
-  target: "MAGIC MANTA",
-  domain: "stripe.com",
-  handles: [
-    { platform: "X", tag: "@stripe", proof: "JSON-LD sameAs" },
-    { platform: "GitHub", tag: "@stripe", proof: "Footer link on stripe.com" },
-    { platform: "LinkedIn", tag: "company/stripe", proof: "JSON-LD sameAs" },
-    { platform: "Bluesky", tag: "@stripe.com", proof: "rel=me link" },
-    { platform: "YouTube", tag: "@stripe", proof: "Footer link on stripe.com" },
-  ],
-  chain: [
-    "FETCH stripe.com -> 200 OK (final URL https://stripe.com/)",
-    "PARSE application/ld+json -> Organization.sameAs [4 urls]",
-    "PARSE <a href> anchors -> 11 outbound social links, 6 unique platforms",
-    "MERGE by handle -> no conflicts between structured data and DOM",
-    "RECIPROCAL CHECK -> 3 profiles link back to stripe.com",
-  ],
-};
+function evidenceChain(result: LookupResult): string[] {
+  const sources = new Set<string>();
+  let reciprocal = 0;
+  let conflicts = 0;
+  for (const platform of result.platforms) {
+    if (platform.conflict) conflicts += 1;
+    for (const entry of platform.entries) {
+      for (const source of entry.sources) sources.add(source);
+      if (entry.reciprocal === "links_back") reciprocal += 1;
+    }
+  }
+  const lines = [
+    `FETCH ${result.domain} -> final URL ${result.finalUrl}`,
+    `PARSE structured data + page links -> sources seen: ${[...sources].join(", ") || "none"}`,
+    `MERGE by handle -> ${conflicts === 0 ? "no conflicts" : `${conflicts} platform conflict(s) flagged`}`,
+    `RECIPROCAL CHECK -> ${reciprocal} profile(s) link back to ${result.domain}`,
+  ];
+  if (result.blocked) lines.push("NOTE -> target refused automated visit; search/probe evidence only");
+  if (result.enrichment?.used) lines.push(`ENRICHMENT -> rendered via Firecrawl (${result.enrichment.reason})`);
+  if (result.browserUse?.used) lines.push(`LIVE BROWSER -> ${result.browserUse.reason}`);
+  lines.push(`CHECKED AT -> ${result.checkedAt}`);
+  return lines;
+}
 
 function Dossier() {
-  const asJson = JSON.stringify(SHEET, null, 2);
+  const { target } = Route.useSearch();
+  const navigate = useNavigate();
+  const [result, setResult] = useState<LookupResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [draft, setDraft] = useState("");
+
+  useEffect(() => {
+    if (!target) return;
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    setResult(null);
+    lookupSocials({ data: { url: target } })
+      .then((r) => {
+        if (!cancelled) setResult(r);
+      })
+      .catch((e: unknown) => {
+        if (!cancelled) setError(e instanceof Error ? e.message : "Lookup failed.");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [target]);
+
+  const submit = () => {
+    const value = draft.trim();
+    if (value) void navigate({ to: "/dossier", search: { target: value } });
+  };
+
+  const entries = result
+    ? result.platforms.flatMap((p) =>
+        p.entries.map((e) => ({
+          platform: p.platformName,
+          tag: e.tag,
+          proof: e.evidence[0] ?? "Found on target site",
+          verified: p.status === "verified" && e.verified,
+        })),
+      )
+    : [];
 
   return (
     <Shell>
@@ -51,65 +105,118 @@ function Dossier() {
         right={<span>[CLASSIFICATION: OPEN SOURCE]</span>}
       />
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-lg mx-auto flex max-w-4xl flex-col">
-        <div className="p-space-lg gap-space-lg text-grit-black flex flex-col border-3 border-grit-black bg-paper-distressed shadow-stamp-lime-xl">
-          <div className="flex flex-wrap items-start justify-between gap-4 border-b-2 border-grit-black pb-4">
-            <div>
-              <p className="font-label-stamp text-label-stamp uppercase">INTEL SHEET // TARGET</p>
-              <h1 className="font-display-hero text-headline-lg uppercase">{SHEET.target} Intel Dossier</h1>
-              <p className="font-code-terminal text-code-terminal">{SHEET.domain}</p>
+        <form
+          className="gap-space-sm flex flex-wrap"
+          onSubmit={(e) => {
+            e.preventDefault();
+            submit();
+          }}
+        >
+          <label htmlFor="dossier-target" className="font-label-stamp text-label-stamp text-paper-distressed uppercase">
+            Target domain
+          </label>
+          <input
+            id="dossier-target"
+            type="text"
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            placeholder="example.com"
+            className="font-code-terminal text-code-terminal text-paper-distressed border-2 border-outline-variant bg-grit-black px-3 py-2"
+          />
+          <button
+            type="submit"
+            className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-2 uppercase shadow-stamp"
+          >
+            Decrypt
+          </button>
+        </form>
+
+        {loading && (
+          <p className="font-code-terminal text-code-terminal text-acid-lime" role="status">
+            &gt; Running recon on {target}…
+          </p>
+        )}
+        {error && (
+          <p className="font-code-terminal text-code-terminal text-hazard-orange" role="alert">
+            &gt; {error}
+          </p>
+        )}
+
+        {result && (
+          <>
+            <div className="p-space-lg gap-space-lg text-grit-black flex flex-col border-3 border-grit-black bg-paper-distressed shadow-stamp-lime-xl">
+              <div className="flex flex-wrap items-start justify-between gap-4 border-b-2 border-grit-black pb-4">
+                <div>
+                  <p className="font-label-stamp text-label-stamp uppercase">INTEL SHEET // TARGET</p>
+                  <h1 className="font-display-hero text-headline-lg uppercase">{result.brandName} Intel Dossier</h1>
+                  <p className="font-code-terminal text-code-terminal">{result.domain}</p>
+                </div>
+                <span className="font-label-stamp text-label-stamp text-paper-distressed rotate-3 border-2 border-grit-black bg-electric-magenta px-3 py-2 uppercase">
+                  DECRYPTED
+                </span>
+              </div>
+
+              <h2 className="font-headline text-headline-sm uppercase">CONFIRMED HANDLES</h2>
+              {entries.length === 0 ? (
+                <p className="font-code-terminal text-code-terminal">
+                  &gt; No social profiles confirmed for this target.
+                </p>
+              ) : (
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="font-label-stamp text-label-stamp uppercase">
+                      <th className="pb-2">Platform</th>
+                      <th className="pb-2">Handle</th>
+                      <th className="hidden pb-2 sm:table-cell">Proof</th>
+                    </tr>
+                  </thead>
+                  <tbody className="font-code-terminal text-code-terminal">
+                    {entries.map((h) => (
+                      <tr key={`${h.platform}-${h.tag}`} className="border-t-2 border-grit-black/20">
+                        <td className="py-2 uppercase">{h.platform}</td>
+                        <td className="py-2 break-all">
+                          {h.tag}
+                          {!h.verified && <span className="uppercase"> (unverified)</span>}
+                        </td>
+                        <td className="hidden py-2 sm:table-cell">{h.proof}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+
+              <div>
+                <h2 className="font-headline text-headline-sm uppercase">EVIDENCE CHAIN</h2>
+                <ol className="font-code-terminal text-code-terminal mt-2 space-y-1">
+                  {evidenceChain(result).map((c) => (
+                    <li key={c}>&gt; {c}</li>
+                  ))}
+                </ol>
+              </div>
             </div>
-            <span className="font-label-stamp text-label-stamp text-paper-distressed rotate-3 border-2 border-grit-black bg-electric-magenta px-3 py-2 uppercase">
-              DECRYPTED
-            </span>
-          </div>
 
-          <h2 className="font-headline text-headline-sm uppercase">CONFIRMED HANDLES</h2>
-          <table className="w-full text-left">
-            <thead>
-              <tr className="font-label-stamp text-label-stamp uppercase">
-                <th className="pb-2">Platform</th>
-                <th className="pb-2">Handle</th>
-                <th className="hidden pb-2 sm:table-cell">Proof</th>
-              </tr>
-            </thead>
-            <tbody className="font-code-terminal text-code-terminal">
-              {SHEET.handles.map((h) => (
-                <tr key={h.platform} className="border-t-2 border-grit-black/20">
-                  <td className="py-2 uppercase">{h.platform}</td>
-                  <td className="py-2 break-all">{h.tag}</td>
-                  <td className="hidden py-2 sm:table-cell">{h.proof}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            <div className="gap-space-sm flex flex-wrap">
+              <button
+                onClick={() => window.print()}
+                className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-3 uppercase shadow-stamp"
+              >
+                Export PDF
+              </button>
+              <button
+                onClick={() => copyText(JSON.stringify(result, null, 2), "dossier JSON")}
+                className="font-label-stamp text-label-stamp text-paper-distressed border-2 border-paper-distressed px-4 py-3 uppercase hover:bg-paper-distressed hover:text-grit-black"
+              >
+                Copy JSON
+              </button>
+            </div>
+          </>
+        )}
 
-          <div>
-            <h2 className="font-headline text-headline-sm uppercase">EVIDENCE CHAIN</h2>
-            <ol className="font-code-terminal text-code-terminal mt-2 space-y-1">
-              {SHEET.chain.map((c) => (
-                <li key={c}>&gt; {c}</li>
-              ))}
-            </ol>
-          </div>
-        </div>
-
-        <div className="gap-space-sm flex flex-wrap">
-          <button
-            onClick={() => window.print()}
-            className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-4 py-3 uppercase shadow-stamp"
-          >
-            Export PDF
-          </button>
-          <button
-            onClick={() => copyText(asJson, "dossier JSON")}
-            className="font-label-stamp text-label-stamp text-paper-distressed border-2 border-paper-distressed px-4 py-3 uppercase hover:bg-paper-distressed hover:text-grit-black"
-          >
-            Copy JSON
-          </button>
-          <button className="font-label-stamp text-label-stamp bg-error-container text-on-error-container px-4 py-3 uppercase shadow-stamp">
-            Flag target
-          </button>
-        </div>
+        {!target && !loading && (
+          <p className="font-code-terminal text-code-terminal text-on-surface-variant">
+            &gt; Enter a target domain above to decrypt its intel sheet.
+          </p>
+        )}
       </section>
     </Shell>
   );
