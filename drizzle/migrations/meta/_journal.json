@@ -15,6 +15,13 @@
       "when": 1791263052587,
       "tag": "0001_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791481741784,
+      "tag": "0002_browser_runs",
+      "breakpoints": true
     }
   ]
 }
