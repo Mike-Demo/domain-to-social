@@ -3,7 +3,35 @@
   "url": "https://magicmanta.com",
   "description": "Find and verify a brand's social media profiles from its website URL.",
   "mcpServers": [
-    { "name": "com.magicmanta/mcp", "url": "https://magicmanta.com/mcp", "card": "https://magicmanta.com/.well-known/mcp/server-card.json" }
+    {
+      "name": "com.magicmanta/mcp",
+      "url": "https://magicmanta.com/mcp",
+      "card": "https://magicmanta.com/.well-known/mcp/server-card.json",
+      "trustManifest": {
+        "identity": "https://magicmanta.com",
+        "attestations": [
+          {
+            "type": "domain-control",
+            "uri": "https://magicmanta.com/.well-known/mcp/server-card.json",
+            "description": "Server card served from the claimed domain"
+          },
+          {
+            "type": "documentation",
+            "uri": "https://magicmanta.com/llms.txt",
+            "description": "Machine-readable docs describing the MCP server and auth"
+          },
+          {
+            "type": "auth",
+            "uri": "https://magicmanta.com/.well-known/oauth-protected-resource",
+            "description": "OAuth 2.0 protected-resource metadata"
+          }
+        ]
+      }
+    }
   ],
-  "docs": ["https://magicmanta.com/llms.txt", "https://magicmanta.com/auth.md", "https://magicmanta.com/openapi.json"]
+  "docs": [
+    "https://magicmanta.com/llms.txt",
+    "https://magicmanta.com/auth.md",
+    "https://magicmanta.com/openapi.json"
+  ]
 }
