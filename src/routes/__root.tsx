@@ -136,7 +136,7 @@ function RootShell({ children }: { children: ReactNode }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "Brand Connector Pro",
+              name: "M4G1C M4NT4",
               alternateName: "M4G1C M4NT4 // Social Radar",
               url: "https://magicmanta.com",
               description: "Find verified social handles for any brand.",
