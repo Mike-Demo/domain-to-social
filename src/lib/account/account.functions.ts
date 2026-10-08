@@ -97,7 +97,7 @@ export const getMyAccount = createServerFn({ method: "GET" })
 
 export const saveLookup = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
-  .inputValidator((d: { result: LookupResult }) => d)
+  .validator((d: { result: LookupResult }) => d)
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.from("lookups").insert({
       user_id: context.userId,
@@ -110,7 +110,7 @@ export const saveLookup = createServerFn({ method: "POST" })
 
 export const createList = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
-  .inputValidator((d: unknown) => z.object({ name: z.string().trim().min(1).max(80) }).parse(d))
+  .validator((d: unknown) => z.object({ name: z.string().trim().min(1).max(80) }).parse(d))
   .handler(async ({ data, context }) => {
     await requireLists(context);
     const { data: row, error } = await context.supabase
@@ -124,7 +124,7 @@ export const createList = createServerFn({ method: "POST" })
 
 export const deleteList = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
-  .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
+  .validator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     await context.supabase.from("lists").delete().eq("id", data.id);
     return { ok: true };
@@ -132,7 +132,7 @@ export const deleteList = createServerFn({ method: "POST" })
 
 export const addToList = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
-  .inputValidator((d: { listId: string; results: LookupResult[] }) => d)
+  .validator((d: { listId: string; results: LookupResult[] }) => d)
   .handler(async ({ data, context }) => {
     await requireLists(context);
     const rows = data.results.slice(0, 25).map((r) => ({
@@ -148,7 +148,7 @@ export const addToList = createServerFn({ method: "POST" })
 
 export const getList = createServerFn({ method: "GET" })
   .middleware([requireMfaAuth])
-  .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
+  .validator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { data: list } = await context.supabase.from("lists").select("id,name").eq("id", data.id).maybeSingle();
     if (!list) throw new Error("List not found.");
@@ -183,7 +183,7 @@ function assertMemberQuota(userId: string, sites: number): void {
 /** Signed-in single lookup: Deep Recon plans get Firecrawl enrichment, others get the standard lookup. */
 export const memberLookup = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
-  .inputValidator((d: unknown) => z.object({ url: z.string().trim().min(3).max(500) }).parse(d))
+  .validator((d: unknown) => z.object({ url: z.string().trim().min(3).max(500) }).parse(d))
   .handler(async ({ data, context }) => {
     assertMemberQuota(context.userId, 1);
     const ent = await loadEntitlements(context);
@@ -193,7 +193,7 @@ export const memberLookup = createServerFn({ method: "POST" })
 
 export const runBatch = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
-  .inputValidator((d: unknown) => z.object({ urls: z.array(z.string().trim().min(3).max(500)).min(1).max(25) }).parse(d))
+  .validator((d: unknown) => z.object({ urls: z.array(z.string().trim().min(3).max(500)).min(1).max(25) }).parse(d))
   .handler(async ({ data, context }) => {
     const ent = await loadEntitlements(context);
     if (ent.batchSize === 0) throw new Error("Bulk searching needs the Operative plan.");

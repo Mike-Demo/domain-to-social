@@ -29,7 +29,7 @@ type CheckoutResult = { clientSecret: string } | { error: string; code?: "owned"
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z.object({ priceId: z.enum(PRICE_IDS) }).parse(d),
   )
   .handler(async ({ data, context }): Promise<CheckoutResult> => {
@@ -91,7 +91,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 /** Swap the live monthly plan right away; Stripe charges or credits the difference on an immediate invoice. */
 export const changePlan = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
-  .inputValidator((d: unknown) => z.object({ priceId: z.enum(MONTHLY_PRICE_IDS) }).parse(d))
+  .validator((d: unknown) => z.object({ priceId: z.enum(MONTHLY_PRICE_IDS) }).parse(d))
   .handler(async ({ data, context }): Promise<{ ok: true } | { error: string }> => {
     const { createStripeClient, getStripeErrorMessage } = await import("@/lib/stripe.server");
     const env = await currentEnv();
@@ -140,7 +140,7 @@ export const createPortalSession = createServerFn({ method: "POST" })
 /** Cancels any live subscription immediately, then erases the user's data and sign-in. */
 export const deleteMyAccount = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
-  .inputValidator((d: unknown) => z.object({ confirm: z.literal("DELETE") }).parse(d))
+  .validator((d: unknown) => z.object({ confirm: z.literal("DELETE") }).parse(d))
   .handler(async ({ context }): Promise<{ ok: true } | { error: string }> => {
     const { createStripeClient, getStripeErrorMessage } = await import("@/lib/stripe.server");
     const env = await currentEnv();

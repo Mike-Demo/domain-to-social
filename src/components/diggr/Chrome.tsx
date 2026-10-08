@@ -31,12 +31,15 @@ export function Stamp({
 
 export function Ticker() {
   return (
-    <div className="bg-primary-container text-on-primary-container px-space-md flex w-full items-center justify-between overflow-hidden border-b border-grit-black py-0.5">
+    <div
+      aria-hidden="true"
+      className="bg-primary-container text-on-primary-container px-space-md flex w-full items-center justify-between overflow-hidden border-b border-grit-black py-0.5"
+    >
       <div className="gap-space-sm font-code-terminal text-code-terminal flex items-center uppercase">
         <span className="bg-grit-black text-primary-container px-1 py-0.5 font-bold tracking-widest">
           LIVE STREAM
         </span>
-        <span className="animate-pulse" aria-hidden="true">●</span>
+        <span className="animate-pulse">●</span>
         <span className="truncate">TARGET // SNIFFING FOOTPRINTS ON 1,482 CORPS</span>
         <span className="hidden opacity-50 sm:inline">|</span>
         <span className="hidden sm:inline">NODE_09: ACTIVE</span>
@@ -151,8 +154,14 @@ export function Shell({ children }: { children: ReactNode }) {
   return (
     <div className="diggr min-h-dvh selection:bg-primary-container selection:text-on-primary-container">
       <WebAwesomeLoader />
+      <a
+        href="#main-content"
+        className="font-label-stamp text-label-stamp sr-only uppercase focus:not-sr-only focus:fixed focus:top-0 focus:left-0 focus:z-[100] focus:bg-primary-container focus:text-on-primary-container focus:px-space-md focus:py-space-sm focus:shadow-stamp-sm"
+      >
+        Skip to content
+      </a>
       <Header />
-      <main className="min-h-dvh w-full pt-32 pb-20 xl:pb-0">{children}</main>
+      <main id="main-content" className="min-h-dvh w-full pt-32 pb-20 xl:pb-0">{children}</main>
       <MobileNav />
     </div>
   );
