@@ -2,6 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
+import { isAgentIdUser } from "@/lib/account/mfa";
 
 interface OAuthResult {
   data: { redirect_url?: string; redirect_to?: string; client?: { name?: string } } | null;
@@ -34,9 +35,11 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
     if (!search.authorization_id) throw new Error("Missing authorization_id");
     const { data } = await supabase.auth.getSession();
     if (!data.session) throw redirect({ to: "/auth", search: { next: location.pathname + location.searchStr } });
-    // Assistants only get access after the owner passes the authenticator-app check.
-    const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-    if (aal?.currentLevel !== "aal2") throw redirect({ to: "/mfa", search: { next: location.pathname + location.searchStr } });
+    // Assistants only get access after the owner passes the authenticator-app check; AgentID sign-ins are exempt.
+    if (!isAgentIdUser(data.session.user)) {
+      const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (aal?.currentLevel !== "aal2") throw redirect({ to: "/mfa", search: { next: location.pathname + location.searchStr } });
+    }
   },
   loader: async ({ location }) => {
     const id = new URLSearchParams(location.search).get("authorization_id") ?? "";
