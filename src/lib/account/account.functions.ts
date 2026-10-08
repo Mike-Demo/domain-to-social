@@ -150,6 +150,7 @@ export const getList = createServerFn({ method: "GET" })
   .middleware([requireMfaAuth])
   .validator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
+    await requireLists(context);
     const { data: list } = await context.supabase.from("lists").select("id,name").eq("id", data.id).maybeSingle();
     if (!list) throw new Error("List not found.");
     const { data: items } = await context.supabase
