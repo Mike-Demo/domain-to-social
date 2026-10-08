@@ -11,10 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdaptersRouteImport } from './routes/adapters'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthDotmdRouteImport } from './routes/auth[.]md'
 import { Route as BatchRouteImport } from './routes/batch'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DossierRouteImport } from './routes/dossier'
 import { Route as FairUseRouteImport } from './routes/fair-use'
 import { Route as IndexDotmdRouteImport } from './routes/index[.]md'
@@ -24,6 +26,7 @@ import { Route as MfaRouteImport } from './routes/mfa'
 import { Route as OfflineRouteImport } from './routes/offline'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PricingDotmdRouteImport } from './routes/pricing[.]md'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as RRouteImport } from './routes/r'
 import { Route as SourceRouteImport } from './routes/source'
 import { Route as SupportRouteImport } from './routes/support'
@@ -46,6 +49,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdaptersRoute = AdaptersRouteImport.update({
   id: '/adapters',
   path: '/adapters',
@@ -64,6 +72,11 @@ const AuthDotmdRoute = AuthDotmdRouteImport.update({
 const BatchRoute = BatchRouteImport.update({
   id: '/batch',
   path: '/batch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DossierRoute = DossierRouteImport.update({
@@ -109,6 +122,11 @@ const PricingRoute = PricingRouteImport.update({
 const PricingDotmdRoute = PricingDotmdRouteImport.update({
   id: '/pricing.md',
   path: '/pricing.md',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RRoute = RRouteImport.update({
@@ -178,10 +196,12 @@ const LovableEmailTransactionalPreviewRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/adapters': typeof AdaptersRoute
   '/auth': typeof AuthRoute
   '/auth.md': typeof AuthDotmdRoute
   '/batch': typeof BatchRoute
+  '/contact': typeof ContactRoute
   '/dossier': typeof DossierRoute
   '/fair-use': typeof FairUseRoute
   '/index.md': typeof IndexDotmdRoute
@@ -191,6 +211,7 @@ export interface FileRoutesByFullPath {
   '/offline': typeof OfflineRoute
   '/pricing': typeof PricingRoute
   '/pricing.md': typeof PricingDotmdRoute
+  '/privacy': typeof PrivacyRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
   '/support': typeof SupportRoute
@@ -206,10 +227,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/adapters': typeof AdaptersRoute
   '/auth': typeof AuthRoute
   '/auth.md': typeof AuthDotmdRoute
   '/batch': typeof BatchRoute
+  '/contact': typeof ContactRoute
   '/dossier': typeof DossierRoute
   '/fair-use': typeof FairUseRoute
   '/index.md': typeof IndexDotmdRoute
@@ -219,6 +242,7 @@ export interface FileRoutesByTo {
   '/offline': typeof OfflineRoute
   '/pricing': typeof PricingRoute
   '/pricing.md': typeof PricingDotmdRoute
+  '/privacy': typeof PrivacyRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
   '/support': typeof SupportRoute
@@ -236,10 +260,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/about': typeof AboutRoute
   '/adapters': typeof AdaptersRoute
   '/auth': typeof AuthRoute
   '/auth.md': typeof AuthDotmdRoute
   '/batch': typeof BatchRoute
+  '/contact': typeof ContactRoute
   '/dossier': typeof DossierRoute
   '/fair-use': typeof FairUseRoute
   '/index.md': typeof IndexDotmdRoute
@@ -249,6 +275,7 @@ export interface FileRoutesById {
   '/offline': typeof OfflineRoute
   '/pricing': typeof PricingRoute
   '/pricing.md': typeof PricingDotmdRoute
+  '/privacy': typeof PrivacyRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
   '/support': typeof SupportRoute
@@ -266,10 +293,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/adapters'
     | '/auth'
     | '/auth.md'
     | '/batch'
+    | '/contact'
     | '/dossier'
     | '/fair-use'
     | '/index.md'
@@ -279,6 +308,7 @@ export interface FileRouteTypes {
     | '/offline'
     | '/pricing'
     | '/pricing.md'
+    | '/privacy'
     | '/r'
     | '/source'
     | '/support'
@@ -294,10 +324,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/adapters'
     | '/auth'
     | '/auth.md'
     | '/batch'
+    | '/contact'
     | '/dossier'
     | '/fair-use'
     | '/index.md'
@@ -307,6 +339,7 @@ export interface FileRouteTypes {
     | '/offline'
     | '/pricing'
     | '/pricing.md'
+    | '/privacy'
     | '/r'
     | '/source'
     | '/support'
@@ -323,10 +356,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/about'
     | '/adapters'
     | '/auth'
     | '/auth.md'
     | '/batch'
+    | '/contact'
     | '/dossier'
     | '/fair-use'
     | '/index.md'
@@ -336,6 +371,7 @@ export interface FileRouteTypes {
     | '/offline'
     | '/pricing'
     | '/pricing.md'
+    | '/privacy'
     | '/r'
     | '/source'
     | '/support'
@@ -353,10 +389,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AboutRoute: typeof AboutRoute
   AdaptersRoute: typeof AdaptersRoute
   AuthRoute: typeof AuthRoute
   AuthDotmdRoute: typeof AuthDotmdRoute
   BatchRoute: typeof BatchRoute
+  ContactRoute: typeof ContactRoute
   DossierRoute: typeof DossierRoute
   FairUseRoute: typeof FairUseRoute
   IndexDotmdRoute: typeof IndexDotmdRoute
@@ -366,6 +404,7 @@ export interface RootRouteChildren {
   OfflineRoute: typeof OfflineRoute
   PricingRoute: typeof PricingRoute
   PricingDotmdRoute: typeof PricingDotmdRoute
+  PrivacyRoute: typeof PrivacyRoute
   RRoute: typeof RRoute
   SourceRoute: typeof SourceRoute
   SupportRoute: typeof SupportRoute
@@ -394,6 +433,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/adapters': {
       id: '/adapters'
       path: '/adapters'
@@ -420,6 +466,13 @@ declare module '@tanstack/react-router' {
       path: '/batch'
       fullPath: '/batch'
       preLoaderRoute: typeof BatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dossier': {
@@ -483,6 +536,13 @@ declare module '@tanstack/react-router' {
       path: '/pricing.md'
       fullPath: '/pricing.md'
       preLoaderRoute: typeof PricingDotmdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/r': {
@@ -588,10 +648,12 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AboutRoute: AboutRoute,
   AdaptersRoute: AdaptersRoute,
   AuthRoute: AuthRoute,
   AuthDotmdRoute: AuthDotmdRoute,
   BatchRoute: BatchRoute,
+  ContactRoute: ContactRoute,
   DossierRoute: DossierRoute,
   FairUseRoute: FairUseRoute,
   IndexDotmdRoute: IndexDotmdRoute,
@@ -601,6 +663,7 @@ const rootRouteChildren: RootRouteChildren = {
   OfflineRoute: OfflineRoute,
   PricingRoute: PricingRoute,
   PricingDotmdRoute: PricingDotmdRoute,
+  PrivacyRoute: PrivacyRoute,
   RRoute: RRoute,
   SourceRoute: SourceRoute,
   SupportRoute: SupportRoute,
