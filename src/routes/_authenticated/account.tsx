@@ -22,6 +22,7 @@ export const Route = createFileRoute("/_authenticated/account")({
       { name: "robots", content: "noindex" },
     ],
   }),
+  validateSearch: (s: Record<string, unknown>): { checkout?: "done" } => (s["checkout"] === "done" ? { checkout: "done" } : {}),
   component: Account,
 });
 
@@ -32,9 +33,18 @@ function Account() {
   const create = useServerFn(createList);
   const remove = useServerFn(deleteList);
   const portal = useServerFn(createPortalSession);
+  const destroy = useServerFn(deleteMyAccount);
   const qc = useQueryClient();
   const navigate = useNavigate();
-  const { data, error } = useQuery({ queryKey: ["account"], queryFn: () => fetchAccount() });
+  const { checkout } = Route.useSearch();
+  const [pollUntil] = useState(() => (checkout ? Date.now() + 30_000 : 0));
+  const { data, error } = useQuery({
+    queryKey: ["account"],
+    queryFn: () => fetchAccount(),
+    refetchInterval: () => (Date.now() < pollUntil ? 2_000 : false),
+  });
+  const [confirmText, setConfirmText] = useState("");
+  const [deleting, setDeleting] = useState(false);
   const [name, setName] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const fetchRecovery = useServerFn(recoveryCodeStatus);
