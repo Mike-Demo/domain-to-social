@@ -63,8 +63,8 @@ const h1 = {
   margin: '0 0 18px',
   lineHeight: '1.25',
 }
-export const text = { fontSize: '15px', color: colors.body, lineHeight: '1.6', margin: '0 0 20px' }
-export const link = { color: colors.black, textDecoration: 'underline', fontWeight: 'bold' as const }
+export const text = { fontSize: '15px', color: colors.body, lineHeight: '1.6', margin: '0 0 20px', overflowWrap: 'anywhere' as const, wordBreak: 'break-word' as const }
+export const link = { color: colors.black, textDecoration: 'underline', fontWeight: 'bold' as const, wordBreak: 'break-all' as const }
 const button = {
   backgroundColor: colors.lime,
   color: colors.black,
@@ -134,7 +134,7 @@ export const BrandButton = ({ href, label }: { href: string; label: string }) =>
     </Button>
     <Text style={fallback}>
       Button not working? Paste this link into your browser:{' '}
-      <Link href={href} style={{ color: colors.muted }}>
+      <Link href={href} style={{ color: colors.muted, wordBreak: 'break-all', overflowWrap: 'anywhere' }}>
         {href}
       </Link>
     </Text>
