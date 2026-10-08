@@ -128,7 +128,7 @@ function Account() {
                     onClick={async () => {
                       setPortalBusy(true);
                       setPortalErr(null);
-                      const r = await portal({ data: { returnUrl: window.location.href } });
+                      const r = await portal();
                       if ("error" in r) {
                         setPortalErr(r.error);
                         setPortalBusy(false);

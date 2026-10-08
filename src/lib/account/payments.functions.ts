@@ -3,6 +3,7 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import type Stripe from "stripe";
 import { z } from "zod";
 import { requireMfaAuth } from "./mfa-middleware";
+import { trustedAppOrigin } from "./return-url";
 import { checkoutDecision, MONTHLY_PRICE_IDS, PRICE_IDS, type SubRow } from "./billing";
 
 export { PRICE_IDS } from "./billing";
@@ -29,7 +30,7 @@ type CheckoutResult = { clientSecret: string } | { error: string; code?: "owned"
 export const createCheckoutSession = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
   .inputValidator((d: unknown) =>
-    z.object({ priceId: z.enum(PRICE_IDS), returnUrl: z.string().url().max(500) }).parse(d),
+    z.object({ priceId: z.enum(PRICE_IDS) }).parse(d),
   )
   .handler(async ({ data, context }): Promise<CheckoutResult> => {
     const { createStripeClient, getStripeErrorMessage } = await import("@/lib/stripe.server");
@@ -74,7 +75,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         line_items: [{ price: price.id, quantity: 1 }],
         mode: isRecurring ? "subscription" : "payment",
         ui_mode: "embedded_page",
-        return_url: data.returnUrl,
+        return_url: `${trustedAppOrigin(getRequestHeaders().get("host"))}/account?checkout=done`,
         customer: customerId,
         managed_payments: { enabled: true },
         metadata: { userId, priceId: data.priceId, managed_payments: "true" },
@@ -119,16 +120,10 @@ export const changePlan = createServerFn({ method: "POST" })
 
 export const createPortalSession = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
-  .inputValidator((d: unknown) => z.object({ returnUrl: z.string().url().max(500) }).parse(d))
-  .handler(async ({ data, context }): Promise<{ url: string } | { error: string }> => {
+  .handler(async ({ context }): Promise<{ url: string } | { error: string }> => {
     const { createStripeClient, getStripeErrorMessage } = await import("@/lib/stripe.server");
-    const host = getRequestHeaders().get("host");
     const env = await currentEnv();
-    const requested = new URL(data.returnUrl);
-    const returnUrl =
-      host && requested.host === host && (requested.protocol === "https:" || host.startsWith("localhost"))
-        ? requested.toString()
-        : `https://${host ?? "magicmanta.com"}/account`;
+    const returnUrl = `${trustedAppOrigin(getRequestHeaders().get("host"))}/account`;
     const sub = await loadRow(context, env);
     if (!sub?.stripe_customer_id) return { error: "No billing account yet." };
     try {

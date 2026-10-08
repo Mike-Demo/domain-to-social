@@ -8,7 +8,7 @@ export function Checkout({ priceId }: { priceId: (typeof PRICE_IDS)[number] }) {
   const create = useServerFn(createCheckoutSession);
   const fetchClientSecret = useCallback(async (): Promise<string> => {
     const r = await create({
-      data: { priceId, returnUrl: `${window.location.origin}/account?checkout=done` },
+      data: { priceId },
     });
     if ("error" in r) throw new Error(r.error);
     return r.clientSecret;
