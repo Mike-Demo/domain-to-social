@@ -44,6 +44,11 @@ function SharedResult() {
       <SubHeader badge="SHARED SNAPSHOT // READ-ONLY" note="// FROZEN AT TIME OF LOOKUP //" />
       <section className="px-margin-mobile sm:px-margin py-space-xl bg-bg-deep">
         <div className="gap-space-xl mx-auto flex max-w-7xl flex-col">
+          {!result && (
+            <h1 className="font-headline text-headline-lg text-paper-distressed uppercase">
+              Social Footprint Snapshot
+            </h1>
+          )}
           {error && (
             <div className="p-space-md font-code-terminal text-code-terminal border-2 border-error-container text-on-error-container">
               <p>! {error}</p>
