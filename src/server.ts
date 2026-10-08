@@ -60,7 +60,14 @@ export default {
       }
       const handler = await getServerEntry();
       const raw = await normalizeCatastrophicSsrResponse(await handler.fetch(request, env, ctx));
-      if (raw.status === 404 && /text\/markdown/i.test(request.headers.get("accept") ?? "")) return markdownResponse(NOT_FOUND_MD, 404);
+      if (/text\/markdown/i.test(request.headers.get("accept") ?? "") && (raw.status === 404 || raw.status === 406)) {
+        // Markdown-only requests are refused (406) by the page renderer; re-check as HTML to tell a missing page apart.
+        const headers = new Headers(request.headers);
+        headers.set("accept", "text/html");
+        const probe = raw.status === 404 ? raw : await handler.fetch(new Request(request, { headers }), env, ctx);
+        if (probe.status === 404) return markdownResponse(NOT_FOUND_MD, 404);
+        if (raw.status === 406) return probe;
+      }
       const type = raw.headers.get("content-type") ?? "";
       if (!type.includes("text/html")) return raw;
       const response = new Response(raw.body, raw);
