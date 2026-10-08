@@ -298,7 +298,7 @@ function RadarScanner() {
               </div>
             )}
             {result.browserUse && (
-              <p className="p-space-md font-label-stamp text-label-stamp text-cyber-cyan border-2 border-cyber-cyan bg-grit-black uppercase">
+              <p className="p-space-md font-label-stamp text-label-stamp text-cyber-cyan border border-cyber-cyan bg-grit-black uppercase">
                 BRAND COMMAND // LIVE BROWSER {result.browserUse.used ? "USED" : "TRIED"} ({result.browserUse.reason})
               </p>
             )}
