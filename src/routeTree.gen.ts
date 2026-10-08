@@ -35,7 +35,6 @@ import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } fr
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedListsIdRouteImport } from './routes/_authenticated/lists.$id'
-import { Route as ApiPublicAcceptProbeRouteImport } from './routes/api/public/accept-probe'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
@@ -172,11 +171,6 @@ const AuthenticatedListsIdRoute = AuthenticatedListsIdRouteImport.update({
   path: '/lists/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const ApiPublicAcceptProbeRoute = ApiPublicAcceptProbeRouteImport.update({
-  id: '/api/public/accept-probe',
-  path: '/api/public/accept-probe',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiPublicPaymentsWebhookRoute =
   ApiPublicPaymentsWebhookRouteImport.update({
     id: '/api/public/payments/webhook',
@@ -226,7 +220,6 @@ export interface FileRoutesByFullPath {
   '/account': typeof AuthenticatedAccountRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
-  '/api/public/accept-probe': typeof ApiPublicAcceptProbeRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -258,7 +251,6 @@ export interface FileRoutesByTo {
   '/account': typeof AuthenticatedAccountRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
-  '/api/public/accept-probe': typeof ApiPublicAcceptProbeRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -292,7 +284,6 @@ export interface FileRoutesById {
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/_authenticated/lists/$id': typeof AuthenticatedListsIdRoute
-  '/api/public/accept-probe': typeof ApiPublicAcceptProbeRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -326,7 +317,6 @@ export interface FileRouteTypes {
     | '/account'
     | '/.lovable/oauth/consent'
     | '/lists/$id'
-    | '/api/public/accept-probe'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -358,7 +348,6 @@ export interface FileRouteTypes {
     | '/account'
     | '/.lovable/oauth/consent'
     | '/lists/$id'
-    | '/api/public/accept-probe'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -391,7 +380,6 @@ export interface FileRouteTypes {
     | '/_authenticated/account'
     | '/.lovable/oauth/consent'
     | '/_authenticated/lists/$id'
-    | '/api/public/accept-probe'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -423,7 +411,6 @@ export interface RootRouteChildren {
   Char91DotwellKnownChar93ApiCatalogRoute: typeof Char91DotwellKnownChar93ApiCatalogRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
-  ApiPublicAcceptProbeRoute: typeof ApiPublicAcceptProbeRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -614,13 +601,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedListsIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/api/public/accept-probe': {
-      id: '/api/public/accept-probe'
-      path: '/api/public/accept-probe'
-      fullPath: '/api/public/accept-probe'
-      preLoaderRoute: typeof ApiPublicAcceptProbeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/public/payments/webhook': {
       id: '/api/public/payments/webhook'
       path: '/api/public/payments/webhook'
@@ -692,7 +672,6 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
-  ApiPublicAcceptProbeRoute: ApiPublicAcceptProbeRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
