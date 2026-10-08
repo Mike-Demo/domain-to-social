@@ -110,6 +110,7 @@ export async function resolvesPublicly(host: string): Promise<boolean> {
   } catch {
     ok = false;
   }
+  if (dnsCache.size > 1000) dnsCache.clear();
   dnsCache.set(host, ok);
   return ok;
 }
