@@ -73,7 +73,7 @@ function EmailFallback() {
         <a href={`mailto:${SUPPORT_EMAIL}`} className="font-code-terminal text-body-sm text-cyber-cyan break-all underline">
           {SUPPORT_EMAIL}
         </a>
-        <WaCopyButton value={SUPPORT_EMAIL} copyLabel="Copy support email" />
+        <WaCopyButton value={SUPPORT_EMAIL} copy-label="Copy support email" />
       </div>
     </div>
   );
