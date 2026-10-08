@@ -58,7 +58,7 @@ function FairUse() {
         </ul>
         <h2 className="font-headline text-headline-sm uppercase">Account security</h2>
         <p>Every account must use an authenticator app for two-factor sign-in. Assistants you connect act as you and follow the same limits.</p>
-        <p>We may slow down, pause, or close accounts that break these rules. Need more? Get in touch before you hit the wall.</p>
+        <p>We may slow down, pause, or close accounts that break these rules. Need more? <a href="/support" className="text-cyber-cyan underline">Contact support</a> before you hit the wall.</p>
       </article>
     </Shell>
   );

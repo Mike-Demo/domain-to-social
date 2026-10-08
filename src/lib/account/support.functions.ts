@@ -41,6 +41,7 @@ export const submitSupportTicket = createServerFn({ method: "POST" })
     await sendTemplateEmail("support-ticket", "", {
       templateData: { ticketId: id, ...data, fromEmail: email || "unknown", userId: context.userId, plan: sub?.plan ?? "free" },
       idempotencyKey: `support-ticket-${id}`,
+      ...(email ? { replyTo: email } : {}),
     });
     if (email) {
       await sendTemplateEmail("support-receipt", email, {
