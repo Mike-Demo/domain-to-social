@@ -31,7 +31,7 @@ const SupportTicketEmail = ({ ticketId = '—', category = 'General help', subje
 
 export const template = {
   component: SupportTicketEmail,
-  subject: (d: Record<string, any>) => `[Support ${d.ticketId ?? ''}] ${d.category ?? ''}: ${d.subject ?? ''}`,
+  subject: (d: Record<string, any>) => `[Support ${d['ticketId'] ?? ''}] ${d['category'] ?? ''}: ${d['subject'] ?? ''}`,
   displayName: 'Support ticket (to team)',
   to: SUPPORT_EMAIL,
   previewData: { ticketId: 'MM-7Q2K9', category: 'Bug report', subject: 'Batch stalls', message: 'Batch of 5 never finished.', fromEmail: 'jane@example.com', userId: '00000000-0000-0000-0000-000000000000', plan: 'operative' },

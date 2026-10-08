@@ -18,7 +18,7 @@ const SupportReceiptEmail = ({ ticketId = '—', subject = 'your request' }: Pro
 
 export const template = {
   component: SupportReceiptEmail,
-  subject: (d: Record<string, any>) => `Ticket ${d.ticketId ?? ''} received`,
+  subject: (d: Record<string, any>) => `Ticket ${d['ticketId'] ?? ''} received`,
   displayName: 'Support ticket receipt',
   previewData: { ticketId: 'MM-7Q2K9', subject: 'Batch stalls' },
 } satisfies TemplateEntry
