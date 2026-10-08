@@ -43,9 +43,9 @@ function Offline() {
       />
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-lg mx-auto flex max-w-4xl flex-col">
         <h1 className="font-display-hero text-display-hero-mobile lg:text-display-hero text-paper-distressed leading-none uppercase">
-          NO SIGNAL.{" "}
+          Air-gap Mode:{" "}
           <span className="text-on-error-container inline-block rotate-1 bg-error-container px-2 shadow-stamp">
-            STILL DIGGING.
+            Offline Dossier Vault
           </span>
         </h1>
         <p className="font-body-md text-body-lg text-on-surface-variant max-w-2xl">

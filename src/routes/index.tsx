@@ -328,9 +328,9 @@ function RadarScanner() {
                 <span className="font-label-stamp text-label-stamp text-electric-magenta uppercase">
                   TARGET: {result.brandName}
                 </span>
-                <span className="font-headline text-headline-lg text-paper-distressed uppercase">
+                <h2 className="font-headline text-headline-lg text-paper-distressed uppercase">
                   CONFIRMED FOOTPRINT
-                </span>
+                </h2>
                 <span className="font-code-terminal text-code-terminal text-on-surface-variant">
                   PRIMARY URL:{" "}
                   <a
