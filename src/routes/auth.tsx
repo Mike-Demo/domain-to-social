@@ -62,6 +62,12 @@ function AuthPage() {
     else if (!r.redirected) void navigate({ to: "/account" });
   }
 
+  async function microsoft() {
+    const r = await lovable.auth.signInWithOAuth("microsoft", { redirect_uri: window.location.origin });
+    if (r.error) setMsg(r.error.message);
+    else if (!r.redirected) void navigate({ to: "/account" });
+  }
+
   async function agentId() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "custom:app-oidc",
@@ -86,6 +92,9 @@ function AuthPage() {
           </button>
           <button type="button" onClick={apple} className={`${btn} bg-paper-distressed text-grit-black`}>
             Continue with Apple
+          </button>
+          <button type="button" onClick={microsoft} className={`${btn} bg-paper-distressed text-grit-black`}>
+            Continue with Microsoft
           </button>
           <button type="button" onClick={agentId} className={`${btn} bg-cyber-cyan text-grit-black`}>
             Continue with AgentID
