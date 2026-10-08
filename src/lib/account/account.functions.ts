@@ -80,6 +80,8 @@ export const getMyAccount = createServerFn({ method: "GET" })
             status: sub.status,
             currentPeriodEnd: sub.current_period_end,
             cancelAtPeriodEnd: sub.cancel_at_period_end,
+            monthlyPlan: subscriptionActive(sub) && sub.status !== "canceled" && sub.stripe_subscription_id ? sub.plan : null,
+            operativeOwned: sub.operative_lifetime,
           }
         : null,
       history: history ?? [],
