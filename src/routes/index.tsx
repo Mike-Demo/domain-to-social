@@ -158,6 +158,7 @@ function RadarScanner() {
 
   return (
     <Shell>
+      <WebMcpTools />
       <SubHeader
         badge="OSINT_RADAR_ENGAGED"
         note="// DEEP CORPO TRACE v2.8 //"
