@@ -3,7 +3,7 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Json } from "@/integrations/supabase/types";
-import { entitlementsFor, type Entitlements, type PlanTier } from "./entitlements";
+import { browserRunAllowed, entitlementsFor, type Entitlements, type PlanTier } from "./entitlements";
 import type { LookupResult } from "@/lib/social/types";
 
 type Ctx = { supabase: import("@supabase/supabase-js").SupabaseClient<import("@/integrations/supabase/types").Database>; userId: string };
@@ -40,6 +40,21 @@ function entitlementsFromSub(data: SubRow | null): Entitlements {
 
 async function loadEntitlements(ctx: Ctx): Promise<Entitlements> {
   return entitlementsFromSub(await loadSubscription(ctx));
+}
+
+/** Server-side daily cap for the live-browser fallback; logs the run when allowed. */
+function browserReserver(ctx: Ctx): (domain: string) => Promise<boolean> {
+  return async (domain) => {
+    const since = new Date(Date.now() - 86_400_000).toISOString();
+    const { count } = await ctx.supabase
+      .from("browser_runs")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", ctx.userId)
+      .gte("run_at", since);
+    if (!browserRunAllowed(count ?? 0)) return false;
+    const { error } = await ctx.supabase.from("browser_runs").insert({ user_id: ctx.userId, domain });
+    return !error;
+  };
 }
 
 async function requireLists(ctx: Ctx): Promise<void> {
@@ -167,7 +182,7 @@ export const memberLookup = createServerFn({ method: "POST" })
     assertMemberQuota(context.userId, 1);
     const ent = await loadEntitlements(context);
     const { lookupDomain } = await import("@/lib/social/lookup.server");
-    return lookupDomain(data.url, { enrich: ent.enrichment });
+    return lookupDomain(data.url, { enrich: ent.enrichment, browserAgent: ent.browserAgent, reserveBrowserRun: browserReserver(context) });
   });
 
 export const runBatch = createServerFn({ method: "POST" })
@@ -179,7 +194,7 @@ export const runBatch = createServerFn({ method: "POST" })
     if (data.urls.length > ent.batchSize) throw new Error(`Your plan allows ${ent.batchSize} domains per run.`);
     assertMemberQuota(context.userId, data.urls.length);
     const { lookupDomain } = await import("@/lib/social/lookup.server");
-    const settled = await Promise.allSettled(data.urls.map((u) => lookupDomain(u, { enrich: ent.enrichment })));
+    const settled = await Promise.allSettled(data.urls.map((u) => lookupDomain(u, { enrich: ent.enrichment, browserAgent: ent.browserAgent, reserveBrowserRun: browserReserver(context) })));
     const out = settled.map((s, i) =>
       s.status === "fulfilled"
         ? { input: data.urls[i] ?? "", ok: true as const, result: s.value }

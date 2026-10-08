@@ -297,6 +297,11 @@ function RadarScanner() {
                 </div>
               </div>
             )}
+            {result.browserUse && (
+              <p className="p-space-md font-label-stamp text-label-stamp text-cyber-cyan border border-cyber-cyan bg-grit-black uppercase">
+                BRAND COMMAND // LIVE BROWSER {result.browserUse.used ? "USED" : "TRIED"} ({result.browserUse.reason})
+              </p>
+            )}
             {result.blocked && (
               <p className="p-space-md font-code-terminal text-code-terminal bg-error-container/30 text-on-error-container border-2 border-error-container">
                 ! {result.domain} blocked our automated visit, so its own links couldn't be read.

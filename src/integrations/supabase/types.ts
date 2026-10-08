@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      browser_runs: {
+        Row: {
+          domain: string
+          id: string
+          run_at: string
+          user_id: string
+        }
+        Insert: {
+          domain: string
+          id?: string
+          run_at?: string
+          user_id: string
+        }
+        Update: {
+          domain?: string
+          id?: string
+          run_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       list_items: {
         Row: {
           added_at: string
