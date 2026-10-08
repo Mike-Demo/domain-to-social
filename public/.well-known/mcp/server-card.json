@@ -1,0 +1,9 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
+  "name": "com.magicmanta/mcp",
+  "title": "M4G1C M4NT4",
+  "description": "Find and verify a brand's social media profiles from its website, with evidence.",
+  "version": "1.0.0",
+  "websiteUrl": "https://magicmanta.com",
+  "remotes": [{ "type": "streamable-http", "url": "https://magicmanta.com/mcp" }]
+}

@@ -13,17 +13,21 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AdaptersRouteImport } from './routes/adapters'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthDotmdRouteImport } from './routes/auth[.]md'
 import { Route as BatchRouteImport } from './routes/batch'
 import { Route as DossierRouteImport } from './routes/dossier'
 import { Route as FairUseRouteImport } from './routes/fair-use'
+import { Route as IndexDotmdRouteImport } from './routes/index[.]md'
 import { Route as LicensesRouteImport } from './routes/licenses'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as MfaRouteImport } from './routes/mfa'
 import { Route as OfflineRouteImport } from './routes/offline'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as PricingDotmdRouteImport } from './routes/pricing[.]md'
 import { Route as RRouteImport } from './routes/r'
 import { Route as SourceRouteImport } from './routes/source'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as Char91DotwellKnownChar93ApiCatalogRouteImport } from './routes/[.well-known]/api-catalog'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
@@ -52,6 +56,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthDotmdRoute = AuthDotmdRouteImport.update({
+  id: '/auth.md',
+  path: '/auth.md',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BatchRoute = BatchRouteImport.update({
   id: '/batch',
   path: '/batch',
@@ -65,6 +74,11 @@ const DossierRoute = DossierRouteImport.update({
 const FairUseRoute = FairUseRouteImport.update({
   id: '/fair-use',
   path: '/fair-use',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexDotmdRoute = IndexDotmdRouteImport.update({
+  id: '/index.md',
+  path: '/index.md',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LicensesRoute = LicensesRouteImport.update({
@@ -92,6 +106,11 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricingDotmdRoute = PricingDotmdRouteImport.update({
+  id: '/pricing.md',
+  path: '/pricing.md',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RRoute = RRouteImport.update({
   id: '/r',
   path: '/r',
@@ -107,6 +126,12 @@ const SupportRoute = SupportRouteImport.update({
   path: '/support',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotwellKnownChar93ApiCatalogRoute =
+  Char91DotwellKnownChar93ApiCatalogRouteImport.update({
+    id: '/.well-known/api-catalog',
+    path: '/.well-known/api-catalog',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
   Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
     id: '/.well-known/oauth-protected-resource',
@@ -155,17 +180,21 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/adapters': typeof AdaptersRoute
   '/auth': typeof AuthRoute
+  '/auth.md': typeof AuthDotmdRoute
   '/batch': typeof BatchRoute
   '/dossier': typeof DossierRoute
   '/fair-use': typeof FairUseRoute
+  '/index.md': typeof IndexDotmdRoute
   '/licenses': typeof LicensesRoute
   '/mcp': typeof McpRoute
   '/mfa': typeof MfaRoute
   '/offline': typeof OfflineRoute
   '/pricing': typeof PricingRoute
+  '/pricing.md': typeof PricingDotmdRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
   '/support': typeof SupportRoute
+  '/.well-known/api-catalog': typeof Char91DotwellKnownChar93ApiCatalogRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account': typeof AuthenticatedAccountRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -179,17 +208,21 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/adapters': typeof AdaptersRoute
   '/auth': typeof AuthRoute
+  '/auth.md': typeof AuthDotmdRoute
   '/batch': typeof BatchRoute
   '/dossier': typeof DossierRoute
   '/fair-use': typeof FairUseRoute
+  '/index.md': typeof IndexDotmdRoute
   '/licenses': typeof LicensesRoute
   '/mcp': typeof McpRoute
   '/mfa': typeof MfaRoute
   '/offline': typeof OfflineRoute
   '/pricing': typeof PricingRoute
+  '/pricing.md': typeof PricingDotmdRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
   '/support': typeof SupportRoute
+  '/.well-known/api-catalog': typeof Char91DotwellKnownChar93ApiCatalogRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account': typeof AuthenticatedAccountRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -205,17 +238,21 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/adapters': typeof AdaptersRoute
   '/auth': typeof AuthRoute
+  '/auth.md': typeof AuthDotmdRoute
   '/batch': typeof BatchRoute
   '/dossier': typeof DossierRoute
   '/fair-use': typeof FairUseRoute
+  '/index.md': typeof IndexDotmdRoute
   '/licenses': typeof LicensesRoute
   '/mcp': typeof McpRoute
   '/mfa': typeof MfaRoute
   '/offline': typeof OfflineRoute
   '/pricing': typeof PricingRoute
+  '/pricing.md': typeof PricingDotmdRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
   '/support': typeof SupportRoute
+  '/.well-known/api-catalog': typeof Char91DotwellKnownChar93ApiCatalogRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -231,17 +268,21 @@ export interface FileRouteTypes {
     | '/'
     | '/adapters'
     | '/auth'
+    | '/auth.md'
     | '/batch'
     | '/dossier'
     | '/fair-use'
+    | '/index.md'
     | '/licenses'
     | '/mcp'
     | '/mfa'
     | '/offline'
     | '/pricing'
+    | '/pricing.md'
     | '/r'
     | '/source'
     | '/support'
+    | '/.well-known/api-catalog'
     | '/.well-known/oauth-protected-resource'
     | '/account'
     | '/.lovable/oauth/consent'
@@ -255,17 +296,21 @@ export interface FileRouteTypes {
     | '/'
     | '/adapters'
     | '/auth'
+    | '/auth.md'
     | '/batch'
     | '/dossier'
     | '/fair-use'
+    | '/index.md'
     | '/licenses'
     | '/mcp'
     | '/mfa'
     | '/offline'
     | '/pricing'
+    | '/pricing.md'
     | '/r'
     | '/source'
     | '/support'
+    | '/.well-known/api-catalog'
     | '/.well-known/oauth-protected-resource'
     | '/account'
     | '/.lovable/oauth/consent'
@@ -280,17 +325,21 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/adapters'
     | '/auth'
+    | '/auth.md'
     | '/batch'
     | '/dossier'
     | '/fair-use'
+    | '/index.md'
     | '/licenses'
     | '/mcp'
     | '/mfa'
     | '/offline'
     | '/pricing'
+    | '/pricing.md'
     | '/r'
     | '/source'
     | '/support'
+    | '/.well-known/api-catalog'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/account'
     | '/.lovable/oauth/consent'
@@ -306,17 +355,21 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AdaptersRoute: typeof AdaptersRoute
   AuthRoute: typeof AuthRoute
+  AuthDotmdRoute: typeof AuthDotmdRoute
   BatchRoute: typeof BatchRoute
   DossierRoute: typeof DossierRoute
   FairUseRoute: typeof FairUseRoute
+  IndexDotmdRoute: typeof IndexDotmdRoute
   LicensesRoute: typeof LicensesRoute
   McpRoute: typeof McpRoute
   MfaRoute: typeof MfaRoute
   OfflineRoute: typeof OfflineRoute
   PricingRoute: typeof PricingRoute
+  PricingDotmdRoute: typeof PricingDotmdRoute
   RRoute: typeof RRoute
   SourceRoute: typeof SourceRoute
   SupportRoute: typeof SupportRoute
+  Char91DotwellKnownChar93ApiCatalogRoute: typeof Char91DotwellKnownChar93ApiCatalogRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
@@ -355,6 +408,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth.md': {
+      id: '/auth.md'
+      path: '/auth.md'
+      fullPath: '/auth.md'
+      preLoaderRoute: typeof AuthDotmdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/batch': {
       id: '/batch'
       path: '/batch'
@@ -374,6 +434,13 @@ declare module '@tanstack/react-router' {
       path: '/fair-use'
       fullPath: '/fair-use'
       preLoaderRoute: typeof FairUseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/index.md': {
+      id: '/index.md'
+      path: '/index.md'
+      fullPath: '/index.md'
+      preLoaderRoute: typeof IndexDotmdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/licenses': {
@@ -411,6 +478,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pricing.md': {
+      id: '/pricing.md'
+      path: '/pricing.md'
+      fullPath: '/pricing.md'
+      preLoaderRoute: typeof PricingDotmdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/r': {
       id: '/r'
       path: '/r'
@@ -430,6 +504,13 @@ declare module '@tanstack/react-router' {
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/api-catalog': {
+      id: '/.well-known/api-catalog'
+      path: '/.well-known/api-catalog'
+      fullPath: '/.well-known/api-catalog'
+      preLoaderRoute: typeof Char91DotwellKnownChar93ApiCatalogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.well-known/oauth-protected-resource': {
@@ -509,17 +590,22 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AdaptersRoute: AdaptersRoute,
   AuthRoute: AuthRoute,
+  AuthDotmdRoute: AuthDotmdRoute,
   BatchRoute: BatchRoute,
   DossierRoute: DossierRoute,
   FairUseRoute: FairUseRoute,
+  IndexDotmdRoute: IndexDotmdRoute,
   LicensesRoute: LicensesRoute,
   McpRoute: McpRoute,
   MfaRoute: MfaRoute,
   OfflineRoute: OfflineRoute,
   PricingRoute: PricingRoute,
+  PricingDotmdRoute: PricingDotmdRoute,
   RRoute: RRoute,
   SourceRoute: SourceRoute,
   SupportRoute: SupportRoute,
+  Char91DotwellKnownChar93ApiCatalogRoute:
+    Char91DotwellKnownChar93ApiCatalogRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,

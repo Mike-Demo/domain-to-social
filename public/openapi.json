@@ -1,0 +1,58 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "M4G1C M4NT4 MCP endpoint",
+    "version": "1.0.0",
+    "description": "M4G1C M4NT4 has no public REST API. This spec documents only the MCP Streamable HTTP endpoint and the discovery documents that exist today. Tools (lookup_socials, list_my_lookups, list_my_lists) are listed live by the MCP tools/list method.",
+    "contact": { "email": "support-magicmanta@agentmail.to" }
+  },
+  "servers": [{ "url": "https://magicmanta.com" }],
+  "components": {
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "description": "OAuth 2.0 authorization code flow with PKCE. Discover the authorization server from /.well-known/oauth-protected-resource. See /auth.md.",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://cylatnxyocxtmmnejajy.supabase.co/auth/v1/oauth/authorize",
+            "tokenUrl": "https://cylatnxyocxtmmnejajy.supabase.co/auth/v1/oauth/token",
+            "scopes": {}
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": { "type": "object", "properties": { "error": { "type": "string", "example": "unauthorized" } }, "required": ["error"] },
+      "JsonRpcRequest": {
+        "type": "object",
+        "properties": { "jsonrpc": { "const": "2.0" }, "id": {}, "method": { "type": "string", "examples": ["initialize", "tools/list", "tools/call"] }, "params": { "type": "object" } },
+        "required": ["jsonrpc", "method"]
+      }
+    }
+  },
+  "paths": {
+    "/mcp": {
+      "post": {
+        "operationId": "mcpRequest",
+        "summary": "Send an MCP JSON-RPC message",
+        "description": "MCP Streamable HTTP transport. Requires a bearer token; without one returns 401 with a WWW-Authenticate header pointing to the protected resource metadata.",
+        "security": [{ "oauth2": [] }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/JsonRpcRequest" } } } },
+        "responses": {
+          "200": { "description": "JSON-RPC response or an event stream", "content": { "application/json": {}, "text/event-stream": {} } },
+          "401": { "description": "Missing or invalid token", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
+      }
+    },
+    "/.well-known/oauth-protected-resource": {
+      "get": {
+        "operationId": "getProtectedResourceMetadata",
+        "summary": "RFC 9728 protected resource metadata for /mcp",
+        "responses": { "200": { "description": "Metadata", "content": { "application/json": { "schema": { "type": "object", "properties": { "resource": { "type": "string" }, "authorization_servers": { "type": "array", "items": { "type": "string" } } } } } } } }
+      }
+    },
+    "/.well-known/api-catalog": {
+      "get": { "operationId": "getApiCatalog", "summary": "RFC 9727 API catalog", "responses": { "200": { "description": "Linkset", "content": { "application/linkset+json": {} } } } }
+    }
+  }
+}
