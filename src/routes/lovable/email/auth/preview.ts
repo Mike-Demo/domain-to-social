@@ -18,7 +18,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "Brand Connector Pro"
+const SITE_NAME = "M4G1C M4NT4"
 const ROOT_DOMAIN = "magicmanta.com"
 
 // Sample data for preview mode ONLY (not used in actual email sending).

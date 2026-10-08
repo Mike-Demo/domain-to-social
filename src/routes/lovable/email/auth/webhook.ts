@@ -9,7 +9,7 @@ import { EmailChangeEmail } from '@/lib/email-templates/email-change'
 import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
-const SITE_NAME = "Brand Connector Pro"
+const SITE_NAME = "M4G1C M4NT4"
 const SENDER_DOMAIN = "notify.magicmanta.com"
 const ROOT_DOMAIN = "magicmanta.com"
 const FROM_DOMAIN = "magicmanta.com"
