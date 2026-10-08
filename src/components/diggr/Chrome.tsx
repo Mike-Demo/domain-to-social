@@ -57,7 +57,7 @@ export function Header() {
       <Ticker />
       <div className="px-space-lg flex h-20 w-full items-center justify-between">
         <div className="gap-space-md flex items-center">
-          <img alt="M4G1C M4NT4 logo" className="h-11 w-11 shrink-0 object-contain" src={LOGO_SRC} />
+          <img alt="M4G1C M4NT4" className="h-11 w-11 shrink-0 object-contain" src={LOGO_SRC} />
           <Link
             to="/"
             className="gap-space-xs text-on-surface hover:text-primary-container flex items-baseline transition-colors"
