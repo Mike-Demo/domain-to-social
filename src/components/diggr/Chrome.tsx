@@ -105,6 +105,7 @@ function AccountChip() {
   return (
     <Link
       to={signedIn ? "/account" : "/auth"}
+      aria-label={signedIn ? "Open console" : "Sign in"}
       className="gap-space-sm px-space-sm py-space-xs min-h-11 flex items-center border-2 border-primary-container bg-surface-high shadow-stamp-sm"
     >
       <span aria-hidden className="material-symbols-outlined text-primary-container">

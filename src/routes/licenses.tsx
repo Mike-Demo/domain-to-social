@@ -15,7 +15,7 @@ export const Route = createFileRoute("/licenses")({
       {
         name: "description",
         content:
-          "Open source credits, digital carbon disclosure, and attributions for Brand Connector Pro.",
+          "Open source credits, digital carbon disclosure, and attributions for M4G1C M4NT4.",
       },
       { property: "og:title", content: "M4G1C M4NT4 // Open source & credits" },
       {
@@ -161,7 +161,7 @@ function Licenses() {
             Open source
           </h2>
           <p className="font-code-terminal text-code-terminal text-on-surface-variant mt-space-sm">
-            The code behind Brand Connector Pro is open source. Find MikeDemo on{" "}
+            The code behind M4G1C M4NT4 is open source. Find MikeDemo on{" "}
             <a
               href="https://github.com/Mike-Demo"
               target="_blank"
