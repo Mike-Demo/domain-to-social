@@ -16,6 +16,11 @@ export const Route = createFileRoute("/auth")({
       { name: "robots", content: "noindex" },
     ],
   }),
+  validateSearch: (s: Record<string, unknown>): { next?: string } => {
+    const n = s["next"];
+    // Only same-origin relative paths, so the return target can't send users off-site.
+    return typeof n === "string" && n.startsWith("/") && !n.startsWith("//") ? { next: n } : {};
+  },
   component: AuthPage,
 });
 
@@ -25,6 +30,9 @@ const input =
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
+  const done = () => (next ? window.location.assign(next) : void navigate({ to: "/account" }));
+  const returnUrl = () => `${window.location.origin}${next ?? ""}`;
   const [mode, setMode] = useState<"in" | "up">("in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,12 +46,12 @@ function AuthPage() {
     if (mode === "in") {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) setMsg(error.message);
-      else void navigate({ to: "/account" });
+      else done();
     } else {
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: `${window.location.origin}/account` },
+        options: { emailRedirectTo: next ? returnUrl() : `${window.location.origin}/account` },
       });
       setMsg(error ? error.message : "Check your inbox to confirm your email, then sign in.");
     }
@@ -51,27 +59,27 @@ function AuthPage() {
   }
 
   async function google() {
-    const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+    const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: returnUrl() });
     if (r.error) setMsg(r.error.message);
-    else if (!r.redirected) void navigate({ to: "/account" });
+    else if (!r.redirected) done();
   }
 
   async function apple() {
-    const r = await lovable.auth.signInWithOAuth("apple", { redirect_uri: window.location.origin });
+    const r = await lovable.auth.signInWithOAuth("apple", { redirect_uri: returnUrl() });
     if (r.error) setMsg(r.error.message);
-    else if (!r.redirected) void navigate({ to: "/account" });
+    else if (!r.redirected) done();
   }
 
   async function microsoft() {
-    const r = await lovable.auth.signInWithOAuth("microsoft", { redirect_uri: window.location.origin });
+    const r = await lovable.auth.signInWithOAuth("microsoft", { redirect_uri: returnUrl() });
     if (r.error) setMsg(r.error.message);
-    else if (!r.redirected) void navigate({ to: "/account" });
+    else if (!r.redirected) done();
   }
 
   async function agentId() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "custom:app-oidc",
-      options: { redirectTo: window.location.origin, scopes: "openid email profile owner_email owner_profile" },
+      options: { redirectTo: returnUrl(), scopes: "openid email profile owner_email owner_profile" },
     });
     if (error) setMsg(error.message);
   }

@@ -16,11 +16,14 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BatchRouteImport } from './routes/batch'
 import { Route as DossierRouteImport } from './routes/dossier'
 import { Route as LicensesRouteImport } from './routes/licenses'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as OfflineRouteImport } from './routes/offline'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as RRouteImport } from './routes/r'
 import { Route as SourceRouteImport } from './routes/source'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedListsIdRouteImport } from './routes/_authenticated/lists.$id'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
@@ -58,6 +61,11 @@ const LicensesRoute = LicensesRouteImport.update({
   path: '/licenses',
   getParentRoute: () => rootRouteImport,
 } as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OfflineRoute = OfflineRouteImport.update({
   id: '/offline',
   path: '/offline',
@@ -78,10 +86,21 @@ const SourceRoute = SourceRouteImport.update({
   path: '/source',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   id: '/account',
   path: '/account',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedListsIdRoute = AuthenticatedListsIdRouteImport.update({
   id: '/lists/$id',
@@ -102,11 +121,14 @@ export interface FileRoutesByFullPath {
   '/batch': typeof BatchRoute
   '/dossier': typeof DossierRoute
   '/licenses': typeof LicensesRoute
+  '/mcp': typeof McpRoute
   '/offline': typeof OfflineRoute
   '/pricing': typeof PricingRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
@@ -117,11 +139,14 @@ export interface FileRoutesByTo {
   '/batch': typeof BatchRoute
   '/dossier': typeof DossierRoute
   '/licenses': typeof LicensesRoute
+  '/mcp': typeof McpRoute
   '/offline': typeof OfflineRoute
   '/pricing': typeof PricingRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
@@ -134,11 +159,14 @@ export interface FileRoutesById {
   '/batch': typeof BatchRoute
   '/dossier': typeof DossierRoute
   '/licenses': typeof LicensesRoute
+  '/mcp': typeof McpRoute
   '/offline': typeof OfflineRoute
   '/pricing': typeof PricingRoute
   '/r': typeof RRoute
   '/source': typeof SourceRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/_authenticated/lists/$id': typeof AuthenticatedListsIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
@@ -151,11 +179,14 @@ export interface FileRouteTypes {
     | '/batch'
     | '/dossier'
     | '/licenses'
+    | '/mcp'
     | '/offline'
     | '/pricing'
     | '/r'
     | '/source'
+    | '/.well-known/oauth-protected-resource'
     | '/account'
+    | '/.lovable/oauth/consent'
     | '/lists/$id'
     | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
@@ -166,11 +197,14 @@ export interface FileRouteTypes {
     | '/batch'
     | '/dossier'
     | '/licenses'
+    | '/mcp'
     | '/offline'
     | '/pricing'
     | '/r'
     | '/source'
+    | '/.well-known/oauth-protected-resource'
     | '/account'
+    | '/.lovable/oauth/consent'
     | '/lists/$id'
     | '/api/public/payments/webhook'
   id:
@@ -182,11 +216,14 @@ export interface FileRouteTypes {
     | '/batch'
     | '/dossier'
     | '/licenses'
+    | '/mcp'
     | '/offline'
     | '/pricing'
     | '/r'
     | '/source'
+    | '/.well-known/oauth-protected-resource'
     | '/_authenticated/account'
+    | '/.lovable/oauth/consent'
     | '/_authenticated/lists/$id'
     | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
@@ -199,10 +236,13 @@ export interface RootRouteChildren {
   BatchRoute: typeof BatchRoute
   DossierRoute: typeof DossierRoute
   LicensesRoute: typeof LicensesRoute
+  McpRoute: typeof McpRoute
   OfflineRoute: typeof OfflineRoute
   PricingRoute: typeof PricingRoute
   RRoute: typeof RRoute
   SourceRoute: typeof SourceRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
 
@@ -257,6 +297,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LicensesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/offline': {
       id: '/offline'
       path: '/offline'
@@ -285,12 +332,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SourceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/account': {
       id: '/_authenticated/account'
       path: '/account'
       fullPath: '/account'
       preLoaderRoute: typeof AuthenticatedAccountRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/lists/$id': {
       id: '/_authenticated/lists/$id'
@@ -330,10 +391,14 @@ const rootRouteChildren: RootRouteChildren = {
   BatchRoute: BatchRoute,
   DossierRoute: DossierRoute,
   LicensesRoute: LicensesRoute,
+  McpRoute: McpRoute,
   OfflineRoute: OfflineRoute,
   PricingRoute: PricingRoute,
   RRoute: RRoute,
   SourceRoute: SourceRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
 export const routeTree = rootRouteImport

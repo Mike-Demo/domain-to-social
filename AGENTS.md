@@ -18,3 +18,4 @@
 - Share links are self-contained snapshots: the lookup result is deflate-compressed into the `/r#<token>` hash (`src/lib/social/share.ts`). Why: read-only, tamper-evident-by-design links with no backend storage.
 - Plan limits are enforced server-side via `entitlementsFor` in `src/lib/account/entitlements.ts`, read from the `subscriptions` table (written only by the payment webhook). Why: UI gating is never a security boundary.
 - Deep Recon enrichment calls Firecrawl only from `lookupDomain(url, { enrich })` via `firecrawl.server.ts`, and only when the plain fetch is blocked or finds no links; enrich is decided server-side from entitlements. Why: caps Firecrawl spend and keeps gating server-side.
+- MCP server (agent integrations): lookup_socials, list_my_lookups, list_my_lists via OAuth sign-in. Why: lets assistants use the app as the signed-in user with RLS.
