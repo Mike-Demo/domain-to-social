@@ -54,6 +54,67 @@ export function isPublicHttpUrl(url: string): boolean {
   return true;
 }
 
+// DNS check: a public-looking hostname can still resolve to a private/internal
+// address (DNS rebinding), which would turn lookups into an internal network
+// probe. Resolve every host over DNS-over-HTTPS and refuse private answers.
+function isPrivateIp(ip: string): boolean {
+  const v4 = ip.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+  if (v4) {
+    const [a, b] = [Number(v4[1]), Number(v4[2])];
+    return (
+      a === 0 ||
+      a === 10 ||
+      a === 127 ||
+      (a === 100 && b >= 64 && b <= 127) ||
+      (a === 169 && b === 254) ||
+      (a === 172 && b >= 16 && b <= 31) ||
+      (a === 192 && b === 168) ||
+      (a === 192 && b === 0) ||
+      (a === 198 && (b === 18 || b === 19)) ||
+      a >= 224
+    );
+  }
+  const v6 = ip.toLowerCase();
+  return (
+    v6 === "::1" ||
+    v6 === "::" ||
+    v6.startsWith("fc") ||
+    v6.startsWith("fd") ||
+    v6.startsWith("fe8") ||
+    v6.startsWith("fe9") ||
+    v6.startsWith("fea") ||
+    v6.startsWith("feb")
+  );
+}
+
+// Per-run cache so repeated hops/probes to one host resolve once.
+const dnsCache = new Map<string, boolean>();
+
+export async function resolvesPublicly(host: string): Promise<boolean> {
+  const cached = dnsCache.get(host);
+  if (cached !== undefined) return cached;
+  let ok = false;
+  try {
+    const answers: string[] = [];
+    for (const type of ["A", "AAAA"]) {
+      const res = await fetch(
+        `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(host)}&type=${type}`,
+        { headers: { accept: "application/dns-json" }, signal: AbortSignal.timeout(5000) },
+      );
+      if (!res.ok) break;
+      const j = (await res.json()) as { Answer?: { type: number; data: string }[] };
+      for (const a of j.Answer ?? []) if (a.type === 1 || a.type === 28) answers.push(String(a.data));
+    }
+    // Fail closed: no usable answers or any private answer means refuse.
+    ok = answers.length > 0 && answers.every((ip) => !isPrivateIp(ip));
+  } catch {
+    ok = false;
+  }
+  if (dnsCache.size > 1000) dnsCache.clear();
+  dnsCache.set(host, ok);
+  return ok;
+}
+
 async function fetchText(
   url: string,
   timeoutMs = 10000,
@@ -64,6 +125,7 @@ async function fetchText(
     // Follow redirects manually so every hop is re-validated against the SSRF guard.
     for (let hops = 0; hops <= 5; hops++) {
       if (!isPublicHttpUrl(current)) return null;
+      if (!(await resolvesPublicly(new URL(current).hostname))) return null;
       const res = await fetch(current, {
         headers: { "user-agent": UA, accept },
         redirect: "manual",
