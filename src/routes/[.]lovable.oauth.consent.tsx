@@ -78,8 +78,8 @@ function Consent() {
   return (
     <Shell>
       <SubHeader badge="AGENT ACCESS" note="// APPROVE AN ASSISTANT //" />
-      <section className="px-margin-mobile sm:px-margin py-space-xl mx-auto flex max-w-md flex-col">
-        <div className="p-space-md gap-space-md flex flex-col border-3 border-primary-container bg-slate-charcoal shadow-stamp-lg">
+      <section className="px-margin-mobile sm:px-margin py-space-xl mx-auto flex flex-col">
+        <div className="p-space-md gap-space-md flex flex-col border border-primary-container bg-slate-charcoal shadow-stamp-lg">
           <h1 className="font-headline text-headline-md text-paper-distressed uppercase">Connect {clientName}</h1>
           <p className="font-code-terminal text-body-sm text-on-surface-variant">
             {clientName} will be able to run lookups and read your saved lookups and lists as you.
