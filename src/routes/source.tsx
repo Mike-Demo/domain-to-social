@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { WaIcon } from "@/design-system/font-awsome-web-awesome-171158/webawesome/react/icon";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
