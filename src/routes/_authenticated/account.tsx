@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { createList, deleteList, getMyAccount } from "@/lib/account/account.functions";
-import { createPortalSession } from "@/lib/account/payments.functions";
+import { createPortalSession, deleteMyAccount } from "@/lib/account/payments.functions";
 import { PLAN_LABEL } from "@/lib/account/entitlements";
 import { generateRecoveryCodes, recoveryCodeStatus } from "@/lib/account/recovery.functions";
 import { BackupCodes } from "@/components/diggr/BackupCodes";
@@ -22,6 +22,7 @@ export const Route = createFileRoute("/_authenticated/account")({
       { name: "robots", content: "noindex" },
     ],
   }),
+  validateSearch: (s: Record<string, unknown>): { checkout?: "done" } => (s["checkout"] === "done" ? { checkout: "done" } : {}),
   component: Account,
 });
 
@@ -32,9 +33,18 @@ function Account() {
   const create = useServerFn(createList);
   const remove = useServerFn(deleteList);
   const portal = useServerFn(createPortalSession);
+  const destroy = useServerFn(deleteMyAccount);
   const qc = useQueryClient();
   const navigate = useNavigate();
-  const { data, error } = useQuery({ queryKey: ["account"], queryFn: () => fetchAccount() });
+  const { checkout } = Route.useSearch();
+  const [pollUntil] = useState(() => (checkout ? Date.now() + 30_000 : 0));
+  const { data, error } = useQuery({
+    queryKey: ["account"],
+    queryFn: () => fetchAccount(),
+    refetchInterval: () => (Date.now() < pollUntil ? 2_000 : false),
+  });
+  const [confirmText, setConfirmText] = useState("");
+  const [deleting, setDeleting] = useState(false);
   const [name, setName] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const fetchRecovery = useServerFn(recoveryCodeStatus);
@@ -73,6 +83,14 @@ function Account() {
       <section className="px-margin-mobile sm:px-margin py-space-xl gap-space-lg mx-auto flex max-w-5xl flex-col">
         <h1 className="font-headline text-headline-lg text-paper-distressed uppercase">Operator console</h1>
         {error && <p className="font-code-terminal text-hazard-orange">{error.message}</p>}
+        {checkout && (
+          <div role="status" className="p-space-md border-3 border-primary-container bg-slate-charcoal">
+            <p className="font-headline text-headline-sm text-primary-container uppercase">Payment received</p>
+            <p className="font-code-terminal text-body-sm text-paper-distressed">
+              Thanks! Your plan below updates within a few seconds. If it still looks wrong after a minute, refresh the page.
+            </p>
+          </div>
+        )}
         {data?.subscription?.status === "past_due" && (
           <div className="p-space-md border-3 border-hazard-orange bg-hazard-orange/10">
             <p className="font-headline text-headline-sm text-hazard-orange uppercase">Payment failed</p>
@@ -193,6 +211,39 @@ function Account() {
                   <span className="text-on-surface-variant">{new Date(h.checked_at).toLocaleString()}</span>
                 </div>
               ))}
+            </div>
+            <div className={panel}>
+              <h2 className="font-headline text-headline-sm text-paper-distressed uppercase">Delete account</h2>
+              <p className="font-code-terminal text-body-sm text-on-surface-variant">
+                Cancels any monthly plan immediately (no refund for the rest of the month) and permanently erases your lists,
+                history and sign-in. Type DELETE to confirm.
+              </p>
+              <div className="gap-space-sm flex flex-wrap">
+                <input
+                  aria-label="Type DELETE to confirm"
+                  value={confirmText}
+                  onChange={(e) => setConfirmText(e.target.value)}
+                  className="font-code-terminal text-code-terminal text-paper-distressed! p-space-sm border-2 border-outline-variant bg-grit-black! flex-1 outline-none focus-visible:ring-2 focus-visible:ring-primary-container"
+                />
+                <button
+                  disabled={confirmText !== "DELETE" || deleting}
+                  onClick={async () => {
+                    setDeleting(true);
+                    setErr(null);
+                    const r = await destroy({ data: { confirm: "DELETE" } });
+                    if ("error" in r) {
+                      setDeleting(false);
+                      return setErr(r.error);
+                    }
+                    await supabase.auth.signOut();
+                    qc.clear();
+                    void navigate({ to: "/" });
+                  }}
+                  className="font-label-stamp text-label-stamp border-2 border-hazard-orange text-hazard-orange px-space-md py-space-xs uppercase"
+                >
+                  {deleting ? "Deleting…" : "Delete forever"}
+                </button>
+              </div>
             </div>
           </>
         )}

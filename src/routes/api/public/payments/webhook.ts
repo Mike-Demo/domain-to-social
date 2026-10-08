@@ -1,11 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type { StripeEnv } from "@/lib/stripe.server";
-import type { PlanTier } from "@/lib/account/entitlements";
-
-const PRICE_TO_PLAN: Record<string, PlanTier> = {
-  deep_recon_monthly: "deep_recon",
-  brand_command_monthly: "brand_command",
-};
+import { PRICE_TO_PLAN, shouldApplySubscriptionEvent } from "@/lib/account/billing";
 
 type Obj = Record<string, unknown>;
 const str = (v: unknown): string | undefined => (typeof v === "string" ? v : undefined);
@@ -18,7 +13,8 @@ async function admin() {
 async function upsertSubscription(sub: Obj, env: StripeEnv, deleted: boolean) {
   const meta = (sub["metadata"] ?? {}) as Obj;
   const userId = str(meta["userId"]);
-  if (!userId) return;
+  const subId = str(sub["id"]);
+  if (!userId || !subId) return;
   const items = ((sub["items"] as Obj | undefined)?.["data"] ?? []) as Obj[];
   const item = items[0] ?? {};
   const price = (item["price"] ?? {}) as Obj;
@@ -26,6 +22,13 @@ async function upsertSubscription(sub: Obj, env: StripeEnv, deleted: boolean) {
   const periodEnd = (item["current_period_end"] ?? sub["current_period_end"]) as number | undefined;
   const status = deleted ? "canceled" : (str(sub["status"]) ?? "none");
   const db = await admin();
+  const { data: stored } = await db
+    .from("subscriptions")
+    .select("status,current_period_end,stripe_subscription_id")
+    .eq("user_id", userId)
+    .eq("environment", env)
+    .maybeSingle();
+  if (!shouldApplySubscriptionEvent(stored, subId, status)) return;
   await db.from("subscriptions").upsert(
     {
       user_id: userId,
@@ -33,7 +36,7 @@ async function upsertSubscription(sub: Obj, env: StripeEnv, deleted: boolean) {
       plan: PRICE_TO_PLAN[priceId] ?? "free",
       status,
       price_id: priceId,
-      stripe_subscription_id: str(sub["id"]) ?? null,
+      stripe_subscription_id: subId,
       stripe_customer_id: str(sub["customer"]) ?? null,
       cancel_at_period_end: Boolean(sub["cancel_at_period_end"]),
       current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
@@ -43,18 +46,42 @@ async function upsertSubscription(sub: Obj, env: StripeEnv, deleted: boolean) {
   );
 }
 
+async function setOperative(userId: string, env: StripeEnv, owned: boolean, customer?: string) {
+  const db = await admin();
+  await db.from("subscriptions").upsert(
+    {
+      user_id: userId,
+      environment: env,
+      operative_lifetime: owned,
+      ...(customer && { stripe_customer_id: customer }),
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "user_id,environment" },
+  );
+}
+
 async function grantOperative(session: Obj, env: StripeEnv) {
-  if (session["mode"] !== "payment" || session["payment_status"] === "unpaid") return;
+  if (session["mode"] !== "payment" || session["payment_status"] !== "paid") return;
   const meta = (session["metadata"] ?? {}) as Obj;
   const userId = str(meta["userId"]);
   if (!userId || meta["priceId"] !== "operative_onetime") return;
-  const db = await admin();
-  await db
-    .from("subscriptions")
-    .upsert(
-      { user_id: userId, environment: env, operative_lifetime: true, stripe_customer_id: str(session["customer"]) ?? null, updated_at: new Date().toISOString() },
-      { onConflict: "user_id,environment" },
-    );
+  await setOperative(userId, env, true, str(session["customer"]));
+}
+
+/** Refund (full) or dispute on the Operative payment turns Operative off. */
+async function revokeOperative(paymentIntentId: string | undefined, env: StripeEnv) {
+  if (!paymentIntentId) return;
+  const { createStripeClient } = await import("@/lib/stripe.server");
+  const stripe = createStripeClient(env);
+  const pi = await stripe.paymentIntents.retrieve(paymentIntentId);
+  let userId = str(pi.metadata?.["userId"]);
+  let priceId = str(pi.metadata?.["priceId"]);
+  if (!userId) {
+    const session = (await stripe.checkout.sessions.list({ payment_intent: paymentIntentId, limit: 1 })).data[0];
+    userId = str(session?.metadata?.["userId"]);
+    priceId = str(session?.metadata?.["priceId"]);
+  }
+  if (userId && priceId === "operative_onetime") await setOperative(userId, env, false);
 }
 
 export const Route = createFileRoute("/api/public/payments/webhook")({
@@ -79,6 +106,12 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
             case "checkout.session.completed":
             case "checkout.session.async_payment_succeeded":
               await grantOperative(obj, env);
+              break;
+            case "charge.refunded":
+              if (obj["refunded"] === true) await revokeOperative(str(obj["payment_intent"]), env);
+              break;
+            case "charge.dispute.created":
+              await revokeOperative(str(obj["payment_intent"]), env);
               break;
             default:
               break;
