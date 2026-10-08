@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getMyAccount } from "@/lib/account/account.functions";
 import { changePlan } from "@/lib/account/payments.functions";
 import type { PlanTier } from "@/lib/account/entitlements";
+import { WaButton } from "@/design-system/font-awsome-web-awesome-171158";
 
 const Checkout = lazy(() => import("@/components/payments/Checkout").then((m) => ({ default: m.Checkout })));
 
@@ -71,7 +72,6 @@ function Pricing() {
 
   function action(t: (typeof TIERS)[number]) {
     if (!t.priceId) return null;
-    const btn = "font-label-stamp text-label-stamp px-space-md py-space-sm w-full min-w-0 whitespace-normal break-words text-center uppercase";
     if (!user)
       return (
         <Link to="/auth" search={{ next: "/pricing" }} className="font-label-stamp text-label-stamp text-cyber-cyan block w-full text-center uppercase underline">
@@ -94,14 +94,21 @@ function Pricing() {
       );
     if (t.priceId !== "operative_onetime" && monthly)
       return (
-        <button disabled={busy} onClick={() => doSwitch(t.priceId as "deep_recon_monthly" | "brand_command_monthly")} className={`${btn} text-paper-distressed border-2 border-paper-distressed`}>
+        <WaButton
+          variant="brand"
+          appearance="outlined"
+          disabled={busy}
+          loading={busy}
+          onClick={() => doSwitch(t.priceId as "deep_recon_monthly" | "brand_command_monthly")}
+          className="w-full"
+        >
           {busy ? "Switching…" : `Switch to ${t.name}`}
-        </button>
+        </WaButton>
       );
     return (
-      <button onClick={() => setSelected(t.priceId)} className={`${btn} text-paper-distressed border-2 border-paper-distressed`}>
+      <WaButton variant="brand" appearance="outlined" onClick={() => setSelected(t.priceId)} className="w-full">
         Get {t.name}
-      </button>
+      </WaButton>
     );
   }
 

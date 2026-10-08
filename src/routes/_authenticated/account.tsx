@@ -9,6 +9,7 @@ import { PLAN_LABEL } from "@/lib/account/entitlements";
 import { generateRecoveryCodes, recoveryCodeStatus } from "@/lib/account/recovery.functions";
 import { BackupCodes } from "@/components/diggr/BackupCodes";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
+import { WaButton } from "@/design-system/font-awsome-web-awesome-171158";
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({
@@ -119,8 +120,11 @@ function Account() {
               </span>
               {data.entitlements.plan !== "free" && (
                 <>
-                  <button
+                  <WaButton
+                    variant="brand"
+                    appearance="plain"
                     disabled={portalBusy}
+                    loading={portalBusy}
                     onClick={async () => {
                       setPortalBusy(true);
                       setPortalErr(null);
@@ -132,10 +136,9 @@ function Account() {
                       }
                       window.location.assign(r.url);
                     }}
-                    className="font-code-terminal text-cyber-cyan text-left underline"
                   >
                     {portalBusy ? "Opening billing…" : "Manage billing →"}
-                  </button>
+                  </WaButton>
                   {portalErr && <p role="alert" className="font-code-terminal text-body-sm text-hazard-orange">{portalErr}</p>}
                 </>
               )}
