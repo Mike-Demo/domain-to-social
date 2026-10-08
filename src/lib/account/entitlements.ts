@@ -5,6 +5,13 @@ const RANK: Record<PlanTier, number> = { free: 0, operative: 1, deep_recon: 2, b
 /** Daily cap on live-browser (Browser Use) fallback runs per account. */
 export const BROWSER_RUNS_PER_DAY = 20;
 
+/** Lookups an account can run through connected assistants per rolling 24 hours. */
+export const ASSISTANT_LOOKUPS_PER_DAY = 100;
+
+export function assistantLookupAllowed(usedLast24h: number): boolean {
+  return usedLast24h < ASSISTANT_LOOKUPS_PER_DAY;
+}
+
 /** Monthly cap on paid page-render (Firecrawl) lookups, by plan. 0 = no access. */
 export const ENRICHED_LOOKUPS_PER_MONTH: Record<PlanTier, number> = {
   free: 0,
