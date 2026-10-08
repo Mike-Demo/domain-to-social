@@ -15,7 +15,9 @@ export const Route = createFileRoute("/adapters")({
       { property: "og:description", content: "MCP server available now; REST endpoint and React SDK coming soon." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://magicmanta.com/adapters" },
     ],
+    links: [{ rel: "canonical", href: "https://magicmanta.com/adapters" }],
   }),
   component: Adapters,
 });

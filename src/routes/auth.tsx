@@ -14,7 +14,9 @@ export const Route = createFileRoute("/auth")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
+      { property: "og:url", content: "https://magicmanta.com/auth" },
     ],
+    links: [{ rel: "canonical", href: "https://magicmanta.com/auth" }],
   }),
   validateSearch: (s: Record<string, unknown>): { next?: string } => {
     const next = safeNext(s["next"]);

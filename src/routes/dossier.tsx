@@ -22,7 +22,9 @@ export const Route = createFileRoute("/dossier")({
       { property: "og:description", content: "Printable intel sheet with the full evidence chain." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://magicmanta.com/dossier" },
     ],
+    links: [{ rel: "canonical", href: "https://magicmanta.com/dossier" }],
   }),
   component: Dossier,
 });

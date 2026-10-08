@@ -24,7 +24,9 @@ export const Route = createFileRoute("/licenses")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://magicmanta.com/licenses" },
     ],
+    links: [{ rel: "canonical", href: "https://magicmanta.com/licenses" }],
   }),
   component: Licenses,
 });

@@ -19,7 +19,9 @@ export const Route = createFileRoute("/batch")({
       { property: "og:description", content: "Bulk domain recon with saved lists." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://magicmanta.com/batch" },
     ],
+    links: [{ rel: "canonical", href: "https://magicmanta.com/batch" }],
   }),
   component: BatchSniffer,
 });

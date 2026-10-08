@@ -16,7 +16,9 @@ export const Route = createFileRoute("/r")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "robots", content: "noindex" },
+      { property: "og:url", content: "https://magicmanta.com/r" },
     ],
+    links: [{ rel: "canonical", href: "https://magicmanta.com/r" }],
   }),
   component: SharedResult,
 });
