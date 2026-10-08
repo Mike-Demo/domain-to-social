@@ -56,6 +56,14 @@ function AuthPage() {
     else if (!r.redirected) void navigate({ to: "/account" });
   }
 
+  async function agentId() {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "custom:app-oidc",
+      options: { redirectTo: window.location.origin },
+    });
+    if (error) setMsg(error.message);
+  }
+
   return (
     <Shell>
       <SubHeader badge="OPERATOR ACCESS" note="// SIGN IN TO SAVE YOUR RECON //" />
@@ -69,6 +77,9 @@ function AuthPage() {
           </h1>
           <button type="button" onClick={google} className={`${btn} bg-paper-distressed text-grit-black`}>
             Continue with Google
+          </button>
+          <button type="button" onClick={agentId} className={`${btn} bg-cyber-cyan text-grit-black`}>
+            Continue with AgentID
           </button>
           <label className="gap-space-xs flex flex-col">
             <span className="font-label-stamp text-label-stamp text-on-surface-variant uppercase">Email</span>
