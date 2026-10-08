@@ -17,12 +17,25 @@ export const Route = createFileRoute("/auth")({
     ],
   }),
   validateSearch: (s: Record<string, unknown>): { next?: string } => {
-    const n = s["next"];
-    // Only same-origin relative paths, so the return target can't send users off-site.
-    return typeof n === "string" && n.startsWith("/") && !n.startsWith("//") ? { next: n } : {};
+    const next = safeNext(s["next"]);
+    return next ? { next } : {};
   },
   component: AuthPage,
 });
+
+// Only same-origin paths survive: backslashes, control chars and protocol-relative forms are rejected,
+// then the value is resolved against a fixed origin and must stay on it.
+export const safeNext = (n: unknown): string | undefined => {
+  if (typeof n !== "string" || !n.startsWith("/") || /[\\\u0000-\u001f]/.test(n)) return undefined;
+  try {
+    const base = "https://same.invalid";
+    const u = new URL(n, base);
+    if (u.origin !== base) return undefined;
+    return `${u.pathname}${u.search}${u.hash}`;
+  } catch {
+    return undefined;
+  }
+};
 
 const btn = "font-label-stamp text-label-stamp px-space-md py-space-sm uppercase";
 const input =
