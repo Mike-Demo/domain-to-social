@@ -152,7 +152,7 @@ function SourceBoard() {
                   aria-label={isExternal ? `${link.label} (opens in new tab)` : link.label}
                   className="gap-space-xs font-code-terminal text-body-sm text-paper-distressed hover:text-acid-lime flex items-center"
                 >
-                  <WaIcon family="brands" name={link.icon} aria-hidden="true" />
+                  <WaIcon family={link.icon === "scale-balanced" ? "classic" : "brands"} name={link.icon} aria-hidden="true" />
                   {link.text}
                 </a>
               );
