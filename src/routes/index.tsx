@@ -53,7 +53,14 @@ function RadarScanner() {
     mutationFn: async (url) => {
       const started = performance.now();
       try {
-        const res = user ? await memberFn({ data: { url } }) : await lookupFn({ data: { url } });
+        let res: LookupResult;
+        if (user) {
+          res = await memberFn({ data: { url } });
+        } else {
+          const out = await lookupFn({ data: { url } });
+          if ("error" in out) throw new Error(out.error);
+          res = out.result;
+        }
         if (user) void saveFn({ data: { result: res } }).catch(() => undefined);
         return res;
       } finally {
@@ -62,7 +69,11 @@ function RadarScanner() {
     },
   });
   const search = useMutation<DomainCandidate[], Error, string>({
-    mutationFn: (query) => searchFn({ data: { query } }),
+    mutationFn: async (query) => {
+      const out = await searchFn({ data: { query } });
+      if ("error" in out) throw new Error(out.error);
+      return out.candidates;
+    },
   });
 
   const runLookup = (url: string) => {

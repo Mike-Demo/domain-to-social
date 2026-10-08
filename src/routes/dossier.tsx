@@ -67,7 +67,9 @@ function Dossier() {
     setResult(null);
     lookupSocials({ data: { url: target } })
       .then((r) => {
-        if (!cancelled) setResult(r);
+        if (cancelled) return;
+        if ("error" in r) setError(r.error);
+        else setResult(r.result);
       })
       .catch((e: unknown) => {
         if (!cancelled) setError(e instanceof Error ? e.message : "Lookup failed.");
