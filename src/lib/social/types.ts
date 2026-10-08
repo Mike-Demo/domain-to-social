@@ -49,6 +49,8 @@ export interface LookupResult {
     colors?: string[] | undefined;
     fonts?: string[] | undefined;
   };
+  /** Brand Command live-browser fallback, run only after Firecrawl came up empty. */
+  browserUse?: { used: boolean; reason: string };
 }
 
 export interface DomainCandidate {
