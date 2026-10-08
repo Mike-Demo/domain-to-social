@@ -42,7 +42,7 @@ function failureMessage(e: unknown, fallback: string): string {
 // Free tier: single lookups. Expected failures (rate limit, unreachable or refused
 // address) come back as `{ error }` instead of a thrown 500.
 export const lookupSocials = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => z.object({ url: z.string().trim().min(3).max(500) }).parse(data))
+  .validator((data: unknown) => z.object({ url: z.string().trim().min(3).max(500) }).parse(data))
   .handler(async ({ data }) => {
     try {
       assertWithinLimit("lookup");
@@ -53,7 +53,7 @@ export const lookupSocials = createServerFn({ method: "POST" })
   });
 
 export const searchBrand = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => z.object({ query: z.string().trim().min(2).max(120) }).parse(data))
+  .validator((data: unknown) => z.object({ query: z.string().trim().min(2).max(120) }).parse(data))
   .handler(async ({ data }) => {
     try {
       assertWithinLimit("search");

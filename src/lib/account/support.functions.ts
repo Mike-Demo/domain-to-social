@@ -23,7 +23,7 @@ function ticketId(): string {
 
 export const submitSupportTicket = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         category: z.enum(SUPPORT_CATEGORIES),

@@ -44,7 +44,7 @@ function assertAttemptAllowed(userId: string): void {
  */
 export const redeemRecoveryCode = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ code: z.string().trim().min(10).max(20) }).parse(d))
+  .validator((d: unknown) => z.object({ code: z.string().trim().min(10).max(20) }).parse(d))
   .handler(async ({ data, context }): Promise<{ ok: true }> => {
     assertAttemptAllowed(context.userId);
     const hash = await hashRecoveryCode(data.code);
