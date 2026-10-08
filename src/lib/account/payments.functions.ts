@@ -166,6 +166,6 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
     }
     await supabaseAdmin.from("profiles").delete().eq("id", uid);
     const { error } = await supabaseAdmin.auth.admin.deleteUser(uid);
-    if (error) return { error: "Your data was erased but the sign-in couldn't be removed. Contact support." };
+    if (error) return { error: "Your data was erased but the sign-in couldn't be removed. Contact support-magicmanta@agentmail.to." };
     return { ok: true };
   });
