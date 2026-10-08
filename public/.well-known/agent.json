@@ -1,19 +1,32 @@
 {
   "name": "Brand Connector Pro",
-  "description": "Finds and verifies a company's social media profiles from its website URL. Web interface only — no public machine API or MCP server.",
+  "description": "Finds and verifies a company's social media profiles from its website URL. Available through the web interface and an auth-gated MCP server at /mcp. No public REST API.",
   "url": "https://magicmanta.com",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "provider": {
     "name": "MikeDemo",
     "url": "https://mikedemo.com"
   },
+  "documentationUrl": "https://magicmanta.com/llms.txt",
   "capabilities": {
     "streaming": false,
     "pushNotifications": false,
     "stateTransitionHistory": false
   },
-  "authentication": {
-    "schemes": []
+  "mcp": {
+    "url": "https://magicmanta.com/mcp",
+    "transport": "streamable-http",
+    "protectedResourceMetadata": "https://magicmanta.com/.well-known/oauth-protected-resource"
   },
-  "skills": []
+  "authentication": {
+    "schemes": ["oauth2"],
+    "signInUrl": "https://magicmanta.com/auth",
+    "signInMethods": ["google", "apple", "microsoft", "agentid", "email_password"],
+    "notes": "MCP requests need an OAuth 2.0 bearer token; requests without one get HTTP 401. Accounts must complete two-factor (authenticator app) before access is granted."
+  },
+  "skills": [
+    { "id": "lookup_socials", "name": "Look up socials", "description": "Find a company's social media profiles from its website address, with evidence for each match." },
+    { "id": "list_my_lookups", "name": "List my lookups", "description": "List the signed-in user's 50 most recent saved website lookups." },
+    { "id": "list_my_lists", "name": "List my lists", "description": "List the signed-in user's saved lists with how many sites each holds." }
+  ]
 }

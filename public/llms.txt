@@ -14,19 +14,35 @@ Brand Connector Pro at https://magicmanta.com finds and verifies a company's soc
 - /batch — look up multiple domains
 - /dossier — result dossier view
 - /source — source board
-- /adapters — platform adapters
+- /adapters — integration options (MCP available now; REST endpoint and React SDK are marked coming soon)
+- /auth — sign in or create an account
+- /pricing — plans and prices
+- /fair-use — usage limits and fair-use policy
+- /support — support form (signed-in users) and support email
 - /licenses — open source credits and digital carbon disclosure
 - /offline — offline fallback
 
+## MCP server
+- Endpoint: https://magicmanta.com/mcp (MCP Streamable HTTP)
+- Auth-gated: unauthenticated requests return HTTP 401 {"error":"unauthorized"}.
+- Authentication: OAuth 2.0 bearer tokens. Discovery metadata: https://magicmanta.com/.well-known/oauth-protected-resource
+- MCP clients run the OAuth flow, which sends the user to sign in at https://magicmanta.com/auth and approve access. Sign-in options: Google, Apple, Microsoft, AgentID, or email and password. Accounts require an authenticator app (two-factor) before access is granted.
+- Tools: lookup_socials (find a site's social profiles with evidence), list_my_lookups (the user's 50 most recent saved lookups), list_my_lists (the user's saved lists).
+
 ## Machine-readable
 - /llms.txt — this file
-- /.well-known/agent.json — agent card (no machine API; the lookup UI is the interface)
+- /.well-known/agent.json — agent card
+- /.well-known/oauth-protected-resource — OAuth metadata for the MCP endpoint
 - /carbon.txt — digital carbon disclosure (carbon.txt v0.5)
 - /sitemap.xml and /robots.txt
 
 ## Limits
-No public REST API and no MCP server. No documented rate limits; automated lookups should be polite (sequential requests, cache where possible). No sign-in required. No personal data is stored.
+- No public REST API exists today; /api/public/radar is not available.
+- The @magicmanta/react SDK is not published yet.
+- The website lookup works without signing in; saved lookups, lists, paid plans and the MCP server require an account.
+- MCP lookups are capped at 100 per account per day. Plan limits are described at /pricing and /fair-use.
+- Automated use should be polite: sequential requests, cache where possible.
 
 ## Contact
-Built by MikeDemo — https://mikedemo.com
-
+- Support: support-magicmanta@agentmail.to or /support
+- Built by MikeDemo — https://mikedemo.com
