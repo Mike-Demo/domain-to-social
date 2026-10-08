@@ -5,5 +5,6 @@
 - [x] Phase 3: Lookup history + saved lists with CSV/JSON export
 - [x] Phase 4: Real bulk sweeps (5 per run Operative, 25 Deep Recon)
 - [x] Phase 5a: Firecrawl render fallback for Deep Recon (single + batch)
+- [x] Pricing actions aligned and billing management opens reliably in the same tab
 - [ ] Phase 5b: browser-agent checks for X/Instagram/LinkedIn — provider undecided
 - [ ] Phase 6: Brand Command — domain claim, /b/<slug> page, weekly monitoring + email alerts

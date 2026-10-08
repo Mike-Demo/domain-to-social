@@ -9,6 +9,7 @@ import { PLAN_LABEL } from "@/lib/account/entitlements";
 import { generateRecoveryCodes, recoveryCodeStatus } from "@/lib/account/recovery.functions";
 import { BackupCodes } from "@/components/diggr/BackupCodes";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
+import { WaButton } from "@/design-system/font-awsome-web-awesome-171158";
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({
@@ -47,6 +48,8 @@ function Account() {
   const [deleting, setDeleting] = useState(false);
   const [name, setName] = useState("");
   const [err, setErr] = useState<string | null>(null);
+  const [portalErr, setPortalErr] = useState<string | null>(null);
+  const [portalBusy, setPortalBusy] = useState(false);
   const fetchRecovery = useServerFn(recoveryCodeStatus);
   const makeCodes = useServerFn(generateRecoveryCodes);
   const recovery = useQuery({ queryKey: ["recovery"], queryFn: () => fetchRecovery() });
@@ -116,16 +119,28 @@ function Account() {
                 {PLAN_LABEL[data.entitlements.plan]}
               </span>
               {data.entitlements.plan !== "free" && (
-                <button
-                  onClick={async () => {
-                    const r = await portal({ data: { returnUrl: window.location.href } });
-                    if ("error" in r) setErr(r.error);
-                    else window.open(r.url, "_blank");
-                  }}
-                  className="font-code-terminal text-cyber-cyan text-left underline"
-                >
-                  Manage billing →<span className="sr-only"> (opens in new tab)</span>
-                </button>
+                <>
+                  <WaButton
+                    variant="brand"
+                    appearance="plain"
+                    disabled={portalBusy}
+                    loading={portalBusy}
+                    onClick={async () => {
+                      setPortalBusy(true);
+                      setPortalErr(null);
+                      const r = await portal({ data: { returnUrl: window.location.href } });
+                      if ("error" in r) {
+                        setPortalErr(r.error);
+                        setPortalBusy(false);
+                        return;
+                      }
+                      window.location.assign(r.url);
+                    }}
+                  >
+                    {portalBusy ? "Opening billing…" : "Manage billing →"}
+                  </WaButton>
+                  {portalErr && <p role="alert" className="font-code-terminal text-body-sm text-hazard-orange">{portalErr}</p>}
+                </>
               )}
               {data.entitlements.plan !== "brand_command" && (
                 <Link to="/pricing" className="font-code-terminal text-cyber-cyan underline">

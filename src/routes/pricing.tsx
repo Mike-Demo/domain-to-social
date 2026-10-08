@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getMyAccount } from "@/lib/account/account.functions";
 import { changePlan } from "@/lib/account/payments.functions";
 import type { PlanTier } from "@/lib/account/entitlements";
+import { WaButton } from "@/design-system/font-awsome-web-awesome-171158";
 
 const Checkout = lazy(() => import("@/components/payments/Checkout").then((m) => ({ default: m.Checkout })));
 
@@ -71,37 +72,43 @@ function Pricing() {
 
   function action(t: (typeof TIERS)[number]) {
     if (!t.priceId) return null;
-    const btn = "font-label-stamp text-label-stamp mt-auto px-space-md py-space-sm uppercase";
     if (!user)
       return (
-        <Link to="/auth" search={{ next: "/pricing" }} className="font-label-stamp text-label-stamp text-cyber-cyan mt-auto uppercase underline">
+        <Link to="/auth" search={{ next: "/pricing" }} className="font-label-stamp text-label-stamp text-cyber-cyan block w-full text-center uppercase underline">
           Sign in to buy
         </Link>
       );
     if (aal2 === false)
       return (
-        <Link to="/mfa" search={{ next: "/pricing" }} className="font-label-stamp text-label-stamp text-cyber-cyan mt-auto uppercase underline">
+        <Link to="/mfa" search={{ next: "/pricing" }} className="font-label-stamp text-label-stamp text-cyber-cyan block w-full text-center uppercase underline">
           Enter your 6-digit code to buy
         </Link>
       );
-    if (!account.data) return <p className="font-code-terminal text-body-sm text-on-surface-variant mt-auto">Checking your plan…</p>;
+    if (!account.data) return <p className="font-code-terminal text-body-sm text-on-surface-variant w-full text-center">Checking your plan…</p>;
     const owned = t.priceId === "operative_onetime" ? plan !== "free" : monthly === t.plan;
     if (owned)
       return (
-        <p className="font-label-stamp text-label-stamp text-primary-container mt-auto uppercase">
+        <p className="font-label-stamp text-label-stamp text-primary-container w-full text-center uppercase">
           {t.priceId === "operative_onetime" && !operativeOwned ? "Included in your plan" : "Your plan"}
         </p>
       );
     if (t.priceId !== "operative_onetime" && monthly)
       return (
-        <button disabled={busy} onClick={() => doSwitch(t.priceId as "deep_recon_monthly" | "brand_command_monthly")} className={`${btn} text-paper-distressed border-2 border-paper-distressed`}>
+        <WaButton
+          variant="brand"
+          appearance="outlined"
+          disabled={busy}
+          loading={busy}
+          onClick={() => doSwitch(t.priceId as "deep_recon_monthly" | "brand_command_monthly")}
+          className="w-full"
+        >
           {busy ? "Switching…" : `Switch to ${t.name}`}
-        </button>
+        </WaButton>
       );
     return (
-      <button onClick={() => setSelected(t.priceId)} className={`${btn} text-paper-distressed border-2 border-paper-distressed`}>
+      <WaButton variant="brand" appearance="outlined" onClick={() => setSelected(t.priceId)} className="w-full">
         Get {t.name}
-      </button>
+      </WaButton>
     );
   }
 
@@ -130,7 +137,9 @@ function Pricing() {
                   <li key={x}>&gt; {x}</li>
                 ))}
               </ul>
-              {action(t)}
+              <div className="mt-auto flex w-full min-w-0 items-end">
+                {action(t)}
+              </div>
             </div>
           ))}
         </div>
