@@ -258,12 +258,17 @@ async function fallbackSearch(
   brandName: string,
   domain: string,
   checkedAt: string,
+  enrich = false,
 ): Promise<PlatformResult[]> {
+  const fc = enrich ? await import("./firecrawl.server") : null;
   const out = await Promise.all(
     missing.map(async (id): Promise<PlatformResult | null> => {
       const p = PLATFORMS.find((x) => x.id === id);
       if (!p) return null;
-      const hits = await ddgSearch(`site:${p.searchHost} "${brandName}"`);
+      const q = `site:${p.searchHost} "${brandName}"`;
+      // Paid tiers search via Firecrawl first; free tier and failures use DuckDuckGo.
+      let hits = fc ? await fc.firecrawlSearch(q) : [];
+      if (!hits.some((h) => matchProfile(h.url)?.platform.id === id)) hits = await ddgSearch(q);
       const match = hits.map((h) => matchProfile(h.url)).find((m) => m?.platform.id === id);
       if (!match) return null;
       const reciprocal = await checkReciprocal(match.profile.url, domain);

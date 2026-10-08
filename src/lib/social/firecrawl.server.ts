@@ -67,3 +67,64 @@ export async function firecrawlScrape(url: string): Promise<FirecrawlPage | null
     return null;
   }
 }
+
+export interface FirecrawlSearchHit {
+  url: string;
+  title: string;
+  snippet: string;
+}
+
+/** Paid-tier web search. Returns [] on failure so callers can fall back to the free search. */
+export async function firecrawlSearch(query: string, limit = 5): Promise<FirecrawlSearchHit[]> {
+  const lovableKey = process.env["LOVABLE_API_KEY"];
+  const fcKey = process.env["FIRECRAWL_API_KEY"];
+  if (!lovableKey || !fcKey) return [];
+  try {
+    const res = await fetch(`${GATEWAY_V2}/search`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${lovableKey}`,
+        "X-Connection-Api-Key": fcKey,
+      },
+      body: JSON.stringify({ query, limit }),
+      signal: AbortSignal.timeout(20000),
+    });
+    if (!res.ok) {
+      console.error(`Firecrawl search failed [${res.status}]: ${(await res.text()).slice(0, 300)}`);
+      return [];
+    }
+    const body = (await res.json()) as {
+      data?: { url?: string; title?: string; description?: string }[] | { web?: { url?: string; title?: string; description?: string }[] };
+    };
+    const list = Array.isArray(body.data) ? body.data : (body.data?.web ?? []);
+    return list
+      .filter((r): r is { url: string; title?: string; description?: string } => typeof r.url === "string")
+      .map((r) => ({ url: r.url, title: r.title ?? "", snippet: r.description ?? "" }));
+  } catch (err) {
+    console.error("Firecrawl search error", err);
+    return [];
+  }
+}
+
+const SUBPAGE_HINTS = ["about", "contact", "connect", "press", "company", "social", "community"];
+
+/** Picks up to `max` same-site subpages likely to carry social links. */
+export function pickSocialSubpages(links: string[], host: string, max = 2): string[] {
+  const out: string[] = [];
+  for (const l of links) {
+    try {
+      const u = new URL(l);
+      const h = u.hostname.replace(/^www\./, "");
+      if (h !== host.replace(/^www\./, "")) continue;
+      const path = u.pathname.toLowerCase();
+      if (!SUBPAGE_HINTS.some((k) => path.split("/").some((seg) => seg.startsWith(k)))) continue;
+      const clean = `${u.origin}${u.pathname}`;
+      if (!out.includes(clean)) out.push(clean);
+      if (out.length >= max) break;
+    } catch {
+      continue;
+    }
+  }
+  return out;
+}
