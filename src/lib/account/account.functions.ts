@@ -34,6 +34,7 @@ function browserReserver(ctx: Ctx): (domain: string) => Promise<boolean> {
       .select("id", { count: "exact", head: true })
       .eq("user_id", ctx.userId)
       .not("domain", "like", `${ENRICH_PREFIX}%`)
+      .not("domain", "like", "mcp:%")
       .gte("run_at", since);
     if (!browserRunAllowed(count ?? 0)) return false;
     const { error } = await ctx.supabase.from("browser_runs").insert({ user_id: ctx.userId, domain });
