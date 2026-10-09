@@ -85,7 +85,11 @@ function Pricing() {
     void supabase.auth.mfa.getAuthenticatorAssuranceLevel().then(({ data }) => setAal2(data?.currentLevel === "aal2"));
   }, [user]);
 
-  const account = useQuery({ queryKey: ["account"], queryFn: () => fetchAccount(), enabled: !!user && aal2 === true });
+  const account = useQuery({
+    queryKey: ["account"],
+    queryFn: () => fetchAccount(),
+    enabled: !!user && (aal2 === true || isAgentIdUser(user)),
+  });
   const plan = account.data?.entitlements.plan ?? "free";
   const monthly = account.data?.subscription?.monthlyPlan ?? null;
   const operativeOwned = account.data?.subscription?.operativeOwned ?? false;
@@ -108,7 +112,8 @@ function Pricing() {
           Sign in to buy
         </Link>
       );
-    if (aal2 === false)
+    // AgentID sign-ins are exempt from the authenticator-app check everywhere, including checkout.
+    if (aal2 === false && !isAgentIdUser(user))
       return (
         <Link to="/mfa" search={{ next: "/pricing" }} className="font-label-stamp text-label-stamp text-cyber-cyan block w-full text-center uppercase underline">
           Enter your 6-digit code to buy
