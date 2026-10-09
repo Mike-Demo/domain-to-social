@@ -28,10 +28,14 @@ export default defineTool({
     if (!assistantLookupAllowed(count ?? 0)) throw new ToolError(`Daily limit of ${ASSISTANT_LOOKUPS_PER_DAY} assistant lookups reached. Try again tomorrow.`);
     const { error: logErr } = await db.from("browser_runs").insert({ user_id: u.user.id, domain: `${MCP_PREFIX}${url.slice(0, 200)}` });
     if (logErr) throw new ToolError("Couldn't record usage — try again.");
+    // Same pipeline as the website Radar: the caller's plan decides Firecrawl / live-browser fallbacks.
+    const planCtx = { supabase: db, userId: u.user.id };
+    const { loadEntitlements, lookupOptionsFor } = await import("@/lib/account/plan-access.server");
+    const ent = await loadEntitlements(planCtx);
     const { lookupDomain } = await import("@/lib/social/lookup.server");
     let r;
     try {
-      r = await lookupDomain(url);
+      r = await lookupDomain(url, lookupOptionsFor(planCtx, ent));
     } catch (e) {
       throw new ToolError(e instanceof Error ? e.message : "Lookup failed.");
     }
@@ -54,11 +58,19 @@ export default defineTool({
     const lines = profiles.map(
       (p) => `${p.platform}: ${p.handle} ${p.url} [${p.verified ? "verified" : "unverified"}, ${p.strength}]`,
     );
+    const renderNote = r.enrichment
+      ? r.enrichment.used
+        ? ` — rendered via Firecrawl (${r.enrichment.reason})`
+        : ` — Firecrawl not used (${r.enrichment.reason})`
+      : r.blocked
+        ? " — site blocked direct visits"
+        : "";
+    const browserNote = r.browserUse ? `\nLive browser: ${r.browserUse.used ? "used" : "not used"}${r.browserUse.reason ? ` (${r.browserUse.reason})` : ""}` : "";
     return {
       content: [
         {
           type: "text",
-          text: `${r.brandName} (${r.domain})${r.blocked ? " — site blocked direct visits" : ""}\n${lines.join("\n") || "No profiles found."}${saveNote}`,
+          text: `${r.brandName} (${r.domain})${renderNote}${browserNote}\n${lines.join("\n") || "No profiles found."}${saveNote}`,
         },
       ],
       structuredContent: {
@@ -67,6 +79,9 @@ export default defineTool({
         checkedAt: r.checkedAt,
         blocked: r.blocked,
         notFound: r.notFound,
+        plan: ent.plan,
+        enrichment: r.enrichment ?? null,
+        browserUse: r.browserUse ?? null,
         profiles,
       },
     };
