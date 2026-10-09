@@ -62,7 +62,7 @@ function Gifts() {
           <>
             <div className={panel}>
               <h2 className="font-headline text-headline-sm text-paper-distressed uppercase">New code</h2>
-              <label htmlFor="g-plan" className="font-code-terminal text-body-sm text-on-surface-variant">Plan</label>
+              <label htmlFor="g-plan" className="font-label-stamp text-label-stamp text-paper-distressed uppercase">Plan</label>
               <select id="g-plan" value={plan} onChange={(e) => setPlan(e.target.value as GiftPlan)} className={field}>
                 <option value="operative">Operative (lifetime)</option>
                 <option value="deep_recon">Deep Recon</option>
@@ -70,13 +70,13 @@ function Gifts() {
               </select>
               {plan !== "operative" && (
                 <>
-                  <label htmlFor="g-days" className="font-code-terminal text-body-sm text-on-surface-variant">Days of access</label>
+                  <label htmlFor="g-days" className="font-label-stamp text-label-stamp text-paper-distressed uppercase">Days of access</label>
                   <input id="g-days" type="number" min={1} value={days} onChange={(e) => setDays(Number(e.target.value))} className={field} />
                 </>
               )}
-              <label htmlFor="g-uses" className="font-code-terminal text-body-sm text-on-surface-variant">How many people can use it</label>
+              <label htmlFor="g-uses" className="font-label-stamp text-label-stamp text-paper-distressed uppercase">How many people can use it</label>
               <input id="g-uses" type="number" min={1} value={maxUses} onChange={(e) => setMaxUses(Number(e.target.value))} className={field} />
-              <label htmlFor="g-note" className="font-code-terminal text-body-sm text-on-surface-variant">Note (optional)</label>
+              <label htmlFor="g-note" className="font-label-stamp text-label-stamp text-paper-distressed uppercase">Note (optional)</label>
               <input id="g-note" value={note} onChange={(e) => setNote(e.target.value)} placeholder="for Sarah" className={field} />
               <button onClick={make} className="font-label-stamp text-label-stamp bg-primary-container text-on-primary-container px-space-md py-space-xs self-start uppercase">
                 Create

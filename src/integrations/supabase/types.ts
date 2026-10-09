@@ -308,7 +308,7 @@ export type Database = {
       admin_create_gift_code: {
         Args: {
           _days: number
-          _expires_at: string
+          _expires_at?: string
           _hash: string
           _max_uses: number
           _note: string
