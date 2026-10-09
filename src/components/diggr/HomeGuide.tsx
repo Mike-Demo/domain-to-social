@@ -9,6 +9,14 @@ export const FAQS: ReadonlyArray<{ q: string; a: string }> = [
     a: "Enter a brand's domain and it finds the company's social media profiles across X, Threads, Instagram, LinkedIn, Bluesky, GitHub and more.",
   },
   {
+    q: "How do I find a company's social media accounts?",
+    a: "Enter the company's website domain on the homepage. M4G1C M4NT4 reads the site's Schema.org sameAs data and official page links, then checks X, Threads, Instagram, LinkedIn, Bluesky, GitHub and more, showing the evidence for every handle it finds.",
+  },
+  {
+    q: "Can I find social profiles from a website URL?",
+    a: "Yes. Paste any brand or business URL into the scanner. Handles linked from the official site are marked Verified; search fallback candidates stay Unverified unless they link back to the domain. You can copy one handle or all verified handles in one click.",
+  },
+  {
     q: "How does the Verified badge work?",
     a: "Profiles declared through JSON-LD/Schema.org sameAs or official-site DOM links get a Verified badge with the evidence source shown. Search fallback candidates stay Unverified — the app checks whether they link back to the official domain.",
   },
