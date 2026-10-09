@@ -183,6 +183,16 @@ function Licenses() {
           >
             Digital carbon
           </h2>
+          <div className="mt-space-sm">
+            <iframe
+              title="Stripe Climate badge"
+              src="https://climate.stripe.com/badge/XmKkjC?theme=dark&size=small&locale=en-US"
+              width={380}
+              height={38}
+              loading="lazy"
+              className="max-w-full border-0"
+            />
+          </div>
           <p className="font-code-terminal text-code-terminal text-on-surface-variant mt-space-sm">
             Homepage transfer is about 1016.0 KB, roughly 0.154 g of CO2 per
             visit. Estimated with CO2.js using the Sustainable Web Design Model
