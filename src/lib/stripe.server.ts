@@ -75,6 +75,16 @@ export function getStripeErrorMessage(error: unknown): string {
   return 'Stripe request failed';
 }
 
+/**
+ * Caller-safe version of getStripeErrorMessage: logs the full diagnostic
+ * server-side but returns a generic message so internal details (requestId,
+ * param, code, decline_code) never reach the client.
+ */
+export function getPublicStripeErrorMessage(error: unknown, fallback: string): string {
+  console.error('[stripe]', getStripeErrorMessage(error));
+  return fallback;
+}
+
 export interface WebhookEvent {
   type: string;
   data: { object: Record<string, unknown> };
