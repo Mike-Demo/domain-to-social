@@ -27,9 +27,12 @@ export const getMyAccount = createServerFn({ method: "GET" })
     const activeGift = gifts
       .filter((g) => !g.gift_until || new Date(g.gift_until) > now)
       .sort((a, b) => planRank(b.plan) - planRank(a.plan))[0] ?? null;
+    // Saved lists are a paid feature: don't even query them without the entitlement.
     const [{ data: history }, { data: lists }] = await Promise.all([
       context.supabase.from("lookups").select("id,domain,checked_at").order("checked_at", { ascending: false }).limit(50),
-      context.supabase.from("lists").select("id,name,created_at,list_items(count)").order("created_at", { ascending: false }),
+      ent.savedLists
+        ? context.supabase.from("lists").select("id,name,created_at,list_items(count)").order("created_at", { ascending: false })
+        : Promise.resolve({ data: null }),
     ]);
     return {
       entitlements: ent,
