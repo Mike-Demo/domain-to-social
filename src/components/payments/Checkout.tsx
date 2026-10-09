@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useCallback } from "react";
 import { getStripe } from "@/lib/stripe";
 import { createCheckoutSession, type PRICE_IDS } from "@/lib/account/payments.functions";
+import climateBadge from "@/assets/stripe-climate.svg";
 
 export function Checkout({ priceId }: { priceId: (typeof PRICE_IDS)[number] }) {
   const create = useServerFn(createCheckoutSession);
@@ -14,9 +15,21 @@ export function Checkout({ priceId }: { priceId: (typeof PRICE_IDS)[number] }) {
     return r.clientSecret;
   }, [create, priceId]);
   return (
-    <EmbeddedCheckoutProvider stripe={getStripe()} options={{ fetchClientSecret }}>
-      <EmbeddedCheckout />
-    </EmbeddedCheckoutProvider>
+    <>
+      <p className="font-code-terminal text-body-sm text-grit-black mb-space-sm flex items-center gap-space-xs">
+        <img
+          src={climateBadge}
+          alt=""
+          aria-hidden="true"
+          className="shrink-0"
+          style={{ width: "var(--wa-space-l)", height: "var(--wa-space-l)" }}
+        />
+        1.5% of this purchase goes to carbon removal via Stripe Climate.
+      </p>
+      <EmbeddedCheckoutProvider stripe={getStripe()} options={{ fetchClientSecret }}>
+        <EmbeddedCheckout />
+      </EmbeddedCheckoutProvider>
+    </>
   );
 }
 
