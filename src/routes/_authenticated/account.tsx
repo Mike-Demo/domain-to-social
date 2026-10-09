@@ -8,6 +8,7 @@ import { createPortalSession, deleteMyAccount } from "@/lib/account/payments.fun
 import { PLAN_LABEL } from "@/lib/account/entitlements";
 import { generateRecoveryCodes, recoveryCodeStatus } from "@/lib/account/recovery.functions";
 import { BackupCodes } from "@/components/diggr/BackupCodes";
+import { RedeemGift } from "@/components/diggr/RedeemGift";
 import { Shell, SubHeader } from "@/components/diggr/Chrome";
 import { WaButton } from "@/design-system/font-awsome-web-awesome-171158/webawesome/react/button";
 
@@ -142,11 +143,18 @@ function Account() {
                   {portalErr && <p role="alert" className="font-code-terminal text-body-sm text-hazard-orange">{portalErr}</p>}
                 </>
               )}
+              {data.gift && (
+                <p className="font-code-terminal text-body-sm text-paper-distressed">
+                  Gifted {PLAN_LABEL[data.gift.plan]}
+                  {data.gift.gift_until ? ` until ${new Date(data.gift.gift_until).toLocaleDateString()}` : " (lifetime)"}
+                </p>
+              )}
               {data.entitlements.plan !== "brand_command" && (
                 <Link to="/pricing" className="font-code-terminal text-cyber-cyan underline">
                   Upgrade your plan →
                 </Link>
               )}
+              <RedeemGift />
             </div>
 
             <div className={panel}>
