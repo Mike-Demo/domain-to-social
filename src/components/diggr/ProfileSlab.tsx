@@ -21,6 +21,14 @@ const PLATFORM_GLYPH: Record<string, string> = {
   pinterest: "P",
   github: "⌘",
   tweetapp: "✦",
+  discord: "D",
+  twitch: "T",
+  substack: "S",
+  telegram: "➤",
+  reddit: "r/",
+  patreon: "P",
+  behance: "Bē",
+  dribbble: "●",
 };
 
 function Metric({ label, value }: { label: string; value: string }) {
