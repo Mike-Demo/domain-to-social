@@ -11,6 +11,7 @@ import { isAgentIdUser } from "@/lib/account/mfa";
 import { changePlan } from "@/lib/account/payments.functions";
 import type { PlanTier } from "@/lib/account/entitlements";
 import { WaButton } from "@/design-system/font-awsome-web-awesome-171158/webawesome/react/button";
+import climateBadge from "@/assets/stripe-climate.svg";
 
 const Checkout = lazy(() => import("@/components/payments/Checkout").then((m) => ({ default: m.Checkout })));
 
@@ -173,6 +174,12 @@ function Pricing() {
                   <li key={x}>&gt; {x}</li>
                 ))}
               </ul>
+              {t.priceId && (
+                <p className="font-code-terminal text-body-sm text-on-surface-variant flex items-center gap-space-xs">
+                  <img src={climateBadge} alt="" aria-hidden="true" className="size-5 shrink-0" />
+                  1.5% goes to carbon removal via Stripe Climate
+                </p>
+              )}
               <div className="mt-auto flex w-full min-w-0 items-end">
                 {action(t)}
               </div>
