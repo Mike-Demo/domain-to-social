@@ -21,8 +21,8 @@
         "title": "Find social profiles",
         "description": "Find a company's social media profiles from its website address, with evidence for each match.",
         "annotations": {
-          "readOnlyHint": true,
-          "idempotentHint": true,
+          "readOnlyHint": false,
+          "idempotentHint": false,
           "openWorldHint": true
         },
         "inputSchema": {
@@ -46,7 +46,7 @@
       {
         "name": "list_my_lookups",
         "title": "List my recent lookups",
-        "description": "List the signed-in user's 50 most recent saved website lookups.",
+        "description": "List the signed-in user's 50 most recent saved website lookups, newest first, with brand name and profiles found.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,

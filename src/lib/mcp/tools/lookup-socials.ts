@@ -2,6 +2,7 @@ import { defineTool, ToolError } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 import { supabaseForUser } from "../supabase";
 import { ASSISTANT_LOOKUPS_PER_DAY, assistantLookupAllowed } from "@/lib/account/entitlements";
+import type { Json } from "@/integrations/supabase/types";
 
 // Assistant lookups are logged in the append-only usage log with this tag (users cannot delete rows).
 const MCP_PREFIX = "mcp:";
@@ -11,7 +12,7 @@ export default defineTool({
   title: "Find social profiles",
   description: "Find a company's social media profiles from its website address, with evidence for each match.",
   inputSchema: { url: z.string().trim().min(3).max(500).describe("Company website, e.g. stripe.com") },
-  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: true },
+  annotations: { readOnlyHint: false, idempotentHint: false, openWorldHint: true },
   handler: async ({ url }, ctx) => {
     if (!ctx.isAuthenticated()) throw new ToolError("Sign in required.");
     const db = supabaseForUser(ctx);
@@ -45,6 +46,11 @@ export default defineTool({
         evidence: e.evidence,
       })),
     );
+    // Save to the same history the website's Radar writes to, so list_my_lookups sees it.
+    const { error: saveErr } = await db
+      .from("lookups")
+      .insert({ user_id: u.user.id, domain: r.domain, result: r as unknown as Json });
+    const saveNote = saveErr ? "\n(Note: couldn't save this lookup to your history.)" : "";
     const lines = profiles.map(
       (p) => `${p.platform}: ${p.handle} ${p.url} [${p.verified ? "verified" : "unverified"}, ${p.strength}]`,
     );
@@ -52,7 +58,7 @@ export default defineTool({
       content: [
         {
           type: "text",
-          text: `${r.brandName} (${r.domain})${r.blocked ? " — site blocked direct visits" : ""}\n${lines.join("\n") || "No profiles found."}`,
+          text: `${r.brandName} (${r.domain})${r.blocked ? " — site blocked direct visits" : ""}\n${lines.join("\n") || "No profiles found."}${saveNote}`,
         },
       ],
       structuredContent: {
