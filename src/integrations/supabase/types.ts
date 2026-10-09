@@ -35,6 +35,83 @@ export type Database = {
         }
         Relationships: []
       }
+      gift_codes: {
+        Row: {
+          code_hash: string
+          created_at: string
+          created_by: string
+          disabled_at: string | null
+          duration_days: number | null
+          expires_at: string | null
+          id: string
+          max_uses: number
+          note: string | null
+          plan: Database["public"]["Enums"]["plan_tier"]
+          uses: number
+        }
+        Insert: {
+          code_hash: string
+          created_at?: string
+          created_by: string
+          disabled_at?: string | null
+          duration_days?: number | null
+          expires_at?: string | null
+          id?: string
+          max_uses?: number
+          note?: string | null
+          plan: Database["public"]["Enums"]["plan_tier"]
+          uses?: number
+        }
+        Update: {
+          code_hash?: string
+          created_at?: string
+          created_by?: string
+          disabled_at?: string | null
+          duration_days?: number | null
+          expires_at?: string | null
+          id?: string
+          max_uses?: number
+          note?: string | null
+          plan?: Database["public"]["Enums"]["plan_tier"]
+          uses?: number
+        }
+        Relationships: []
+      }
+      gift_redemptions: {
+        Row: {
+          code_id: string
+          gift_until: string | null
+          id: string
+          plan: Database["public"]["Enums"]["plan_tier"]
+          redeemed_at: string
+          user_id: string
+        }
+        Insert: {
+          code_id: string
+          gift_until?: string | null
+          id?: string
+          plan: Database["public"]["Enums"]["plan_tier"]
+          redeemed_at?: string
+          user_id: string
+        }
+        Update: {
+          code_id?: string
+          gift_until?: string | null
+          id?: string
+          plan?: Database["public"]["Enums"]["plan_tier"]
+          redeemed_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gift_redemptions_code_id_fkey"
+            columns: ["code_id"]
+            isOneToOne: false
+            referencedRelation: "gift_codes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       list_items: {
         Row: {
           added_at: string
@@ -205,14 +282,66 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_create_gift_code: {
+        Args: {
+          _days: number
+          _expires_at: string
+          _hash: string
+          _max_uses: number
+          _note: string
+          _plan: Database["public"]["Enums"]["plan_tier"]
+        }
+        Returns: string
+      }
+      admin_disable_gift_code: { Args: { _id: string }; Returns: undefined }
+      admin_list_gift_codes: {
+        Args: never
+        Returns: {
+          created_at: string
+          disabled_at: string
+          duration_days: number
+          expires_at: string
+          id: string
+          max_uses: number
+          note: string
+          plan: Database["public"]["Enums"]["plan_tier"]
+          uses: number
+        }[]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      redeem_gift_code: { Args: { _hash: string }; Returns: Json }
     }
     Enums: {
+      app_role: "admin"
       plan_tier: "free" | "operative" | "deep_recon" | "brand_command"
     }
     CompositeTypes: {
@@ -341,6 +470,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin"],
       plan_tier: ["free", "operative", "deep_recon", "brand_command"],
     },
   },
