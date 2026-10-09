@@ -7,6 +7,7 @@ import { PaymentTestModeBanner } from "@/components/payments/Checkout";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyAccount } from "@/lib/account/account.functions";
+import { isAgentIdUser } from "@/lib/account/mfa";
 import { changePlan } from "@/lib/account/payments.functions";
 import type { PlanTier } from "@/lib/account/entitlements";
 import { WaButton } from "@/design-system/font-awsome-web-awesome-171158/webawesome/react/button";
@@ -85,7 +86,11 @@ function Pricing() {
     void supabase.auth.mfa.getAuthenticatorAssuranceLevel().then(({ data }) => setAal2(data?.currentLevel === "aal2"));
   }, [user]);
 
-  const account = useQuery({ queryKey: ["account"], queryFn: () => fetchAccount(), enabled: !!user && aal2 === true });
+  const account = useQuery({
+    queryKey: ["account"],
+    queryFn: () => fetchAccount(),
+    enabled: !!user && (aal2 === true || isAgentIdUser(user)),
+  });
   const plan = account.data?.entitlements.plan ?? "free";
   const monthly = account.data?.subscription?.monthlyPlan ?? null;
   const operativeOwned = account.data?.subscription?.operativeOwned ?? false;
@@ -108,7 +113,8 @@ function Pricing() {
           Sign in to buy
         </Link>
       );
-    if (aal2 === false)
+    // AgentID sign-ins are exempt from the authenticator-app check everywhere, including checkout.
+    if (aal2 === false && !isAgentIdUser(user))
       return (
         <Link to="/mfa" search={{ next: "/pricing" }} className="font-label-stamp text-label-stamp text-cyber-cyan block w-full text-center uppercase underline">
           Enter your 6-digit code to buy
