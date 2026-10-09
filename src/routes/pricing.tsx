@@ -176,7 +176,7 @@ function Pricing() {
               </ul>
               {t.priceId && (
                 <p className="font-code-terminal text-body-sm text-on-surface-variant flex items-center gap-space-xs">
-                  <img src={climateBadge} alt="" aria-hidden="true" className="size-5 shrink-0" />
+                  <img src={climateBadge} alt="" aria-hidden="true" className="shrink-0" style={{ width: "var(--wa-space-l)", height: "var(--wa-space-l)" }} />
                   1.5% goes to carbon removal via Stripe Climate
                 </p>
               )}
