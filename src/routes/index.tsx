@@ -59,7 +59,7 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@graph": [
             {
-              "@type": "SoftwareApplication",
+              "@type": "WebApplication",
               name: "M4G1C M4NT4",
               url: "https://magicmanta.com/",
               applicationCategory: "BusinessApplication",
