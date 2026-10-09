@@ -58,7 +58,7 @@ export default defineTool({
       content: [
         {
           type: "text",
-          text: `${r.brandName} (${r.domain})${r.blocked ? " — site blocked direct visits" : ""}\n${lines.join("\n") || "No profiles found."}`,
+          text: `${r.brandName} (${r.domain})${r.blocked ? " — site blocked direct visits" : ""}\n${lines.join("\n") || "No profiles found."}${saveNote}`,
         },
       ],
       structuredContent: {
