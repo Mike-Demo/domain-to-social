@@ -35,6 +35,34 @@ function assertWithinLimit(kind: "lookup" | "search"): void {
   }
 }
 
+// Destination bound: across all anonymous callers, one target site can be looked up
+// only a few times per window, so the free tool can't be aimed at a site as a traffic source.
+const MAX_PUBLIC_LOOKUPS_PER_TARGET = 5;
+const targetBuckets = new Map<string, Bucket>();
+
+function targetHost(input: string): string {
+  const raw = /^https?:\/\//i.test(input) ? input : `https://${input}`;
+  try {
+    return new URL(raw).hostname.toLowerCase().replace(/^www\./, "");
+  } catch {
+    throw new Error("Please enter a public website address.");
+  }
+}
+
+function assertTargetWithinLimit(input: string): void {
+  const key = targetHost(input);
+  const now = Date.now();
+  const bucket = targetBuckets.get(key);
+  if (!bucket || bucket.resetAt <= now) {
+    targetBuckets.set(key, { count: 1, resetAt: now + WINDOW_MS });
+    return;
+  }
+  bucket.count += 1;
+  if (bucket.count > MAX_PUBLIC_LOOKUPS_PER_TARGET) {
+    throw new Error("This site was looked up a lot just now — please try again in a minute.");
+  }
+}
+
 function failureMessage(e: unknown, fallback: string): string {
   return e instanceof Error && e.message ? e.message : fallback;
 }
@@ -46,6 +74,7 @@ export const lookupSocials = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       assertWithinLimit("lookup");
+      assertTargetWithinLimit(data.url);
       return { result: await lookupDomain(data.url) };
     } catch (e) {
       return { error: failureMessage(e, "Lookup failed.") };
