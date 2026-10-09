@@ -33,7 +33,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
     z.object({ priceId: z.enum(PRICE_IDS) }).parse(d),
   )
   .handler(async ({ data, context }): Promise<CheckoutResult> => {
-    const { createStripeClient, getStripeErrorMessage } = await import("@/lib/stripe.server");
+    const { createStripeClient, getPublicStripeErrorMessage } = await import("@/lib/stripe.server");
     const env = await currentEnv();
     const decision = checkoutDecision(await loadRow(context, env), data.priceId);
     if (decision === "owned") return { error: "You already have this plan.", code: "owned" };
@@ -84,7 +84,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       } as Stripe.Checkout.SessionCreateParams);
       return { clientSecret: session.client_secret ?? "" };
     } catch (error) {
-      return { error: getStripeErrorMessage(error) };
+      return { error: getPublicStripeErrorMessage(error, "Couldn't start checkout — please try again.") };
     }
   });
 
@@ -93,7 +93,7 @@ export const changePlan = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
   .validator((d: unknown) => z.object({ priceId: z.enum(MONTHLY_PRICE_IDS) }).parse(d))
   .handler(async ({ data, context }): Promise<{ ok: true } | { error: string }> => {
-    const { createStripeClient, getStripeErrorMessage } = await import("@/lib/stripe.server");
+    const { createStripeClient, getPublicStripeErrorMessage } = await import("@/lib/stripe.server");
     const env = await currentEnv();
     const row = await loadRow(context, env);
     const decision = checkoutDecision(row, data.priceId);
@@ -114,14 +114,14 @@ export const changePlan = createServerFn({ method: "POST" })
       });
       return { ok: true };
     } catch (error) {
-      return { error: getStripeErrorMessage(error) };
+      return { error: getPublicStripeErrorMessage(error, "Couldn't switch your plan — please try again.") };
     }
   });
 
 export const createPortalSession = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
   .handler(async ({ context }): Promise<{ url: string } | { error: string }> => {
-    const { createStripeClient, getStripeErrorMessage } = await import("@/lib/stripe.server");
+    const { createStripeClient, getPublicStripeErrorMessage } = await import("@/lib/stripe.server");
     const env = await currentEnv();
     const returnUrl = `${trustedAppOrigin(getRequestHeaders().get("host"))}/account`;
     const sub = await loadRow(context, env);
@@ -133,7 +133,7 @@ export const createPortalSession = createServerFn({ method: "POST" })
       });
       return { url: portal.url };
     } catch (error) {
-      return { error: getStripeErrorMessage(error) };
+      return { error: getPublicStripeErrorMessage(error, "Couldn't open billing management — please try again.") };
     }
   });
 
@@ -142,7 +142,7 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
   .validator((d: unknown) => z.object({ confirm: z.literal("DELETE") }).parse(d))
   .handler(async ({ context }): Promise<{ ok: true } | { error: string }> => {
-    const { createStripeClient, getStripeErrorMessage } = await import("@/lib/stripe.server");
+    const { createStripeClient, getStripeErrorMessage, getPublicStripeErrorMessage } = await import("@/lib/stripe.server");
     const env = await currentEnv();
     const row = await loadRow(context, env);
     if (row?.stripe_subscription_id && row.status !== "canceled") {
@@ -150,7 +150,8 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
         await createStripeClient(env).subscriptions.cancel(row.stripe_subscription_id);
       } catch (error) {
         const msg = getStripeErrorMessage(error);
-        if (!/No such subscription|canceled/i.test(msg)) return { error: `Couldn't cancel your subscription: ${msg}` };
+        if (!/No such subscription|canceled/i.test(msg))
+          return { error: getPublicStripeErrorMessage(error, "Couldn't cancel your subscription — please try again.") };
       }
     }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
