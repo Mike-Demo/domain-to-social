@@ -3,8 +3,8 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireMfaAuth } from "./mfa-middleware";
 import type { Json } from "@/integrations/supabase/types";
-import { browserRunAllowed, enrichmentAllowed, type Entitlements, type PlanTier } from "./entitlements";
-import { entitlementsFromSub, subscriptionActive, type SubRow } from "./billing";
+import { planRank, browserRunAllowed, enrichmentAllowed, type Entitlements, type PlanTier } from "./entitlements";
+import { entitlementsFromSub, subscriptionActive, type GiftRow, type SubRow } from "./billing";
 import type { LookupResult } from "@/lib/social/types";
 
 type Ctx = { supabase: import("@supabase/supabase-js").SupabaseClient<import("@/integrations/supabase/types").Database>; userId: string };
@@ -21,8 +21,14 @@ async function loadSubscription({ supabase, userId }: Ctx): Promise<SubRow | nul
   return data;
 }
 
+async function loadGifts({ supabase, userId }: Ctx): Promise<GiftRow[]> {
+  const { data } = await supabase.from("gift_redemptions").select("plan,gift_until").eq("user_id", userId);
+  return data ?? [];
+}
+
 async function loadEntitlements(ctx: Ctx): Promise<Entitlements> {
-  return entitlementsFromSub(await loadSubscription(ctx));
+  const [sub, gifts] = await Promise.all([loadSubscription(ctx), loadGifts(ctx)]);
+  return entitlementsFromSub(sub, new Date(), gifts);
 }
 
 /** Server-side daily cap for the live-browser fallback; logs the run when allowed. */
@@ -68,14 +74,19 @@ async function requireLists(ctx: Ctx): Promise<void> {
 export const getMyAccount = createServerFn({ method: "GET" })
   .middleware([requireMfaAuth])
   .handler(async ({ context }) => {
-    const sub = await loadSubscription(context);
-    const ent = entitlementsFromSub(sub);
+    const [sub, gifts] = await Promise.all([loadSubscription(context), loadGifts(context)]);
+    const ent = entitlementsFromSub(sub, new Date(), gifts);
+    const now = new Date();
+    const activeGift = gifts
+      .filter((g) => !g.gift_until || new Date(g.gift_until) > now)
+      .sort((a, b) => planRank(b.plan) - planRank(a.plan))[0] ?? null;
     const [{ data: history }, { data: lists }] = await Promise.all([
       context.supabase.from("lookups").select("id,domain,checked_at").order("checked_at", { ascending: false }).limit(50),
       context.supabase.from("lists").select("id,name,created_at,list_items(count)").order("created_at", { ascending: false }),
     ]);
     return {
       entitlements: ent,
+      gift: activeGift,
       subscription: sub
         ? {
             status: sub.status,

@@ -1,4 +1,4 @@
-import { entitlementsFor, type Entitlements, type PlanTier } from "./entitlements";
+import { entitlementsFor, planRank, type Entitlements, type PlanTier } from "./entitlements";
 
 export const PRICE_IDS = ["operative_onetime", "deep_recon_monthly", "brand_command_monthly"] as const;
 export type PriceId = (typeof PRICE_IDS)[number];
@@ -28,21 +28,40 @@ export function subscriptionActive(row: Pick<SubRow, "status" | "current_period_
   return row.status === "canceled" && !!row.current_period_end && periodOk;
 }
 
-export function effectivePlan(row: SubRow | null, now = new Date()): PlanTier {
+function paidPlan(row: SubRow | null, now: Date): PlanTier {
   if (!row) return "free";
   if (subscriptionActive(row, now) && row.plan !== "free") return row.plan;
   return row.operative_lifetime ? "operative" : "free";
 }
 
-export function entitlementsFromSub(row: SubRow | null, now = new Date()): Entitlements {
-  return entitlementsFor(effectivePlan(row, now));
+export interface GiftRow {
+  plan: PlanTier;
+  gift_until: string | null;
+}
+
+/** Highest gifted plan still in effect (null gift_until = lifetime). */
+export function bestGift(gifts: GiftRow[], now = new Date()): PlanTier {
+  return gifts
+    .filter((g) => !g.gift_until || new Date(g.gift_until) > now)
+    .reduce<PlanTier>((best, g) => (planRank(g.plan) > planRank(best) ? g.plan : best), "free");
+}
+
+/** The paid plan or an active gift, whichever is higher; gifts never lower a paid plan. */
+export function effectivePlan(row: SubRow | null, now = new Date(), gifts: GiftRow[] = []): PlanTier {
+  const paid = paidPlan(row, now);
+  const gift = bestGift(gifts, now);
+  return planRank(gift) > planRank(paid) ? gift : paid;
+}
+
+export function entitlementsFromSub(row: SubRow | null, now = new Date(), gifts: GiftRow[] = []): Entitlements {
+  return entitlementsFor(effectivePlan(row, now, gifts));
 }
 
 export type CheckoutDecision = "checkout" | "switch" | "owned";
 
 /** What buying `priceId` should do: open checkout, swap the existing monthly plan, or refuse (already owned). */
 export function checkoutDecision(row: SubRow | null, priceId: PriceId, now = new Date()): CheckoutDecision {
-  const plan = effectivePlan(row, now);
+  const plan = paidPlan(row, now);
   if (priceId === "operative_onetime") return plan === "free" ? "checkout" : "owned";
   const target = PRICE_TO_PLAN[priceId];
   const liveSub = !!row?.stripe_subscription_id && subscriptionActive(row, now) && row.status !== "canceled";
