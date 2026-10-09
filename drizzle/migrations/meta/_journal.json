@@ -43,6 +43,13 @@
       "when": 1791504091442,
       "tag": "0005_gift_codes",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791505380827,
+      "tag": "0006_gift_admin_email",
+      "breakpoints": true
     }
   ]
 }
