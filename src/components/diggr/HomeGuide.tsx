@@ -36,6 +36,10 @@ export const FAQS: ReadonlyArray<{ q: string; a: string }> = [
     q: "How fresh is the data?",
     a: 'Each result shows "last checked", conflicts between official sources are flagged, and every handle carries its evidence chain.',
   },
+  {
+    q: "Do you offset the site's carbon footprint?",
+    a: "Yes. 1.5% of purchases are contributed to Stripe Climate, which funds carbon removal. The site runs on Lovable Cloud behind Cloudflare (verified green hosting by the Green Web Foundation) — see the machine-readable disclosure at /carbon.txt.",
+  },
 ];
 
 export const HOWTO_STEPS: ReadonlyArray<{ name: string; text: string }> = [
