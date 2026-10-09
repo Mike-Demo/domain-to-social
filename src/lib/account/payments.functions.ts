@@ -84,7 +84,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       } as Stripe.Checkout.SessionCreateParams);
       return { clientSecret: session.client_secret ?? "" };
     } catch (error) {
-      return { error: getStripeErrorMessage(error) };
+      return { error: getPublicStripeErrorMessage(error, "Couldn't start checkout — please try again.") };
     }
   });
 
@@ -114,7 +114,7 @@ export const changePlan = createServerFn({ method: "POST" })
       });
       return { ok: true };
     } catch (error) {
-      return { error: getStripeErrorMessage(error) };
+      return { error: getPublicStripeErrorMessage(error, "Couldn't switch your plan — please try again.") };
     }
   });
 
@@ -133,7 +133,7 @@ export const createPortalSession = createServerFn({ method: "POST" })
       });
       return { url: portal.url };
     } catch (error) {
-      return { error: getStripeErrorMessage(error) };
+      return { error: getPublicStripeErrorMessage(error, "Couldn't open billing management — please try again.") };
     }
   });
 
@@ -150,7 +150,8 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
         await createStripeClient(env).subscriptions.cancel(row.stripe_subscription_id);
       } catch (error) {
         const msg = getStripeErrorMessage(error);
-        if (!/No such subscription|canceled/i.test(msg)) return { error: `Couldn't cancel your subscription: ${msg}` };
+        if (!/No such subscription|canceled/i.test(msg))
+          return { error: getPublicStripeErrorMessage(error, "Couldn't cancel your subscription — please try again.") };
       }
     }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
