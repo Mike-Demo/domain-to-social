@@ -1,12 +1,14 @@
 version = "0.5"
 
-last_updated = 2026-09-30
+last_updated = 2026-10-08
 
 [org]
 
 disclosures = [
 
  { doc_type = "web-page", url = "https://magicmanta.com/licenses", domain = "magicmanta.com", title = "Carbon disclosure for Brand Connector Pro" },
+
+ { doc_type = "certificate", url = "https://stripe.com/climate", domain = "stripe.com", title = "Stripe Climate: 1.5% of purchase revenue contributed to carbon removal" },
 
 ]
 
