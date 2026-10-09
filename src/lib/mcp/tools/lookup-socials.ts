@@ -12,7 +12,7 @@ export default defineTool({
   title: "Find social profiles",
   description: "Find a company's social media profiles from its website address, with evidence for each match.",
   inputSchema: { url: z.string().trim().min(3).max(500).describe("Company website, e.g. stripe.com") },
-  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: true },
+  annotations: { readOnlyHint: false, idempotentHint: false, openWorldHint: true },
   handler: async ({ url }, ctx) => {
     if (!ctx.isAuthenticated()) throw new ToolError("Sign in required.");
     const db = supabaseForUser(ctx);
