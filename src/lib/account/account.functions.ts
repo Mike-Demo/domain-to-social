@@ -160,6 +160,16 @@ export const runBatch = createServerFn({ method: "POST" })
     const ent = await loadEntitlements(context);
     if (ent.batchSize === 0) throw new Error("Bulk searching needs the Operative plan.");
     if (data.urls.length > ent.batchSize) throw new Error(`Your plan allows ${ent.batchSize} domains per run.`);
+    // One request per target site per run, so a batch can't be used to hammer a single host.
+    const hostOf = (u: string) => {
+      try {
+        return new URL(/^https?:\/\//i.test(u) ? u : `https://${u}`).hostname.toLowerCase().replace(/^www\./, "");
+      } catch {
+        return u.toLowerCase();
+      }
+    };
+    const hosts = data.urls.map(hostOf);
+    if (new Set(hosts).size !== hosts.length) throw new Error("Each site can appear only once per run.");
     assertMemberQuota(context.userId, data.urls.length);
     const { lookupDomain } = await import("@/lib/social/lookup.server");
     const settled = await Promise.allSettled(data.urls.map((u) => lookupDomain(u, { enrich: ent.enrichment, browserAgent: ent.browserAgent, reserveBrowserRun: browserReserver(context), reserveEnrichment: enrichmentReserver(context, ent.plan) })));
