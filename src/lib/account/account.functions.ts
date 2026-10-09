@@ -1,71 +1,18 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireMfaAuth } from "./mfa-middleware";
 import type { Json } from "@/integrations/supabase/types";
-import { planRank, browserRunAllowed, enrichmentAllowed, type Entitlements, type PlanTier } from "./entitlements";
-import { entitlementsFromSub, subscriptionActive, type GiftRow, type SubRow } from "./billing";
+import { planRank } from "./entitlements";
+import { entitlementsFromSub, subscriptionActive } from "./billing";
 import type { LookupResult } from "@/lib/social/types";
-
-type Ctx = { supabase: import("@supabase/supabase-js").SupabaseClient<import("@/integrations/supabase/types").Database>; userId: string };
-
-async function loadSubscription({ supabase, userId }: Ctx): Promise<SubRow | null> {
-  const { stripeEnvForHost } = await import("@/lib/stripe.server");
-  const env = stripeEnvForHost(getRequestHeaders().get("host"));
-  const { data } = await supabase
-    .from("subscriptions")
-    .select("plan,status,current_period_end,operative_lifetime,cancel_at_period_end,stripe_subscription_id")
-    .eq("user_id", userId)
-    .eq("environment", env)
-    .maybeSingle();
-  return data;
-}
-
-async function loadGifts({ supabase, userId }: Ctx): Promise<GiftRow[]> {
-  const { data } = await supabase.from("gift_redemptions").select("plan,gift_until").eq("user_id", userId);
-  return data ?? [];
-}
-
-async function loadEntitlements(ctx: Ctx): Promise<Entitlements> {
-  const [sub, gifts] = await Promise.all([loadSubscription(ctx), loadGifts(ctx)]);
-  return entitlementsFromSub(sub, new Date(), gifts);
-}
-
-/** Server-side daily cap for the live-browser fallback; logs the run when allowed. */
-function browserReserver(ctx: Ctx): (domain: string) => Promise<boolean> {
-  return async (domain) => {
-    const since = new Date(Date.now() - 86_400_000).toISOString();
-    const { count } = await ctx.supabase
-      .from("browser_runs")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", ctx.userId)
-      .not("domain", "like", `${ENRICH_PREFIX}%`)
-      .not("domain", "like", "mcp:%")
-      .gte("run_at", since);
-    if (!browserRunAllowed(count ?? 0)) return false;
-    const { error } = await ctx.supabase.from("browser_runs").insert({ user_id: ctx.userId, domain });
-    return !error;
-  };
-}
-
-// Paid page renders are logged in the same append-only usage log as browser runs, tagged with this prefix.
-const ENRICH_PREFIX = "enrich:";
-
-/** Server-side rolling 30-day cap on paid page renders; logs the run when allowed. */
-function enrichmentReserver(ctx: Ctx, plan: PlanTier): (domain: string) => Promise<boolean> {
-  return async (domain) => {
-    const since = new Date(Date.now() - 30 * 86_400_000).toISOString();
-    const { count } = await ctx.supabase
-      .from("browser_runs")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", ctx.userId)
-      .like("domain", `${ENRICH_PREFIX}%`)
-      .gte("run_at", since);
-    if (!enrichmentAllowed(plan, count ?? 0)) return false;
-    const { error } = await ctx.supabase.from("browser_runs").insert({ user_id: ctx.userId, domain: `${ENRICH_PREFIX}${domain}` });
-    return !error;
-  };
-}
+import {
+  browserReserver,
+  enrichmentReserver,
+  loadEntitlements,
+  loadGifts,
+  loadSubscription,
+  type PlanCtx as Ctx,
+} from "./plan-access.server";
 
 async function requireLists(ctx: Ctx): Promise<void> {
   if (!(await loadEntitlements(ctx)).savedLists) throw new Error("Saved lists need the Operative plan.");
