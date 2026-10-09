@@ -14,7 +14,15 @@ export type PlatformId =
   | "youtube"
   | "pinterest"
   | "github"
-  | "tweetapp";
+  | "tweetapp"
+  | "discord"
+  | "twitch"
+  | "substack"
+  | "telegram"
+  | "reddit"
+  | "patreon"
+  | "behance"
+  | "dribbble";
 
 export interface ParsedProfile {
   handle: string;
@@ -243,6 +251,129 @@ export const PLATFORMS: PlatformDef[] = [
         ? simple(segs, [], (h) => ({ handle: h, tag: `@${h}`, url: `https://tweet.app/${h}` }))
         : null,
   },
+  {
+    id: "discord",
+    name: "Discord",
+    searchHost: "discord.gg",
+    parse: (host, segs) => {
+      const build = (h: string): ParsedProfile => ({ handle: h, tag: h, url: `https://discord.gg/${h}` });
+      if (host === "discord.gg") return simple(segs, [], build);
+      if ((host === "discord.com" || host === "discordapp.com") && segs[0] === "invite")
+        return simple(segs.slice(1), [], build);
+      return null;
+    },
+  },
+  {
+    id: "twitch",
+    name: "Twitch",
+    searchHost: "twitch.tv",
+    parse: (host, segs) =>
+      host === "twitch.tv"
+        ? simple(segs, ["directory", "videos", "downloads", "jobs", "p", "subscriptions", "turbo", "wallet"], (h) => ({
+            handle: h,
+            tag: `@${h}`,
+            url: `https://www.twitch.tv/${h}`,
+          }))
+        : null,
+    probe: { url: (h) => `https://www.twitch.tv/${h}`, profileUrl: (h) => `https://www.twitch.tv/${h}` },
+  },
+  {
+    id: "substack",
+    name: "Substack",
+    searchHost: "substack.com",
+    parse: (host, segs) => {
+      const build = (h: string): ParsedProfile => ({ handle: h, tag: `@${h}`, url: `https://${h}.substack.com` });
+      if (host.endsWith(".substack.com")) {
+        const sub = host.slice(0, -".substack.com".length);
+        return /^[a-z0-9-]{1,63}$/i.test(sub) && !["www", "on", "open", "support", "cdn"].includes(sub) ? build(sub) : null;
+      }
+      if (host === "substack.com" && segs[0]?.startsWith("@"))
+        return simple(segs, [], (h) => ({ handle: h, tag: `@${h}`, url: `https://substack.com/@${h}` }));
+      return null;
+    },
+    probe: { url: (h) => `https://${h}.substack.com`, profileUrl: (h) => `https://${h}.substack.com` },
+  },
+  {
+    id: "telegram",
+    name: "Telegram",
+    searchHost: "t.me",
+    parse: (host, segs) => {
+      if (host !== "t.me" && host !== "telegram.me") return null;
+      if (segs[0]?.startsWith("+")) return null;
+      const s = segs[0] === "s" ? segs.slice(1) : segs;
+      return simple(s, ["joinchat", "addstickers", "proxy", "socks", "iv", "c", "addlist"], (h) => ({
+        handle: h,
+        tag: `@${h}`,
+        url: `https://t.me/${h}`,
+      }));
+    },
+    probe: { url: (h) => `https://t.me/${h}`, profileUrl: (h) => `https://t.me/${h}` },
+  },
+  {
+    id: "reddit",
+    name: "Reddit",
+    searchHost: "reddit.com",
+    parse: (host, segs) => {
+      if (host !== "reddit.com" && host !== "old.reddit.com") return null;
+      const kind = segs[0]?.toLowerCase();
+      if (kind === "r")
+        return simple(segs.slice(1), ["all", "popular"], (h) => ({
+          handle: `r/${h}`,
+          tag: `r/${h}`,
+          url: `https://www.reddit.com/r/${h}`,
+        }));
+      if (kind === "user" || kind === "u")
+        return simple(segs.slice(1), [], (h) => ({
+          handle: `u/${h}`,
+          tag: `u/${h}`,
+          url: `https://www.reddit.com/user/${h}`,
+        }));
+      return null;
+    },
+  },
+  {
+    id: "patreon",
+    name: "Patreon",
+    searchHost: "patreon.com",
+    parse: (host, segs) => {
+      if (host !== "patreon.com") return null;
+      const s = segs[0] === "c" ? segs.slice(1) : segs;
+      return simple(s, ["posts", "creators", "product", "join", "checkout", "pricing", "user", "messages", "notifications"], (h) => ({
+        handle: h,
+        tag: `@${h}`,
+        url: `https://www.patreon.com/${h}`,
+      }));
+    },
+    probe: { url: (h) => `https://www.patreon.com/${h}`, profileUrl: (h) => `https://www.patreon.com/${h}` },
+  },
+  {
+    id: "behance",
+    name: "Behance",
+    searchHost: "behance.net",
+    parse: (host, segs) =>
+      host === "behance.net"
+        ? simple(segs, ["gallery", "galleries", "joblist", "assets", "hire", "onboarding", "live", "blog"], (h) => ({
+            handle: h,
+            tag: `@${h}`,
+            url: `https://www.behance.net/${h}`,
+          }))
+        : null,
+    probe: { url: (h) => `https://www.behance.net/${h}`, profileUrl: (h) => `https://www.behance.net/${h}` },
+  },
+  {
+    id: "dribbble",
+    name: "Dribbble",
+    searchHost: "dribbble.com",
+    parse: (host, segs) =>
+      host === "dribbble.com"
+        ? simple(segs, ["shots", "jobs", "designers", "tags", "stories", "pro", "session", "signup", "following", "freelance-jobs"], (h) => ({
+            handle: h,
+            tag: `@${h}`,
+            url: `https://dribbble.com/${h}`,
+          }))
+        : null,
+    probe: { url: (h) => `https://dribbble.com/${h}`, profileUrl: (h) => `https://dribbble.com/${h}` },
+  },
 ];
 
 export function normalizeHost(host: string): string {
@@ -282,6 +413,16 @@ export const SOCIAL_HOSTS = [
   "pinterest.com",
   "github.com",
   "tweet.app",
+  "discord.gg",
+  "discord.com",
+  "twitch.tv",
+  "substack.com",
+  "t.me",
+  "telegram.me",
+  "reddit.com",
+  "patreon.com",
+  "behance.net",
+  "dribbble.com",
   "wikipedia.org",
   "duckduckgo.com",
 ];
