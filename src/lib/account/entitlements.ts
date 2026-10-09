@@ -2,6 +2,10 @@ export type PlanTier = "free" | "operative" | "deep_recon" | "brand_command";
 
 const RANK: Record<PlanTier, number> = { free: 0, operative: 1, deep_recon: 2, brand_command: 3 };
 
+export function planRank(plan: PlanTier): number {
+  return RANK[plan];
+}
+
 /** Daily cap on live-browser (Browser Use) fallback runs per account. */
 export const BROWSER_RUNS_PER_DAY = 20;
 
