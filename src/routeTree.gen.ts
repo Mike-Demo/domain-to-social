@@ -34,6 +34,7 @@ import { Route as Char91DotwellKnownChar93ApiCatalogRouteImport } from './routes
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as AuthenticatedAdminGiftsRouteImport } from './routes/_authenticated/admin.gifts'
 import { Route as AuthenticatedListsIdRouteImport } from './routes/_authenticated/lists.$id'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
@@ -166,6 +167,11 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminGiftsRoute = AuthenticatedAdminGiftsRouteImport.update({
+  id: '/admin/gifts',
+  path: '/admin/gifts',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedListsIdRoute = AuthenticatedListsIdRouteImport.update({
   id: '/lists/$id',
   path: '/lists/$id',
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account': typeof AuthenticatedAccountRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/admin/gifts': typeof AuthenticatedAdminGiftsRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -250,6 +257,7 @@ export interface FileRoutesByTo {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account': typeof AuthenticatedAccountRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/admin/gifts': typeof AuthenticatedAdminGiftsRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -283,6 +291,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/_authenticated/admin/gifts': typeof AuthenticatedAdminGiftsRoute
   '/_authenticated/lists/$id': typeof AuthenticatedListsIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -316,6 +325,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/account'
     | '/.lovable/oauth/consent'
+    | '/admin/gifts'
     | '/lists/$id'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
@@ -347,6 +357,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/account'
     | '/.lovable/oauth/consent'
+    | '/admin/gifts'
     | '/lists/$id'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
@@ -379,6 +390,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/account'
     | '/.lovable/oauth/consent'
+    | '/_authenticated/admin/gifts'
     | '/_authenticated/lists/$id'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
@@ -594,6 +606,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/gifts': {
+      id: '/_authenticated/admin/gifts'
+      path: '/admin/gifts'
+      fullPath: '/admin/gifts'
+      preLoaderRoute: typeof AuthenticatedAdminGiftsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/lists/$id': {
       id: '/_authenticated/lists/$id'
       path: '/lists/$id'
@@ -634,11 +653,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
+  AuthenticatedAdminGiftsRoute: typeof AuthenticatedAdminGiftsRoute
   AuthenticatedListsIdRoute: typeof AuthenticatedListsIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  AuthenticatedAdminGiftsRoute: AuthenticatedAdminGiftsRoute,
   AuthenticatedListsIdRoute: AuthenticatedListsIdRoute,
 }
 
