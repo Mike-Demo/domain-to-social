@@ -7,6 +7,7 @@ import { PaymentTestModeBanner } from "@/components/payments/Checkout";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyAccount } from "@/lib/account/account.functions";
+import { isAgentIdUser } from "@/lib/account/mfa";
 import { changePlan } from "@/lib/account/payments.functions";
 import type { PlanTier } from "@/lib/account/entitlements";
 import { WaButton } from "@/design-system/font-awsome-web-awesome-171158/webawesome/react/button";
