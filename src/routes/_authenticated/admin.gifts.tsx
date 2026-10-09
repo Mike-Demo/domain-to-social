@@ -62,7 +62,7 @@ function Gifts() {
           <>
             <div className={panel}>
               <h2 className="font-headline text-headline-sm text-paper-distressed uppercase">New code</h2>
-              <label htmlFor="g-plan" className="font-code-terminal text-body-sm text-on-surface-variant">Plan</label>
+              <label htmlFor="g-plan" className="font-label-stamp text-label-stamp text-paper-distressed uppercase">Plan</label>
               <select id="g-plan" value={plan} onChange={(e) => setPlan(e.target.value as GiftPlan)} className={field}>
                 <option value="operative">Operative (lifetime)</option>
                 <option value="deep_recon">Deep Recon</option>
