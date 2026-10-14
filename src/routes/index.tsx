@@ -109,7 +109,7 @@ function RadarScanner() {
   const searchFn = useServerFn(searchBrand);
   const saveFn = useServerFn(saveLookup);
   const memberFn = useServerFn(memberLookup);
-  const { user } = useAuth();
+  const { verified: member } = useAuth();
 
   const [elapsed, setElapsed] = useState<number | null>(null);
 
@@ -118,14 +118,14 @@ function RadarScanner() {
       const started = performance.now();
       try {
         let res: LookupResult;
-        if (user) {
+        if (member) {
           res = await memberFn({ data: { url } });
         } else {
           const out = await lookupFn({ data: { url } });
           if ("error" in out) throw new Error(out.error);
           res = out.result;
         }
-        if (user) void saveFn({ data: { result: res } }).catch(() => undefined);
+        if (member) void saveFn({ data: { result: res } }).catch(() => undefined);
         return res;
       } finally {
         setElapsed((performance.now() - started) / 1000);

@@ -31,11 +31,11 @@ type Row = { input: string; ok: true; result: LookupResult } | { input: string; 
 const btn = "font-label-stamp text-label-stamp px-space-md py-space-sm uppercase";
 
 function BatchSniffer() {
-  const { user, ready } = useAuth();
+  const { user, ready, verified } = useAuth();
   const fetchAccount = useServerFn(getMyAccount);
   const run = useServerFn(runBatch);
   const add = useServerFn(addToList);
-  const account = useQuery({ queryKey: ["account"], queryFn: () => fetchAccount(), enabled: !!user });
+  const account = useQuery({ queryKey: ["account"], queryFn: () => fetchAccount(), enabled: verified });
   const [paste, setPaste] = useState("stripe.com\nvercel.com");
   const [rows, setRows] = useState<Row[]>([]);
   const [busy, setBusy] = useState(false);
