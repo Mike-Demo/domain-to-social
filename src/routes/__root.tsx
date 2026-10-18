@@ -13,10 +13,7 @@ import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
 import waThemeCss from "@/design-system/font-awsome-web-awesome-171158/webawesome/theme.css?url";
-import {
-  WEB_AWESOME_STYLE_URLS,
-  WEB_AWESOME_FOUCE_STYLE_URL,
-} from "@/design-system/font-awsome-web-awesome-171158/webawesome/cdn";
+import waBundleCss from "@/assets/webawesome-bundle.css?url";
 import { WEB_AWESOME_HTML_CLASSES } from "@/design-system/font-awsome-web-awesome-171158/webawesome/setup";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
