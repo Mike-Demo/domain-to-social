@@ -13,10 +13,7 @@ import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
 import waThemeCss from "@/design-system/font-awsome-web-awesome-171158/webawesome/theme.css?url";
-import {
-  WEB_AWESOME_STYLE_URLS,
-  WEB_AWESOME_FOUCE_STYLE_URL,
-} from "@/design-system/font-awsome-web-awesome-171158/webawesome/cdn";
+import waBundleCss from "@/assets/webawesome-bundle.css?url";
 import { WEB_AWESOME_HTML_CLASSES } from "@/design-system/font-awsome-web-awesome-171158/webawesome/setup";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -100,8 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      ...WEB_AWESOME_STYLE_URLS.map((href) => ({ rel: "stylesheet", href })),
-      { rel: "stylesheet", href: WEB_AWESOME_FOUCE_STYLE_URL },
+      { rel: "stylesheet", href: waBundleCss },
       { rel: "stylesheet", href: waThemeCss },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
@@ -112,10 +108,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap",
       },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap",
-      },
+      { rel: "preload", href: "/fonts/material-symbols-subset.woff2", as: "font", type: "font/woff2", crossOrigin: "anonymous" },
     ],
   }),
   shellComponent: RootShell,

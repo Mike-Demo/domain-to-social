@@ -29,9 +29,9 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://magicmanta.com/" },
-      { property: "og:image", content: "https://magicmanta.com/og-image.png" },
+      { property: "og:image", content: "https://magicmanta.com/og-image.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://magicmanta.com/og-image.png" },
+      { name: "twitter:image", content: "https://magicmanta.com/og-image.jpg" },
     ],
     links: [
       { rel: "canonical", href: "https://magicmanta.com/" },

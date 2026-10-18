@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { WebAwesomeLoader } from "@/design-system/font-awsome-web-awesome-171158/webawesome/setup";
-import LOGO_SRC from "@/assets/favicon-src.png";
+import LOGO_SRC from "@/assets/logo.png";
 
 export const NAV_ITEMS = [
   { to: "/", label: "Radar Scanner", short: "Radar" },
