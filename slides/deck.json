@@ -1,0 +1,227 @@
+{
+  "boltSlidesVersion": 1,
+  "boltSlidesId": "11011050-f9d6-4d43-8a9e-3e43af51bbaf",
+  "deck": {
+    "title": "Domain to Social — Launch Kit",
+    "transition": "fade",
+    "font": "manrope",
+    "accent": "#FF6F61"
+  },
+  "slides": [
+    {
+      "id": "s1",
+      "position": 0,
+      "layout": "cover",
+      "props": {
+        "kicker": "Open source · github.com/Mike-Demo/domain-to-social",
+        "title": "Your website already wrote your ==first posts==.",
+        "subtitle": "Domain to Social turns any site into a ready-to-post social starter kit — bios, handles, and launch posts in minutes.",
+        "foot": "Domain to Social · 2026"
+      },
+      "background": { "type": "color", "color": "var(--bg)" },
+      "animation": "cascade",
+      "transition": null,
+      "nav": null,
+      "notes": "Hook: every founder stares at an empty profile on launch day. This tool fixes that. One sentence, then move on.",
+      "status": "none"
+    },
+    {
+      "id": "s2",
+      "position": 1,
+      "layout": "statement",
+      "props": {
+        "kicker": "The problem",
+        "title": "The ==blank profile== is where momentum dies.",
+        "body": "Launch day demands a social presence — but bios, handles, and first posts all start from an empty box, while the website that explains everything just sits there."
+      },
+      "background": { "type": "color", "color": "var(--bg)" },
+      "animation": "cascade",
+      "transition": null,
+      "nav": null,
+      "notes": "Say it out loud: everyone has felt this. You spent weeks on the site, and then freeze for an hour on a 160-character bio.",
+      "status": "none"
+    },
+    {
+      "id": "s3",
+      "position": 2,
+      "layout": "pillars",
+      "props": {
+        "title": "Point it at a domain. Get the ==whole kit==.",
+        "items": [
+          {
+            "title": "Profile bios",
+            "body": "Sized per platform — X, LinkedIn, GitHub — written from what your site actually says."
+          },
+          {
+            "title": "Handle shortlist",
+            "body": "Available-feeling options derived from your name and positioning, ranked and ready to claim."
+          },
+          {
+            "title": "First posts",
+            "body": "A set of launch-ready posts in your site's own voice — announce, explain, and invite."
+          }
+        ]
+      },
+      "background": { "type": "color", "color": "var(--bg)" },
+      "animation": "cascade",
+      "transition": null,
+      "nav": null,
+      "notes": "Three deliverables, one input: a URL. Emphasize that everything is drafted from the site's real content, not templates.",
+      "status": "none"
+    },
+    {
+      "id": "s4",
+      "position": 3,
+      "layout": "steps",
+      "props": {
+        "kicker": "How it works",
+        "title": "From URL to ==post-ready== in four steps.",
+        "items": [
+          {
+            "title": "Fetch",
+            "body": "Point the tool at your domain — it pulls the live site."
+          },
+          {
+            "title": "Extract",
+            "body": "It works out what the project is and who it's for."
+          },
+          {
+            "title": "Generate",
+            "body": "Bios, handles, and platform-ready drafts come back as a kit."
+          },
+          {
+            "title": "Review & post",
+            "body": "You approve every word — nothing goes out without your say-so."
+          }
+        ]
+      },
+      "background": { "type": "color", "color": "var(--bg)" },
+      "animation": "cascade",
+      "transition": null,
+      "nav": null,
+      "notes": "Walk the four steps quickly, then slow down on step 4: the human stays in the loop. Drafts, not autopilot.",
+      "status": "none"
+    },
+    {
+      "id": "s5",
+      "position": 4,
+      "layout": "contrast",
+      "props": {
+        "kicker": "Why it works",
+        "title": "Start at ==80% right==, not 0%.",
+        "left": {
+          "label": "Without",
+          "title": "Blank box",
+          "points": [
+            "Empty profile, empty page",
+            "Bios and posts written from scratch",
+            "Momentum spent on boilerplate, not the product"
+          ]
+        },
+        "right": {
+          "label": "With",
+          "title": "Your landing page",
+          "points": [
+            "Source material that already exists",
+            "Copy that's already been approved — by you",
+            "Drafts arrive at 80% right; you polish the last 20%"
+          ]
+        }
+      },
+      "background": { "type": "color", "color": "var(--bg)" },
+      "animation": "cascade",
+      "transition": null,
+      "nav": null,
+      "notes": "The core insight: the hard part of social copy is already done — it's your website. The tool just re-uses approved material.",
+      "status": "none"
+    },
+    {
+      "id": "s6",
+      "position": 5,
+      "layout": "bento",
+      "props": {
+        "kicker": "Key features",
+        "title": "Small tool, ==sharp edges==.",
+        "tiles": [
+          {
+            "k": "01",
+            "title": "Per-platform sizing",
+            "body": "Bio length and tone matched to each network's limits and culture.",
+            "c": 3,
+            "variant": "accent"
+          },
+          {
+            "k": "02",
+            "title": "Voice-matched posts",
+            "body": "First posts echo the language of your site, not a generic template.",
+            "c": 3
+          },
+          {
+            "k": "03",
+            "title": "Human-in-the-loop",
+            "body": "Everything lands in a review queue — you post, it never does.",
+            "c": 2
+          },
+          {
+            "k": "04",
+            "title": "One command",
+            "body": "A domain in, a starter kit out. No accounts, no configuration.",
+            "c": 2
+          },
+          {
+            "k": "05",
+            "title": "Open source",
+            "body": "Read it, fork it, shape it — the whole pipeline is on GitHub.",
+            "c": 2,
+            "variant": "glow"
+          }
+        ]
+      },
+      "background": { "type": "color", "color": "var(--bg)" },
+      "animation": "cascade",
+      "transition": null,
+      "nav": null,
+      "notes": "Pick two or three tiles to talk to — per-platform sizing and human-in-the-loop are the differentiators. Don't read every tile.",
+      "status": "none"
+    },
+    {
+      "id": "s7",
+      "position": 6,
+      "layout": "bigNumber",
+      "props": {
+        "kicker": "Status",
+        "value": "100%",
+        "caption": "working tool, open source — free to run, fork, and build on",
+        "foot": "github.com/Mike-Demo/domain-to-social"
+      },
+      "background": { "type": "color", "color": "var(--bg)" },
+      "animation": "cascade",
+      "transition": null,
+      "nav": null,
+      "notes": "Status check: it works today, and it's fully open source. Invite people to try it on their own domain right after the talk.",
+      "status": "none"
+    },
+    {
+      "id": "s8",
+      "position": 7,
+      "layout": "cover",
+      "props": {
+        "kicker": "Try it on your domain",
+        "title": "Give it a URL. ==Post today==.",
+        "subtitle": "github.com/Mike-Demo/domain-to-social",
+        "foot": "Domain to Social · MIT licensed · Star it if it saves you an hour"
+      },
+      "background": {
+        "type": "gradient",
+        "from": "#06080d",
+        "to": "#2a1210",
+        "angle": 160
+      },
+      "animation": "rise",
+      "transition": "zoom",
+      "nav": null,
+      "notes": "Close with the call to action: run it on your own site this week. Repo link is on screen — star it if it saves you an hour.",
+      "status": "none"
+    }
+  ]
+}
