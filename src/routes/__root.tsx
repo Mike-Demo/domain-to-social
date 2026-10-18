@@ -97,8 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      ...WEB_AWESOME_STYLE_URLS.map((href) => ({ rel: "stylesheet", href })),
-      { rel: "stylesheet", href: WEB_AWESOME_FOUCE_STYLE_URL },
+      { rel: "stylesheet", href: waBundleCss },
       { rel: "stylesheet", href: waThemeCss },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
@@ -111,7 +110,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&text=badgeloginradarterminalhubsourcemilitary_tech&display=swap",
       },
     ],
   }),
