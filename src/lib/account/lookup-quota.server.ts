@@ -24,3 +24,13 @@ export async function reserveLookupQuota(userId: string, inputs: string[], db?: 
   if (error) throw new Error("Couldn't check lookup usage — please try again.");
   if (data !== true) throw new Error("Too many lookups for this account or site — please wait a minute and try again.");
 }
+
+/** The free endpoint accepts incomplete-MFA sessions, but still verifies identity before counting account usage. */
+export async function reserveLookupQuotaFromAuthorization(authorization: string, inputs: string[]): Promise<void> {
+  if (!authorization.startsWith("Bearer ")) throw new Error("Please sign in again.");
+  const token = authorization.slice(7);
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin.auth.getUser(token);
+  if (error || !data.user) throw new Error("Please sign in again.");
+  await reserveLookupQuota(data.user.id, inputs, supabaseAdmin);
+}
