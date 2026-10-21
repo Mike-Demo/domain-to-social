@@ -75,6 +75,12 @@ export const lookupSocials = createServerFn({ method: "POST" })
     try {
       assertWithinLimit("lookup");
       assertTargetWithinLimit(data.url);
+      // Signed-in callers cannot bypass the shared account cap by choosing the free endpoint.
+      const authorization = getRequestHeaders().get("authorization");
+      if (authorization) {
+        const { reserveLookupQuotaFromAuthorization } = await import("@/lib/account/lookup-quota.server");
+        await reserveLookupQuotaFromAuthorization(authorization, [data.url]);
+      }
       return { result: await lookupDomain(data.url) };
     } catch (e) {
       return { error: failureMessage(e, "Lookup failed.") };
