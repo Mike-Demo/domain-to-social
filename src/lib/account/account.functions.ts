@@ -5,6 +5,7 @@ import type { Json } from "@/integrations/supabase/types";
 import { planRank } from "./entitlements";
 import { entitlementsFromSub, subscriptionActive } from "./billing";
 import type { LookupResult } from "@/lib/social/types";
+import { reserveLookupQuota } from "./lookup-quota.server";
 import {
   browserReserver,
   enrichmentReserver,
@@ -125,29 +126,12 @@ export const getList = createServerFn({ method: "GET" })
     };
   });
 
-const MEMBER_WINDOW_MS = 60_000;
-const MEMBER_MAX_SITES_PER_WINDOW = 30;
-const memberBuckets = new Map<string, { count: number; resetAt: number }>();
-
-/** Per-account cap on how many sites the server fetches per minute, so lookups can't be used as a bulk fetch proxy. */
-function assertMemberQuota(userId: string, sites: number): void {
-  const now = Date.now();
-  const b = memberBuckets.get(userId);
-  if (!b || b.resetAt <= now) {
-    memberBuckets.set(userId, { count: sites, resetAt: now + MEMBER_WINDOW_MS });
-    if (sites > MEMBER_MAX_SITES_PER_WINDOW) throw new Error("Too many lookups — please wait a minute and try again.");
-    return;
-  }
-  if (b.count + sites > MEMBER_MAX_SITES_PER_WINDOW) throw new Error("Too many lookups — please wait a minute and try again.");
-  b.count += sites;
-}
-
 /** Signed-in single lookup: Deep Recon plans get Firecrawl enrichment, others get the standard lookup. */
 export const memberLookup = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
   .validator((d: unknown) => z.object({ url: z.string().trim().min(3).max(500) }).parse(d))
   .handler(async ({ data, context }) => {
-    assertMemberQuota(context.userId, 1);
+    await reserveLookupQuota(context.userId, [data.url]);
     const ent = await loadEntitlements(context);
     const { lookupDomain } = await import("@/lib/social/lookup.server");
     return lookupDomain(data.url, { enrich: ent.enrichment, browserAgent: ent.browserAgent, reserveBrowserRun: browserReserver(context), reserveEnrichment: enrichmentReserver(context, ent.plan) });
@@ -160,17 +144,7 @@ export const runBatch = createServerFn({ method: "POST" })
     const ent = await loadEntitlements(context);
     if (ent.batchSize === 0) throw new Error("Bulk searching needs the Operative plan.");
     if (data.urls.length > ent.batchSize) throw new Error(`Your plan allows ${ent.batchSize} domains per run.`);
-    // One request per target site per run, so a batch can't be used to hammer a single host.
-    const hostOf = (u: string) => {
-      try {
-        return new URL(/^https?:\/\//i.test(u) ? u : `https://${u}`).hostname.toLowerCase().replace(/^www\./, "");
-      } catch {
-        return u.toLowerCase();
-      }
-    };
-    const hosts = data.urls.map(hostOf);
-    if (new Set(hosts).size !== hosts.length) throw new Error("Each site can appear only once per run.");
-    assertMemberQuota(context.userId, data.urls.length);
+    await reserveLookupQuota(context.userId, data.urls);
     const { lookupDomain } = await import("@/lib/social/lookup.server");
     const settled = await Promise.allSettled(data.urls.map((u) => lookupDomain(u, { enrich: ent.enrichment, browserAgent: ent.browserAgent, reserveBrowserRun: browserReserver(context), reserveEnrichment: enrichmentReserver(context, ent.plan) })));
     const out = settled.map((s, i) =>

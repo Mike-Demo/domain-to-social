@@ -168,6 +168,24 @@ export type Database = {
         }
         Relationships: []
       }
+      lookup_quota_buckets: {
+        Row: {
+          count: number
+          key: string
+          reset_at: string
+        }
+        Insert: {
+          count?: number
+          key: string
+          reset_at?: string
+        }
+        Update: {
+          count?: number
+          key?: string
+          reset_at?: string
+        }
+        Relationships: []
+      }
       lookups: {
         Row: {
           checked_at: string
@@ -331,6 +349,7 @@ export type Database = {
           uses: number
         }[]
       }
+      gift_code_is_active: { Args: { _code_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -339,6 +358,10 @@ export type Database = {
         Returns: boolean
       }
       redeem_gift_code: { Args: { _hash: string }; Returns: Json }
+      reserve_lookup_quota: {
+        Args: { _hosts: string[]; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin"
