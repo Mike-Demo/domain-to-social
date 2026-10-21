@@ -50,20 +50,11 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       if (!price) throw new Error("Price not found");
       const isRecurring = price.type === "recurring";
 
-      let customerId: string | undefined;
+      // Only reuse a billing customer already tied to this account ID. Never adopt one by
+      // email: some sign-in providers issue unverified email claims.
       const found = await stripe.customers.search({ query: `metadata['userId']:'${userId}'`, limit: 1 });
-      customerId = found.data[0]?.id;
-      if (!customerId && email) {
-        const existing = await stripe.customers.list({ email, limit: 1 });
-        const c = existing.data[0];
-        if (c) {
-          if (c.metadata?.["userId"] !== userId) await stripe.customers.update(c.id, { metadata: { ...c.metadata, userId } });
-          customerId = c.id;
-        }
-      }
-      if (!customerId) {
-        customerId = (await stripe.customers.create({ ...(email && { email }), metadata: { userId } })).id;
-      }
+      const customerId =
+        found.data[0]?.id ?? (await stripe.customers.create({ ...(email && { email }), metadata: { userId } })).id;
 
       let description: string | undefined;
       if (!isRecurring) {
