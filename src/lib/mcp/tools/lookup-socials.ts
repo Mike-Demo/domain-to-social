@@ -18,6 +18,12 @@ export default defineTool({
     const db = supabaseForUser(ctx);
     const { data: u } = await db.auth.getUser();
     if (!u.user) throw new ToolError("Sign in required.");
+    const { reserveLookupQuota } = await import("@/lib/account/lookup-quota.server");
+    try {
+      await reserveLookupQuota(u.user.id, [url]);
+    } catch (e) {
+      throw new ToolError(e instanceof Error ? e.message : "Couldn't check lookup usage.");
+    }
     const since = new Date(Date.now() - 86_400_000).toISOString();
     const { count } = await db
       .from("browser_runs")
