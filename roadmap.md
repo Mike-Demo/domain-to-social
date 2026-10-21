@@ -1,7 +1,7 @@
 # Roadmap
 
-- [ ] Selected security fix: revoke redeemed gift access when its code is disabled
-- [ ] Selected security fix: durable signed-in lookup limits shared by Radar, bulk, and MCP
+- [x] Selected security fix: revoke redeemed gift access when its code is disabled
+- [x] Selected security fix: durable signed-in lookup limits shared by Radar, bulk, and MCP
 
 - [x] Phase 1: Accounts (email + Google), header sign-in, operator console
 - [x] Phase 2: Payments — Operative $5 once, Deep Recon $10/mo, Brand Command $20/mo, plan synced from payments
