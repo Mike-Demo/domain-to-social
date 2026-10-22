@@ -2,14 +2,17 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { requireMfaAuth } from "./mfa-middleware";
-import { RECOVERY_CODE_COUNT, generateRecoveryCode, hashRecoveryCode } from "./recovery";
+import { RECOVERY_CODE_COUNT, generateRecoveryCode } from "./recovery";
 
 /** Issues a fresh set of backup codes (old ones stop working). Needs a fully verified session. */
 export const generateRecoveryCodes = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
   .handler(async ({ context }): Promise<{ codes: string[] }> => {
     const codes = Array.from({ length: RECOVERY_CODE_COUNT }, generateRecoveryCode);
-    const rows = await Promise.all(codes.map(async (c) => ({ user_id: context.userId, code_hash: await hashRecoveryCode(c) })));
+    const { hashRecoveryCode } = await import("./recovery.server");
+    const rows = await Promise.all(
+      codes.map(async (c) => ({ user_id: context.userId, code_hash: await hashRecoveryCode(c) })),
+    );
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const del = await supabaseAdmin.from("mfa_recovery_codes").delete().eq("user_id", context.userId);
     if (del.error) throw new Error("Could not reset backup codes.");
@@ -21,7 +24,8 @@ export const generateRecoveryCodes = createServerFn({ method: "POST" })
 export const recoveryCodeStatus = createServerFn({ method: "GET" })
   .middleware([requireMfaAuth])
   .handler(async ({ context }): Promise<{ remaining: number }> => {
-    const { count } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { count } = await supabaseAdmin
       .from("mfa_recovery_codes")
       .select("id", { count: "exact", head: true })
       .eq("user_id", context.userId)
@@ -47,6 +51,7 @@ export const redeemRecoveryCode = createServerFn({ method: "POST" })
   .validator((d: unknown) => z.object({ code: z.string().trim().min(10).max(20) }).parse(d))
   .handler(async ({ data, context }): Promise<{ ok: true }> => {
     assertAttemptAllowed(context.userId);
+    const { hashRecoveryCode } = await import("./recovery.server");
     const hash = await hashRecoveryCode(data.code);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: used, error } = await supabaseAdmin

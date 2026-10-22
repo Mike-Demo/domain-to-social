@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireMfaAuth } from "./mfa-middleware";
-import { generateRecoveryCode, hashRecoveryCode } from "./recovery";
+import { generateRecoveryCode, hashGiftCode } from "./recovery";
 
 const GIFT_PREFIX = "gift:";
 const REDEEM_ATTEMPTS_PER_HOUR = 10;
@@ -19,7 +19,9 @@ export const redeemGiftCode = createServerFn({ method: "POST" })
       .gte("run_at", since);
     if ((count ?? 0) >= REDEEM_ATTEMPTS_PER_HOUR) return { error: "Too many tries. Wait an hour and try again." };
     await context.supabase.from("browser_runs").insert({ user_id: context.userId, domain: `${GIFT_PREFIX}redeem` });
-    const { data: r, error } = await context.supabase.rpc("redeem_gift_code", { _hash: await hashRecoveryCode(data.code) });
+    const { data: r, error } = await context.supabase.rpc("redeem_gift_code", {
+      _hash: await hashGiftCode(data.code),
+    });
     if (error) return { error: "Could not redeem the code. Try again." };
     const res = r as { error?: string; plan?: string; gift_until?: string | null };
     if (res.error) return { error: res.error };
@@ -56,7 +58,7 @@ export const createGiftCode = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const code = generateRecoveryCode();
     const { error } = await context.supabase.rpc("admin_create_gift_code", {
-      _hash: await hashRecoveryCode(code),
+      _hash: await hashGiftCode(code),
       _plan: data.plan,
       _days: data.days,
       _max_uses: data.maxUses,
