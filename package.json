@@ -4,12 +4,13 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
+    "dev": "patchstack-connect dev -- vite dev",
+    "build": "patchstack-connect scan && patchstack-connect map --upload && vite build && patchstack-connect mark-build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "postinstall": "patchstack-connect scan"
   },
   "overrides": {
     "rolldown": "1.2.1",
@@ -22,6 +23,7 @@
     "@lovable.dev/email-js": "0.3.1",
     "@lovable.dev/mcp-js": "^3.0.5",
     "@lovable.dev/webhooks-js": "0.0.3",
+    "@patchstack/connect": "^0.5.80",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.8",

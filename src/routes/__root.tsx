@@ -121,6 +121,14 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={WEB_AWESOME_HTML_CLASSES}>
       <head>
+        {/* #region patchstack (managed by patchstack-connect — do not edit) */}
+        {import.meta.env.PROD && (
+          <script
+            data-patchstack-build="true"
+            dangerouslySetInnerHTML={{ __html: 'window.__PATCHSTACK_PROD__=true;window.__PATCHSTACK_BUILD__="fe47dcb83ba4";' }}
+          />
+        )}
+        {/* #endregion patchstack */}
         <HeadContent />
         <script
           type="application/ld+json"

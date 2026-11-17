@@ -33,3 +33,9 @@ dist-ssr
 
 # Lovable sandbox workspace directory
 .workspace/
+
+# Patchstack credential — never commit this
+.patchstackrc.local.json
+
+# Patchstack local runtime cache
+.patchstack/

@@ -1,0 +1,857 @@
+{
+  "_comment": "Patchstack rules for this site, refreshed from the project's workspace, used until the running guard fetches live ones. _patchstack.rules_reader is a read-only credential for that fetch: it can read this site's rules and nothing else. Server-side only — never import this file into browser code.",
+  "firewall": [
+    {
+      "id": "ps-fallback-proto-pollution",
+      "title": "Prototype pollution in request body",
+      "category": "prototype-pollution",
+      "rule_v2": [
+        {
+          "parameter": "raw",
+          "mutations": [
+            "urldecode"
+          ],
+          "match": {
+            "type": "contains",
+            "value": "__proto__"
+          }
+        },
+        {
+          "parameter": "rules",
+          "rules": [
+            {
+              "parameter": "raw",
+              "mutations": [
+                "urldecode"
+              ],
+              "match": {
+                "type": "contains",
+                "value": "constructor"
+              },
+              "inclusive": true
+            },
+            {
+              "parameter": "raw",
+              "mutations": [
+                "urldecode"
+              ],
+              "match": {
+                "type": "contains",
+                "value": "prototype"
+              },
+              "inclusive": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ps-fallback-path-traversal",
+      "title": "Path traversal in a file/path parameter",
+      "category": "lfi",
+      "rule_v2": [
+        {
+          "parameter": [
+            "get.file",
+            "post.file",
+            "get.path",
+            "post.path"
+          ],
+          "mutations": [
+            "urldecode"
+          ],
+          "match": {
+            "type": "contains",
+            "value": ".."
+          }
+        }
+      ]
+    },
+    {
+      "id": "ps-fallback-ssrf-internal",
+      "title": "SSRF via a url parameter pointing at an internal/metadata address",
+      "category": "ssrf",
+      "rule_v2": [
+        {
+          "parameter": [
+            "get.url",
+            "post.url"
+          ],
+          "mutations": [
+            "urldecode"
+          ],
+          "match": {
+            "type": "regex",
+            "value": "/localhost|127\\.0\\.0\\.1|169\\.254\\.169\\.254|::1|metadata\\.google/i"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ps-fallback-xss",
+      "title": "Stored/reflected XSS in a text field",
+      "category": "xss",
+      "rule_v2": [
+        {
+          "parameter": [
+            "post.title",
+            "post.comment",
+            "post.body"
+          ],
+          "mutations": [
+            "urldecode",
+            "htmlentitydecode"
+          ],
+          "match": {
+            "type": "regex",
+            "value": "/<script\\b|onerror\\s*=|javascript:/i"
+          }
+        }
+      ]
+    },
+    {
+      "id": 22425,
+      "title": "npm: launch-editor: `fs.existsSync()` existence check can be bypassed on Windows",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "regex",
+            "value": "/(?:^|[\\\\\\/])\\.\\.[. ]*:[0-9:]+$/"
+          },
+          "parameter": "get.file"
+        }
+      ],
+      "source_revision": "sha256:6fe0d08a9a83daac896e202ebed01268",
+      "phase": "request",
+      "action": "block",
+      "category": "command-injection"
+    },
+    {
+      "id": 22280,
+      "title": "Vite dev-server protocol-relative html-proxy URL with query-text traversal (GHSA-9jrq-w75r-8gcw), partial",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "regex",
+            "value": "/^\\/[\\/\\\\]/"
+          },
+          "inclusive": true,
+          "parameter": "server.REQUEST_PATH"
+        },
+        {
+          "match": {
+            "type": "regex",
+            "value": "/(?:^|[\\/\\\\])\\.\\.(?:[\\/\\\\]|$)/"
+          },
+          "inclusive": true,
+          "parameter": "server.REQUEST_URI"
+        }
+      ],
+      "source_revision": "sha256:063c6d3e1531be032c583f58f64b2f91",
+      "phase": "request",
+      "action": "block",
+      "category": "xss"
+    },
+    {
+      "id": 22283,
+      "title": "npm: fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization",
+      "rule_v2": [
+        {
+          "rules": [
+            {
+              "match": {
+                "type": "not_contains",
+                "value": "x-www-form-urlencoded"
+              },
+              "inclusive": true,
+              "parameter": "server.CONTENT_TYPE"
+            },
+            {
+              "match": {
+                "type": "regex",
+                "value": "/\\b(?:https?|wss?):\\\\?\\/\\\\?\\/[^\\/?#\\s@\"'<>\\\\]{0,8192}@[^\\/?#\\s@\"'<>\\\\]{0,8192}@/i"
+              },
+              "inclusive": true,
+              "parameter": "raw"
+            }
+          ],
+          "parameter": "rules"
+        },
+        {
+          "rules": [
+            {
+              "match": {
+                "type": "contains",
+                "value": "x-www-form-urlencoded"
+              },
+              "inclusive": true,
+              "parameter": "server.CONTENT_TYPE"
+            },
+            {
+              "match": {
+                "type": "regex",
+                "value": "/\\b(?:https?|wss?):\\/\\/[^\\/?#\\s@\"'<>\\\\&]{0,8192}@[^\\/?#\\s@\"'<>\\\\&]{0,8192}@/i"
+              },
+              "inclusive": true,
+              "mutations": [
+                "urldecode"
+              ],
+              "parameter": "raw"
+            }
+          ],
+          "parameter": "rules"
+        },
+        {
+          "match": {
+            "type": "regex",
+            "value": "/\\b(?:https?|wss?):\\/\\/[^\\/?#\\s@\"'<>\\\\]{0,8192}@[^\\/?#\\s@\"'<>\\\\]{0,8192}@/i"
+          },
+          "parameter": "get.*"
+        }
+      ],
+      "source_revision": "sha256:cd143f1db6da24ad44db3acdfc1c7066",
+      "phase": "request",
+      "action": "block",
+      "category": "host-confusion"
+    },
+    {
+      "id": 22284,
+      "title": "npm: fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "regex",
+            "value": "/^\\s{0,16}(?=[a-z]{0,9}%)(?:(?:j|%(?:u00)?[46]a)(?:a|%(?:u00)?[46]1)(?:v|%(?:u00)?[57]6)(?:a|%(?:u00)?[46]1)(?:s|%(?:u00)?[57]3)(?:c|%(?:u00)?[46]3)(?:r|%(?:u00)?[57]2)(?:i|%(?:u00)?[46]9)(?:p|%(?:u00)?[57]0)(?:t|%(?:u00)?[57]4)|(?:v|%(?:u00)?[57]6)(?:b|%(?:u00)?[46]2)(?:s|%(?:u00)?[57]3)(?:c|%(?:u00)?[46]3)(?:r|%(?:u00)?[57]2)(?:i|%(?:u00)?[46]9)(?:p|%(?:u00)?[57]0)(?:t|%(?:u00)?[57]4)|(?:d|%(?:u00)?[46]4)(?:a|%(?:u00)?[46]1)(?:t|%(?:u00)?[57]4)(?:a|%(?:u00)?[46]1)):/i"
+          },
+          "mutations": [
+            "json_decode",
+            "getArrayValues"
+          ],
+          "parameter": "raw"
+        },
+        {
+          "match": {
+            "type": "regex",
+            "value": "/[\"\\n]\\s{0,16}(?=[a-z]{0,9}%)(?:(?:j|%(?:u00)?[46]a)(?:a|%(?:u00)?[46]1)(?:v|%(?:u00)?[57]6)(?:a|%(?:u00)?[46]1)(?:s|%(?:u00)?[57]3)(?:c|%(?:u00)?[46]3)(?:r|%(?:u00)?[57]2)(?:i|%(?:u00)?[46]9)(?:p|%(?:u00)?[57]0)(?:t|%(?:u00)?[57]4)|(?:v|%(?:u00)?[57]6)(?:b|%(?:u00)?[46]2)(?:s|%(?:u00)?[57]3)(?:c|%(?:u00)?[46]3)(?:r|%(?:u00)?[57]2)(?:i|%(?:u00)?[46]9)(?:p|%(?:u00)?[57]0)(?:t|%(?:u00)?[57]4)|(?:d|%(?:u00)?[46]4)(?:a|%(?:u00)?[46]1)(?:t|%(?:u00)?[57]4)(?:a|%(?:u00)?[46]1)):/i"
+          },
+          "parameter": "raw"
+        },
+        {
+          "match": {
+            "type": "regex",
+            "value": "/(?:^|&)[^=&]{1,256}=\\s{0,16}(?=[a-z]{0,9}%)(?:(?:j|%(?:u00)?[46]a)(?:a|%(?:u00)?[46]1)(?:v|%(?:u00)?[57]6)(?:a|%(?:u00)?[46]1)(?:s|%(?:u00)?[57]3)(?:c|%(?:u00)?[46]3)(?:r|%(?:u00)?[57]2)(?:i|%(?:u00)?[46]9)(?:p|%(?:u00)?[57]0)(?:t|%(?:u00)?[57]4)|(?:v|%(?:u00)?[57]6)(?:b|%(?:u00)?[46]2)(?:s|%(?:u00)?[57]3)(?:c|%(?:u00)?[46]3)(?:r|%(?:u00)?[57]2)(?:i|%(?:u00)?[46]9)(?:p|%(?:u00)?[57]0)(?:t|%(?:u00)?[57]4)|(?:d|%(?:u00)?[46]4)(?:a|%(?:u00)?[46]1)(?:t|%(?:u00)?[57]4)(?:a|%(?:u00)?[46]1)):/i"
+          },
+          "mutations": [
+            "urldecode"
+          ],
+          "parameter": "raw"
+        },
+        {
+          "match": {
+            "type": "regex",
+            "value": "/^\\s{0,16}(?=[a-z]{0,9}%)(?:(?:j|%(?:u00)?[46]a)(?:a|%(?:u00)?[46]1)(?:v|%(?:u00)?[57]6)(?:a|%(?:u00)?[46]1)(?:s|%(?:u00)?[57]3)(?:c|%(?:u00)?[46]3)(?:r|%(?:u00)?[57]2)(?:i|%(?:u00)?[46]9)(?:p|%(?:u00)?[57]0)(?:t|%(?:u00)?[57]4)|(?:v|%(?:u00)?[57]6)(?:b|%(?:u00)?[46]2)(?:s|%(?:u00)?[57]3)(?:c|%(?:u00)?[46]3)(?:r|%(?:u00)?[57]2)(?:i|%(?:u00)?[46]9)(?:p|%(?:u00)?[57]0)(?:t|%(?:u00)?[57]4)|(?:d|%(?:u00)?[46]4)(?:a|%(?:u00)?[46]1)(?:t|%(?:u00)?[57]4)(?:a|%(?:u00)?[46]1)):/i"
+          },
+          "mutations": [
+            "getArrayValues"
+          ],
+          "parameter": [
+            "get.*",
+            "post.*"
+          ]
+        }
+      ],
+      "source_revision": "sha256:0371b6bb32e16c78e9c52d84115ac066",
+      "phase": "request",
+      "action": "block",
+      "category": "xss"
+    },
+    {
+      "id": 22470,
+      "title": "npm: qs : qs.stringify with arrayFormat 'comma' throws an uncaught TypeError on array elements carrying a non-callable own toString (DoS)",
+      "rule_v2": [
+        {
+          "rules": [
+            {
+              "match": {
+                "type": "contains",
+                "value": "json"
+              },
+              "inclusive": true,
+              "parameter": "server.CONTENT_TYPE"
+            },
+            {
+              "match": {
+                "type": "regex",
+                "value": "/[{,]\\s{0,64}\"toString\"\\s{0,64}:/"
+              },
+              "inclusive": true,
+              "parameter": "raw"
+            }
+          ],
+          "parameter": "rules"
+        },
+        {
+          "match": {
+            "type": "regex",
+            "value": "/[{,]\"toString\":/"
+          },
+          "mutations": [
+            "json_decode",
+            "json_encode"
+          ],
+          "parameter": "raw"
+        },
+        {
+          "match": {
+            "type": "regex",
+            "value": "/\\[toString\\]/"
+          },
+          "parameter": "server.REQUEST_URI"
+        },
+        {
+          "rules": [
+            {
+              "match": {
+                "type": "contains",
+                "value": "x-www-form-urlencoded"
+              },
+              "inclusive": true,
+              "parameter": "server.CONTENT_TYPE"
+            },
+            {
+              "match": {
+                "type": "regex",
+                "value": "/\\[toString\\]/"
+              },
+              "inclusive": true,
+              "mutations": [
+                "urldecode"
+              ],
+              "parameter": "raw"
+            }
+          ],
+          "parameter": "rules"
+        }
+      ],
+      "source_revision": "sha256:c3163ae699648fa36334e47c0066564d",
+      "phase": "request",
+      "action": "block",
+      "category": "denial-of-service"
+    },
+    {
+      "id": 22422,
+      "title": "deepmerge <=4.3.1 prototype poisoning: own __proto__ object key in a JSON request body (CVE-2026-93753)",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "contains",
+            "value": "json"
+          },
+          "inclusive": true,
+          "parameter": [
+            "server.CONTENT_TYPE",
+            "server.HTTP_CONTENT_TYPE"
+          ]
+        },
+        {
+          "match": {
+            "type": "regex",
+            "value": "/[{,]\\s*\"(?:_|\\\\u005[fF]){2}(?:p|\\\\u0070)(?:r|\\\\u0072)(?:o|\\\\u006[fF])(?:t|\\\\u0074)(?:o|\\\\u006[fF])(?:_|\\\\u005[fF]){2}\"\\s*:/"
+          },
+          "inclusive": true,
+          "parameter": "raw"
+        }
+      ],
+      "source_revision": "sha256:bf3c171af3ca709456b442cd65832984",
+      "phase": "request",
+      "action": "block",
+      "category": "prototype-pollution"
+    },
+    {
+      "id": 23180,
+      "title": "Hono csrf() bypass via hyperlink-auditing text/ping requests (GHSA-46wx-v44x-9hh2)",
+      "rule_v2": [
+        {
+          "rules": [
+            {
+              "match": {
+                "type": "regex",
+                "value": "/^\\s{0,16}text\\/ping\\b/i"
+              },
+              "inclusive": true,
+              "parameter": "server.HTTP_CONTENT_TYPE"
+            },
+            {
+              "match": {
+                "type": "in_array",
+                "value": [
+                  "cross-site",
+                  "same-site"
+                ]
+              },
+              "inclusive": true,
+              "parameter": "server.HTTP_SEC_FETCH_SITE"
+            }
+          ],
+          "parameter": "rules"
+        },
+        {
+          "rules": [
+            {
+              "match": {
+                "type": "regex",
+                "value": "/^\\s{0,16}text\\/ping\\b/i"
+              },
+              "inclusive": true,
+              "parameter": "server.HTTP_CONTENT_TYPE"
+            },
+            {
+              "match": {
+                "type": "cross_origin"
+              },
+              "inclusive": true
+            }
+          ],
+          "parameter": "rules"
+        }
+      ],
+      "source_revision": "sha256:1ab99937660802da586a337aebff9dd3",
+      "when": {
+        "method": [
+          "POST",
+          "PUT",
+          "PATCH",
+          "DELETE"
+        ]
+      },
+      "phase": "request",
+      "action": "block",
+      "category": "csrf"
+    },
+    {
+      "id": 20129,
+      "title": "Private key in response body",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "regex",
+            "value": "/-----BEGIN [A-Z0-9 -]{0,32}PRIVATE KEY[A-Z0-9 -]{0,32}-----/"
+          },
+          "parameter": "response.body"
+        }
+      ],
+      "source_revision": "mp1-1e65db90db7e1d02947f3648b9f10d76",
+      "phase": "response",
+      "action": "block",
+      "category": "secret-exposure",
+      "prefilter": [
+        "PRIVATE KEY"
+      ]
+    },
+    {
+      "id": 20130,
+      "title": "AWS access key id in response body",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "regex",
+            "value": "/\\b(?:AKIA|ASIA)[0-9A-Z]{16}\\b/"
+          },
+          "parameter": "response.body"
+        }
+      ],
+      "source_revision": "mp1-b61bf159e0ef560fbcb182753d4b6be2",
+      "phase": "response",
+      "action": "redact",
+      "category": "secret-exposure",
+      "prefilter": [
+        "AKIA",
+        "ASIA"
+      ]
+    },
+    {
+      "id": 20131,
+      "title": "Google API key in response body",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "regex",
+            "value": "/\\bAIza[0-9A-Za-z_-]{35}\\b/"
+          },
+          "parameter": "response.body"
+        }
+      ],
+      "source_revision": "mp1-458d6e282cdaa809c7e8a1e17165ca09",
+      "phase": "response",
+      "action": "redact",
+      "category": "secret-exposure",
+      "prefilter": [
+        "AIza"
+      ]
+    },
+    {
+      "id": 20132,
+      "title": "Vendor API key / token in response body",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "regex",
+            "value": "/\\b(?:sk_live_[0-9A-Za-z]{16,}|rk_live_[0-9A-Za-z]{16,}|gh[opsu]_[0-9A-Za-z]{36}|github_pat_[0-9A-Za-z_]{60,}|glpat-[0-9A-Za-z_-]{20,}|xox[baprs]-[0-9A-Za-z-]{10,}|sk-ant-[0-9A-Za-z_-]{20,}|ya29\\.[0-9A-Za-z_-]{20,}|npm_[0-9A-Za-z]{36})(?![0-9A-Za-z])/"
+          },
+          "parameter": "response.body"
+        }
+      ],
+      "source_revision": "mp1-cbc85872f3377b397757f41c062adac5",
+      "phase": "response",
+      "action": "redact",
+      "category": "secret-exposure",
+      "prefilter": [
+        "sk_live_",
+        "rk_live_",
+        "ghp_",
+        "gho_",
+        "ghs_",
+        "ghu_",
+        "github_pat_",
+        "glpat-",
+        "xox",
+        "sk-ant-",
+        "ya29.",
+        "npm_"
+      ]
+    },
+    {
+      "id": 20133,
+      "title": "Supabase secret key in response body",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "regex",
+            "value": "/\\bsb_secret_[A-Za-z0-9_-]{22}_[A-Za-z0-9_-]{8}(?![A-Za-z0-9_-])/"
+          },
+          "parameter": "response.body"
+        }
+      ],
+      "source_revision": "mp1-e298aabc45500346e0efecb23d316afd",
+      "phase": "response",
+      "action": "redact",
+      "category": "secret-exposure",
+      "prefilter": [
+        "sb_secret_"
+      ]
+    },
+    {
+      "id": 20134,
+      "title": "Supabase service_role key in response body",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "jwt_claim_equals",
+            "claim": "role",
+            "value": "service_role"
+          },
+          "parameter": "response.body"
+        }
+      ],
+      "source_revision": "mp1-5bd70ceb48e0e17feefd1691c16d4fd2",
+      "phase": "response",
+      "action": "redact",
+      "category": "secret-exposure",
+      "prefilter": [
+        "eyJ"
+      ]
+    },
+    {
+      "id": 20135,
+      "title": "Database connection string with credentials in response body",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "regex",
+            "value": "/\\b(?:mongodb(?:\\+srv)?|postgres(?:ql)?|mysql|redis|amqps?):\\/\\/[A-Za-z0-9._~%!$&'()*+,;=-]+:[A-Za-z0-9._~%!$&'()*+,;=:-]+@/i"
+          },
+          "parameter": "response.body"
+        }
+      ],
+      "source_revision": "mp1-b4c6d330e39a89feabb2e565ab66c697",
+      "phase": "response",
+      "action": "block",
+      "category": "secret-exposure",
+      "prefilter": [
+        "mongodb",
+        "postgres",
+        "mysql",
+        "redis",
+        "amqp"
+      ]
+    },
+    {
+      "id": 20136,
+      "title": "Node stack trace leaking in response body",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "regex",
+            "value": "/(?:\\n|\\\\n)\\s*at\\s+\\S[^\\r\\n(]*\\((?:node:|[A-Za-z]:[\\\\/])?[^:\\r\\n]+:\\d+:\\d+\\)/"
+          },
+          "parameter": "response.body"
+        }
+      ],
+      "source_revision": "mp1-91c78581e2fd667fa96ea6fa4d14d7fd",
+      "phase": "response",
+      "action": "block",
+      "category": "info-exposure"
+    },
+    {
+      "id": 20138,
+      "title": "Backend exception / stack trace disclosure in response body",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "regex",
+            "value": "/(Traceback \\(most recent call last\\)|Exception in thread \"|System\\.[A-Za-z.]+Exception|\\bat [\\w.$]+\\([\\w]+\\.(?:java|kt|scala|rb|py|cs):\\d+\\)|goroutine \\d+ \\[)/"
+          },
+          "parameter": "response.body"
+        }
+      ],
+      "source_revision": "mp1-dbf6fafe7251f6865de581579380134c",
+      "phase": "response",
+      "action": "block",
+      "category": "info-exposure",
+      "prefilter": [
+        "Traceback",
+        "Exception in thread",
+        "System.",
+        "goroutine ",
+        ".java:",
+        ".kt:",
+        ".scala:",
+        ".rb:",
+        ".py:",
+        ".cs:"
+      ]
+    },
+    {
+      "id": 20139,
+      "title": "Outbound request to an internal / metadata address",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "internal_host"
+          },
+          "parameter": "egress.host"
+        }
+      ],
+      "source_revision": "mp1-1d591499dd2a26a038e3e73191535b3c",
+      "phase": "egress",
+      "action": "block",
+      "category": "ssrf"
+    },
+    {
+      "id": 20140,
+      "title": "A `__proto__` marker in a request (body)",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "contains",
+            "value": "__proto__"
+          },
+          "mutations": [
+            "urldecode"
+          ],
+          "parameter": "raw"
+        }
+      ],
+      "source_revision": "mp1-8e19379edcc797c778e7adc745dc3fad",
+      "phase": "request",
+      "action": "block",
+      "capture": {
+        "version": 1,
+        "raw_chars": 256
+      },
+      "category": "prototype-pollution"
+    },
+    {
+      "id": 20141,
+      "title": "A `__proto__` marker in a request (request line)",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "contains",
+            "value": "__proto__"
+          },
+          "mutations": [
+            "urldecode"
+          ],
+          "parameter": "server.REQUEST_URI"
+        }
+      ],
+      "source_revision": "mp1-71d402ebcea6ea632cb6bac6c5ecdb0f",
+      "phase": "request",
+      "action": "block",
+      "category": "prototype-pollution"
+    },
+    {
+      "id": 20142,
+      "title": "A `constructor.prototype` marker in a request (body)",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "contains",
+            "value": "constructor.prototype"
+          },
+          "mutations": [
+            "urldecode"
+          ],
+          "parameter": "raw"
+        },
+        {
+          "match": {
+            "type": "contains",
+            "value": "constructor[prototype]"
+          },
+          "mutations": [
+            "urldecode"
+          ],
+          "parameter": "raw"
+        }
+      ],
+      "source_revision": "mp1-fec868eccc9282ce181673f0bf266171",
+      "phase": "request",
+      "action": "block",
+      "capture": {
+        "version": 1,
+        "raw_chars": 256
+      },
+      "category": "prototype-pollution"
+    },
+    {
+      "id": 20143,
+      "title": "A `constructor.prototype` marker in a request (request line)",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "contains",
+            "value": "constructor.prototype"
+          },
+          "mutations": [
+            "urldecode"
+          ],
+          "parameter": "server.REQUEST_URI"
+        },
+        {
+          "match": {
+            "type": "contains",
+            "value": "constructor[prototype]"
+          },
+          "mutations": [
+            "urldecode"
+          ],
+          "parameter": "server.REQUEST_URI"
+        }
+      ],
+      "source_revision": "mp1-742a35d374b0bb1a2ae7d2e015fdc833",
+      "phase": "request",
+      "action": "block",
+      "category": "prototype-pollution"
+    },
+    {
+      "id": 20144,
+      "title": "A directory traversal sequence in a request (body)",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "contains",
+            "value": "../"
+          },
+          "mutations": [
+            "urldecode"
+          ],
+          "parameter": "raw"
+        },
+        {
+          "match": {
+            "type": "contains",
+            "value": "..\\"
+          },
+          "mutations": [
+            "urldecode"
+          ],
+          "parameter": "raw"
+        }
+      ],
+      "source_revision": "mp1-d436c04932b34a5044fe0e4b02e8f588",
+      "phase": "request",
+      "action": "block",
+      "capture": {
+        "version": 1,
+        "raw_chars": 256
+      },
+      "category": "path-traversal"
+    },
+    {
+      "id": 20145,
+      "title": "A directory traversal sequence in a request (request line)",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "contains",
+            "value": "../"
+          },
+          "mutations": [
+            "urldecode"
+          ],
+          "parameter": "server.REQUEST_URI"
+        },
+        {
+          "match": {
+            "type": "contains",
+            "value": "..\\"
+          },
+          "mutations": [
+            "urldecode"
+          ],
+          "parameter": "server.REQUEST_URI"
+        }
+      ],
+      "source_revision": "mp1-4e74c5b78ff78511f3e2f218f6862710",
+      "phase": "request",
+      "action": "block",
+      "category": "path-traversal"
+    },
+    {
+      "id": 20455,
+      "title": "SQL / ORM error disclosure in response body",
+      "rule_v2": [
+        {
+          "match": {
+            "type": "regex",
+            "value": "/(SQLSTATE\\[[0-9A-Z]+\\]|SequelizeDatabaseError|\\bER_[A-Z][A-Z0-9_]*|ORA-\\d{5}|PG::[A-Za-z]+Error|SQLITE_ERROR|You have an error in your SQL syntax)/"
+          },
+          "parameter": "response.body"
+        }
+      ],
+      "source_revision": "mp1-74a69eceb4638eff92724011524f1216",
+      "phase": "response",
+      "action": "block",
+      "category": "info-exposure",
+      "prefilter": [
+        "SQLSTATE",
+        "Sequelize",
+        "ER_",
+        "ORA-",
+        "PG::",
+        "SQLITE_ERROR",
+        "SQL syntax"
+      ]
+    }
+  ],
+  "whitelists": [],
+  "whitelist_keys": {},
+  "_patchstack": {
+    "rules_reader": "rr_488ecf8c83a06b006e6108fb41124374f7f6065f581cec3d-510691",
+    "manifest_checksum": "fe47dcb83ba4",
+    "build_id": "1238b1686e0492380bbaecb3b00154e7174d6120c4b7e93b3f79c973d6cfac12"
+  },
+  "enforcement": "dry-run"
+}

@@ -3,6 +3,8 @@ import "./lib/error-capture";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { AGENT_VIEW, INDEX_MD, LINK_HEADER, NOT_FOUND_MD, markdownResponse, wantsMarkdown } from "./lib/agent/docs";
+import { protectFetch } from "./patchstack/guard";
+
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -46,7 +48,7 @@ function isH3SwallowedErrorBody(body: string): boolean {
 }
 
 export default {
-  async fetch(request: Request, env: unknown, ctx: unknown) {
+  fetch: protectFetch(async function (request: Request, env: unknown, ctx: unknown) {
     try {
       const url = new URL(request.url);
       if (request.method === "GET" && url.pathname === "/") {
@@ -80,5 +82,5 @@ export default {
         headers: { "content-type": "text/html; charset=utf-8" },
       });
     }
-  },
+  }),
 };
