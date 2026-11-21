@@ -64,6 +64,13 @@
       "when": 1792622601247,
       "tag": "0008_revoke_disabled_gifts_and_reserve_lookup_quota",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792632112587,
+      "tag": "0009_secure_mfa_recovery_codes",
+      "breakpoints": true
     }
   ]
 }

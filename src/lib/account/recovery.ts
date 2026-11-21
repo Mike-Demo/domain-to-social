@@ -16,7 +16,10 @@ export function normalizeRecoveryCode(input: string): string {
   return input.toUpperCase().replace(/[^0-9A-Z]/g, "");
 }
 
-export async function hashRecoveryCode(code: string): Promise<string> {
-  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(normalizeRecoveryCode(code)));
+export async function hashGiftCode(code: string): Promise<string> {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(normalizeRecoveryCode(code)),
+  );
   return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
 }
