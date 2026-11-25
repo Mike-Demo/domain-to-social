@@ -48,7 +48,7 @@ describe("isAgentIdUser", () => {
 });
 
 describe("AppSumo reviewer exemption", () => {
-  const ID = "37f4a84d-961a-4ee5-a39a-d44c9d561c51";
+  const ID = "d9a1f286-c436-4a88-bc5e-363acfc15c56";
   const pw = { provider: "email", providers: ["email"] };
   it("exempts only the reviewer's own password account", () => {
     expect(isAgentIdSession({ sub: ID, email: "mdemop+appsumo@mikedemo.com", app_metadata: pw })).toBe(true);
