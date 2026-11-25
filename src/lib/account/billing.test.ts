@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checkoutDecision, effectivePlan, shouldApplySubscriptionEvent, type SubRow } from "./billing";
+import { checkoutDecision, PRICE_TO_PLAN, effectivePlan, shouldApplySubscriptionEvent, type SubRow } from "./billing";
 
 const now = new Date("2026-10-08T12:00:00Z");
 const future = "2026-11-08T12:00:00Z";
@@ -15,6 +15,13 @@ const row = (o: Partial<SubRow>): SubRow => ({
 });
 
 describe("checkoutDecision", () => {
+  it("treats Operative at $5/mo as a monthly plan", () => {
+    expect(PRICE_TO_PLAN["operative_monthly"]).toBe("operative");
+    expect(checkoutDecision(null, "operative_monthly", now)).toBe("checkout");
+  });
+  it("refuses monthly Operative for lifetime Operative owners", () => {
+    expect(checkoutDecision(row({ operative_lifetime: true }), "operative_monthly", now)).toBe("owned");
+  });
   it("refuses a second Operative purchase", () => {
     expect(checkoutDecision(row({ operative_lifetime: true }), "operative_onetime", now)).toBe("owned");
   });
