@@ -5,7 +5,7 @@ import type { Json } from "@/integrations/supabase/types";
 import { planRank } from "./entitlements";
 import { entitlementsFromSub, subscriptionActive } from "./billing";
 import type { LookupResult } from "@/lib/social/types";
-import { reserveLookupQuota } from "./lookup-quota.server";
+import { reserveBatchLookupQuota, reserveLookupQuota } from "./lookup-quota.server";
 import {
   browserReserver,
   enrichmentReserver,
@@ -139,12 +139,12 @@ export const memberLookup = createServerFn({ method: "POST" })
 
 export const runBatch = createServerFn({ method: "POST" })
   .middleware([requireMfaAuth])
-  .validator((d: unknown) => z.object({ urls: z.array(z.string().trim().min(3).max(500)).min(1).max(25) }).parse(d))
+  .validator((d: unknown) => z.object({ urls: z.array(z.string().trim().max(500)).min(1).max(25) }).parse(d))
   .handler(async ({ data, context }) => {
     const ent = await loadEntitlements(context);
     if (ent.batchSize === 0) throw new Error("Bulk searching needs the Operative plan.");
     if (data.urls.length > ent.batchSize) throw new Error(`Your plan allows ${ent.batchSize} domains per run.`);
-    await reserveLookupQuota(context.userId, data.urls);
+    await reserveBatchLookupQuota(context.userId, data.urls);
     const { lookupDomain } = await import("@/lib/social/lookup.server");
     const settled = await Promise.allSettled(data.urls.map((u) => lookupDomain(u, { enrich: ent.enrichment, browserAgent: ent.browserAgent, reserveBrowserRun: browserReserver(context), reserveEnrichment: enrichmentReserver(context, ent.plan) })));
     const out = settled.map((s, i) =>

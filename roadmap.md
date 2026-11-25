@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Fix bulk searches canceled by invalid entries; verify row isolation and retained quota checks
+
 - [x] Selected security fix: revoke redeemed gift access when its code is disabled
 - [x] Selected security fix: durable signed-in lookup limits shared by Radar, bulk, and MCP
 

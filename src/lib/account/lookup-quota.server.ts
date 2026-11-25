@@ -15,6 +15,20 @@ export function lookupQuotaHosts(inputs: string[]): string[] {
 
 type QuotaClient = Pick<SupabaseClient<Database>, "rpc">;
 
+/** Invalid rows never fetch a target; leave their errors to the batch's per-row lookup handling. */
+export async function reserveBatchLookupQuota(userId: string, inputs: string[], db?: QuotaClient): Promise<void> {
+  if (inputs.length < 1 || inputs.length > 25) throw new Error("Enter between 1 and 25 sites.");
+  const validInputs = inputs.filter((input) => {
+    try {
+      lookupQuotaHosts([input]);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+  if (validInputs.length) await reserveLookupQuota(userId, validInputs, db);
+}
+
 /** Caller identity is established by authenticated middleware or the MCP user session, never client input. */
 export async function reserveLookupQuota(userId: string, inputs: string[], db?: QuotaClient): Promise<void> {
   const hosts = lookupQuotaHosts(inputs);
