@@ -6,7 +6,7 @@ export function hasSecondFactor(claims: { aal?: unknown } | null | undefined): b
 const AGENT_ID_PROVIDER = "custom:app-oidc";
 
 /** The AppSumo reviewer account skips the authenticator step so marketplace QA can sign in with a password. */
-export const MFA_EXEMPT_EMAILS: readonly string[] = ["appsumo-review@magicmanta.com"];
+export const MFA_EXEMPT_EMAILS: readonly string[] = ["mdemop+appsumo@mikedemo.com"];
 
 function isExemptEmail(email: unknown): boolean {
   return typeof email === "string" && MFA_EXEMPT_EMAILS.includes(email.toLowerCase());
