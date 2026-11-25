@@ -11,7 +11,7 @@
         "@lovable.dev/email-js": "0.3.1",
         "@lovable.dev/mcp-js": "^3.0.5",
         "@lovable.dev/webhooks-js": "0.0.3",
-        "@patchstack/connect": "^0.5.80",
+        "@patchstack/connect": "^0.5.84",
         "@radix-ui/react-accordion": "^1.2.12",
         "@radix-ui/react-alert-dialog": "^1.1.15",
         "@radix-ui/react-aspect-ratio": "^1.1.8",
@@ -326,7 +326,7 @@
 
     "@oxc-project/types": ["@oxc-project/types@0.142.0", "https://europe-west4-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/@oxc-project/types/-/types-0.142.0.tgz", {}, "sha512-7W+2q5AKQVU36fkaryontrHn3YDt1RyUYXatw9i5H8ocYe2sPKSFB6eS8WNPeRKiN1qAWWZUPm7gwFzJGrccqQ=="],
 
-    "@patchstack/connect": ["@patchstack/connect@0.5.80", "", { "dependencies": { "typescript": "^5.4.0" }, "bin": { "patchstack-connect": "dist/cli.js" } }, "sha512-IRZCaxDH6D0fK2yKLwv04DtgqVtHsCbEKyqoSRtIS/jC65IpG1Zj53R9nbgEqrrF6AFsxpxLxN6eJQ2C/sEDGw=="],
+    "@patchstack/connect": ["@patchstack/connect@0.5.84", "", { "dependencies": { "typescript": "^5.4.0" }, "bin": { "patchstack-connect": "dist/cli.js" } }, "sha512-/OWGLFoSy1wXcgKUlZZM3r6Yx5wAZshMjhorl/H9aFRiCIEEd/assiNX7+Zg8Yh0u9A88n3TZmZhEueCiW4OhA=="],
 
     "@pkgr/core": ["@pkgr/core@0.3.6", "https://europe-west4-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/@pkgr/core/-/core-0.3.6.tgz", {}, "sha512-SEeaJLb3qBNF/OaXnaR1NmmBbFYk1zC0ZH/52fATcRPLFg/p791YrcyFFy44Bo9sLaGuSuLp5Q6axbb/O+v/RA=="],
 

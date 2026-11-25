@@ -125,7 +125,7 @@ function RootShell({ children }: { children: ReactNode }) {
         {import.meta.env.PROD && (
           <script
             data-patchstack-build="true"
-            dangerouslySetInnerHTML={{ __html: 'window.__PATCHSTACK_PROD__=true;window.__PATCHSTACK_BUILD__="9aa378411cab";' }}
+            dangerouslySetInnerHTML={{ __html: 'window.__PATCHSTACK_PROD__=true;window.__PATCHSTACK_BUILD__="44e2231e156d";' }}
           />
         )}
         {/* #endregion patchstack */}
@@ -147,6 +147,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <body>
         {children}
         <Scripts />
+        <script src="https://cdn.patchstack.com/patchstack-widget.js" data-site-uuid="83948da2-d290-4df9-b800-c3d459ee51da" defer data-patchstack-connect-widget="true"></script>
       </body>
     </html>
   );
