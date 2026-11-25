@@ -48,10 +48,20 @@ describe("isAgentIdUser", () => {
 });
 
 describe("AppSumo reviewer exemption", () => {
-  it("exempts only the reviewer email", () => {
-    expect(isAgentIdSession({ email: "mdemop+appsumo@mikedemo.com" })).toBe(true);
-    expect(isAgentIdUser({ email: "MDEMOP+AppSumo@mikedemo.com" })).toBe(true);
-    expect(isAgentIdSession({ email: "someone@magicmanta.com" })).toBe(false);
-    expect(isAgentIdUser({ email: "someone@magicmanta.com" })).toBe(false);
+  const ID = "37f4a84d-961a-4ee5-a39a-d44c9d561c51";
+  const pw = { provider: "email", providers: ["email"] };
+  it("exempts only the reviewer's own password account", () => {
+    expect(isAgentIdSession({ sub: ID, email: "mdemop+appsumo@mikedemo.com", app_metadata: pw })).toBe(true);
+    expect(
+      isAgentIdUser({ id: ID, email: "MDEMOP+AppSumo@mikedemo.com", email_confirmed_at: "2026-11-25", app_metadata: pw }),
+    ).toBe(true);
+  });
+  it("rejects the reviewer email on another account or provider", () => {
+    expect(isAgentIdSession({ email: "mdemop+appsumo@mikedemo.com" })).toBe(false);
+    expect(isAgentIdSession({ sub: "other", email: "mdemop+appsumo@mikedemo.com", app_metadata: pw })).toBe(false);
+    expect(
+      isAgentIdSession({ sub: ID, email: "mdemop+appsumo@mikedemo.com", app_metadata: { provider: "google", providers: ["google"] } }),
+    ).toBe(false);
+    expect(isAgentIdUser({ id: ID, email: "mdemop+appsumo@mikedemo.com", app_metadata: pw })).toBe(false);
   });
 });
