@@ -42,7 +42,7 @@ export const Route = createFileRoute("/pricing")({
           url: "https://magicmanta.com/pricing",
           offers: [
             { name: "Free Radar", price: "0", description: "1 domain at a time, no account needed, share links" },
-            { name: "Operative", price: "5", description: "One-time: account, lookup history, saved lists, CSV/JSON export, bulk 5 domains per run" },
+            { name: "Operative", price: "5", period: "P1M", description: "Monthly: account, lookup history, saved lists, CSV/JSON export, bulk 5 domains per run" },
             { name: "Deep Recon", price: "10", description: "Monthly: everything in Operative, deep page checks (300 / 30 days), bulk 25 per run", period: "P1M" },
             { name: "Brand Command", price: "20", description: "Monthly: everything in Deep Recon, deep page checks (1,000 / 30 days), live browser checks (20 / day)", period: "P1M" },
           ].map(({ period, ...o }) => ({
@@ -64,7 +64,7 @@ export const Route = createFileRoute("/pricing")({
 
 const TIERS = [
   { priceId: null, plan: "free" as PlanTier, name: "Free Radar", price: "$0", items: ["1 domain at a time", "No account needed", "Share links"] },
-  { priceId: "operative_onetime" as const, plan: "operative" as PlanTier, name: "Operative", price: "$5 once", items: ["Account + lookup history", "Saved lists + CSV/JSON export", "Bulk: 5 domains per run"] },
+  { priceId: "operative_monthly" as const, plan: "operative" as PlanTier, name: "Operative", price: "$5 / mo", items: ["Account + lookup history", "Saved lists + CSV/JSON export", "Bulk: 5 domains per run"] },
   { priceId: "deep_recon_monthly" as const, plan: "deep_recon" as PlanTier, name: "Deep Recon", price: "$10 / mo", items: ["Everything in Operative", "Deep page checks for blocked sites (300 / 30 days)", "Bulk: 25 per run"] },
   { priceId: "brand_command_monthly" as const, plan: "brand_command" as PlanTier, name: "Brand Command", price: "$20 / mo", items: ["Everything in Deep Recon", "Deep page checks (1,000 / 30 days)", "Live browser checks (20 / day)", "Coming soon: claim your domain, public brand page, monitoring + alerts"] },
 ];
@@ -96,7 +96,7 @@ function Pricing() {
   const monthly = account.data?.subscription?.monthlyPlan ?? null;
   const operativeOwned = account.data?.subscription?.operativeOwned ?? false;
 
-  async function doSwitch(priceId: "deep_recon_monthly" | "brand_command_monthly") {
+  async function doSwitch(priceId: "operative_monthly" | "deep_recon_monthly" | "brand_command_monthly") {
     setBusy(true);
     setMsg(null);
     const r = await swap({ data: { priceId } });
@@ -122,21 +122,21 @@ function Pricing() {
         </Link>
       );
     if (!account.data) return <p className="font-code-terminal text-body-sm text-on-surface-variant w-full text-center">Checking your plan…</p>;
-    const owned = t.priceId === "operative_onetime" ? plan !== "free" : monthly === t.plan;
+    const owned = t.plan === "operative" ? monthly === "operative" || (!monthly && plan !== "free") : monthly === t.plan;
     if (owned)
       return (
         <p className="font-label-stamp text-label-stamp text-primary-container w-full text-center uppercase">
-          {t.priceId === "operative_onetime" && !operativeOwned ? "Included in your plan" : "Your plan"}
+          {t.plan === "operative" && monthly !== "operative" && !operativeOwned ? "Included in your plan" : "Your plan"}
         </p>
       );
-    if (t.priceId !== "operative_onetime" && monthly)
+    if (monthly)
       return (
         <WaButton
           variant="brand"
           appearance="outlined"
           disabled={busy}
           loading={busy}
-          onClick={() => doSwitch(t.priceId as "deep_recon_monthly" | "brand_command_monthly")}
+          onClick={() => doSwitch(t.priceId as "operative_monthly" | "deep_recon_monthly" | "brand_command_monthly")}
           className="w-full"
         >
           {busy ? "Switching…" : `Switch to ${t.name}`}

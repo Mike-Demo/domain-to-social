@@ -9,7 +9,7 @@ describe("agent docs", () => {
   });
   it("pricing.md uses the exact tier names and prices from /pricing", () => {
     expect(PRICING_MD).toContain("## Free Radar — $0");
-    expect(PRICING_MD).toContain("## Operative — $5 once");
+    expect(PRICING_MD).toContain("## Operative — $5 / mo");
     expect(PRICING_MD).toContain("## Deep Recon — $10 / mo");
     expect(PRICING_MD).toContain("## Brand Command — $20 / mo");
     expect(PRICING_MD).not.toContain("Free Scout");

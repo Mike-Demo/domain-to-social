@@ -45,7 +45,7 @@ Prices in USD. Source of truth: ${SITE}/pricing
 - No account needed
 - Share links
 
-## Operative — $5 once
+## Operative — $5 / mo
 - Account + lookup history
 - Saved lists + CSV/JSON export
 - Bulk: 5 domains per run

@@ -1,10 +1,11 @@
 import { entitlementsFor, planRank, type Entitlements, type PlanTier } from "./entitlements";
 
-export const PRICE_IDS = ["operative_onetime", "deep_recon_monthly", "brand_command_monthly"] as const;
+export const PRICE_IDS = ["operative_onetime", "operative_monthly", "deep_recon_monthly", "brand_command_monthly"] as const;
 export type PriceId = (typeof PRICE_IDS)[number];
-export const MONTHLY_PRICE_IDS = ["deep_recon_monthly", "brand_command_monthly"] as const;
+export const MONTHLY_PRICE_IDS = ["operative_monthly", "deep_recon_monthly", "brand_command_monthly"] as const;
 
 export const PRICE_TO_PLAN: Record<string, PlanTier> = {
+  operative_monthly: "operative",
   deep_recon_monthly: "deep_recon",
   brand_command_monthly: "brand_command",
 };
@@ -66,6 +67,8 @@ export function checkoutDecision(row: SubRow | null, priceId: PriceId, now = new
   const target = PRICE_TO_PLAN[priceId];
   const liveSub = !!row?.stripe_subscription_id && subscriptionActive(row, now) && row.status !== "canceled";
   if (liveSub && row?.plan === target) return "owned";
+  // Lifetime Operative owners already have everything the monthly Operative plan gives.
+  if (target === "operative" && !liveSub && plan !== "free") return "owned";
   return liveSub ? "switch" : "checkout";
 }
 

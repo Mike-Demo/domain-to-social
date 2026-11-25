@@ -30,7 +30,7 @@ export const FAQS: ReadonlyArray<{ q: string; a: string }> = [
   },
   {
     q: "How much does it cost?",
-    a: "Single lookups are free. Operative is $5 one-time (account, lookup history, saved lists, CSV/JSON export, bulk 5 domains per run). Deep Recon is $10/month. See /pricing for the full plans.",
+    a: "Single lookups are free. Operative is $5/month (account, lookup history, saved lists, CSV/JSON export, bulk 5 domains per run). Deep Recon is $10/month. See /pricing for the full plans.",
   },
   {
     q: "How fresh is the data?",
@@ -91,7 +91,7 @@ export function HomeGuide() {
           <div className={card}>
             <h2 className={h2}>Plans</h2>
             <p className={body}>
-              Single lookups are free. Operative $5 once, Deep Recon $10/mo, Brand Command $20/mo.{" "}
+              Single lookups are free. Operative $5/mo, Deep Recon $10/mo, Brand Command $20/mo.{" "}
               <Link to="/pricing" className={link}>Compare plans</Link>.
             </p>
           </div>
