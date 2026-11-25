@@ -28,3 +28,4 @@
 - Redeemed gift reads exclude disabled source codes through RLS and a narrow security-definer predicate. Why: every entitlement consumer loses revoked gifts without exposing gift-code secrets.
 - Authenticated Radar, bulk, and MCP reserve account and global target quotas atomically through the service-only `reserve_lookup_quota` RPC before fetching; bulk excludes invalid destinations from reservation and reports their errors per row. Why: shared durable limits stay enforced without one invalid entry canceling valid lookups.
 - Unit tests use a standalone Vitest configuration without the app's RPC transforms. Why: handler tests must exercise server logic rather than generated transport stubs.
+- AppSumo stacking lives in `redeem_gift_code`: codes noted `appsumo` grant a tier by how many the user has redeemed (1/2/3), each code single-use. Why: tier comes from the redemption row so `bestGift` needs no changes.
