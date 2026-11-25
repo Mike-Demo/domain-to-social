@@ -75,7 +75,8 @@ export const createList = createServerFn({ method: "POST" })
   .validator((d: unknown) => z.object({ name: z.string().trim().min(1).max(80) }).parse(d))
   .handler(async ({ data, context }) => {
     await requireLists(context);
-    const { data: row, error } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
       .from("lists")
       .insert({ user_id: context.userId, name: data.name })
       .select("id")
@@ -97,13 +98,16 @@ export const addToList = createServerFn({ method: "POST" })
   .validator((d: { listId: string; results: LookupResult[] }) => d)
   .handler(async ({ data, context }) => {
     await requireLists(context);
+    const { data: owned } = await context.supabase.from("lists").select("id").eq("id", data.listId).maybeSingle();
+    if (!owned) throw new Error("List not found.");
     const rows = data.results.slice(0, 25).map((r) => ({
       list_id: data.listId,
       user_id: context.userId,
       domain: r.domain,
       result: r as unknown as Json,
     }));
-    const { error } = await context.supabase.from("list_items").insert(rows);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("list_items").insert(rows);
     if (error) throw new Error("Could not add to list.");
     return { ok: true };
   });

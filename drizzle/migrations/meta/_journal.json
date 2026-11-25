@@ -71,6 +71,13 @@
       "when": 1795583713185,
       "tag": "0009_stack_appsumo_codes",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1795627715819,
+      "tag": "0010_lock_list_writes_and_role_check",
+      "breakpoints": true
     }
   ]
 }
