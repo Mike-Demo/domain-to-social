@@ -33,6 +33,7 @@ import { Route as SupportRouteImport } from './routes/support'
 import { Route as Char91DotwellKnownChar93ApiCatalogRouteImport } from './routes/[.well-known]/api-catalog'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
+import { Route as GuidesFindCompanySocialMediaAccountsRouteImport } from './routes/guides.find-company-social-media-accounts'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedAdminGiftsRouteImport } from './routes/_authenticated/admin.gifts'
 import { Route as AuthenticatedListsIdRouteImport } from './routes/_authenticated/lists.$id'
@@ -162,6 +163,12 @@ const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const GuidesFindCompanySocialMediaAccountsRoute =
+  GuidesFindCompanySocialMediaAccountsRouteImport.update({
+    id: '/guides/find-company-social-media-accounts',
+    path: '/guides/find-company-social-media-accounts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   id: '/.lovable/oauth/consent',
   path: '/.lovable/oauth/consent',
@@ -224,6 +231,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/api-catalog': typeof Char91DotwellKnownChar93ApiCatalogRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/guides/find-company-social-media-accounts': typeof GuidesFindCompanySocialMediaAccountsRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/admin/gifts': typeof AuthenticatedAdminGiftsRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
@@ -256,6 +264,7 @@ export interface FileRoutesByTo {
   '/.well-known/api-catalog': typeof Char91DotwellKnownChar93ApiCatalogRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/guides/find-company-social-media-accounts': typeof GuidesFindCompanySocialMediaAccountsRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/admin/gifts': typeof AuthenticatedAdminGiftsRoute
   '/lists/$id': typeof AuthenticatedListsIdRoute
@@ -290,6 +299,7 @@ export interface FileRoutesById {
   '/.well-known/api-catalog': typeof Char91DotwellKnownChar93ApiCatalogRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/guides/find-company-social-media-accounts': typeof GuidesFindCompanySocialMediaAccountsRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/_authenticated/admin/gifts': typeof AuthenticatedAdminGiftsRoute
   '/_authenticated/lists/$id': typeof AuthenticatedListsIdRoute
@@ -324,6 +334,7 @@ export interface FileRouteTypes {
     | '/.well-known/api-catalog'
     | '/.well-known/oauth-protected-resource'
     | '/account'
+    | '/guides/find-company-social-media-accounts'
     | '/.lovable/oauth/consent'
     | '/admin/gifts'
     | '/lists/$id'
@@ -356,6 +367,7 @@ export interface FileRouteTypes {
     | '/.well-known/api-catalog'
     | '/.well-known/oauth-protected-resource'
     | '/account'
+    | '/guides/find-company-social-media-accounts'
     | '/.lovable/oauth/consent'
     | '/admin/gifts'
     | '/lists/$id'
@@ -389,6 +401,7 @@ export interface FileRouteTypes {
     | '/.well-known/api-catalog'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/account'
+    | '/guides/find-company-social-media-accounts'
     | '/.lovable/oauth/consent'
     | '/_authenticated/admin/gifts'
     | '/_authenticated/lists/$id'
@@ -422,6 +435,7 @@ export interface RootRouteChildren {
   SupportRoute: typeof SupportRoute
   Char91DotwellKnownChar93ApiCatalogRoute: typeof Char91DotwellKnownChar93ApiCatalogRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  GuidesFindCompanySocialMediaAccountsRoute: typeof GuidesFindCompanySocialMediaAccountsRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
@@ -599,6 +613,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/guides/find-company-social-media-accounts': {
+      id: '/guides/find-company-social-media-accounts'
+      path: '/guides/find-company-social-media-accounts'
+      fullPath: '/guides/find-company-social-media-accounts'
+      preLoaderRoute: typeof GuidesFindCompanySocialMediaAccountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/.lovable/oauth/consent': {
       id: '/.lovable/oauth/consent'
       path: '/.lovable/oauth/consent'
@@ -692,6 +713,8 @@ const rootRouteChildren: RootRouteChildren = {
     Char91DotwellKnownChar93ApiCatalogRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  GuidesFindCompanySocialMediaAccountsRoute:
+    GuidesFindCompanySocialMediaAccountsRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,

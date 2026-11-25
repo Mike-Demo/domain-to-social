@@ -72,7 +72,17 @@ export function HomeGuide() {
           </ol>
         </div>
 
-        <div className="gap-space-md grid md:grid-cols-3">
+        <div className="gap-space-md grid md:grid-cols-2 xl:grid-cols-4">
+          <div className={card}>
+            <h2 className={h2}>Guide</h2>
+            <p className={body}>
+              New to this? Read{" "}
+              <Link to="/guides/find-company-social-media-accounts" className={link}>
+                how to find a company's social media accounts
+              </Link>
+              , including what Verified and link-back checks mean.
+            </p>
+          </div>
           <div className={card}>
             <h2 className={h2}>Batch lookups</h2>
             <p className={body}>
