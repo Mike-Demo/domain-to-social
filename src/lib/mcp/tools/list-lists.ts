@@ -8,11 +8,18 @@ export default defineTool({
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async (_args, ctx) => {
-    const { data, error } = await supabaseForUser(ctx)
+    if (!ctx.isAuthenticated()) throw new ToolError("Sign in required.");
+    const db = supabaseForUser(ctx);
+    const { data: u } = await db.auth.getUser();
+    if (!u.user) throw new ToolError("Sign in required.");
+    const { loadEntitlements } = await import("@/lib/account/plan-access.server");
+    const ent = await loadEntitlements({ supabase: db, userId: u.user.id });
+    if (!ent.savedLists) throw new ToolError("Saved lists need the Operative plan or higher.");
+    const { data, error } = await db
       .from("lists")
       .select("id,name,created_at,list_items(count)")
       .order("created_at", { ascending: false });
-    if (error) throw new ToolError(error.message);
+    if (error) throw new ToolError("Couldn't load your lists — try again.");
     const lists = (data ?? []).map((l) => ({
       id: l.id,
       name: l.name,
