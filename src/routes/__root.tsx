@@ -125,7 +125,7 @@ function RootShell({ children }: { children: ReactNode }) {
         {import.meta.env.PROD && (
           <script
             data-patchstack-build="true"
-            dangerouslySetInnerHTML={{ __html: 'window.__PATCHSTACK_PROD__=true;window.__PATCHSTACK_BUILD__="fe47dcb83ba4";' }}
+            dangerouslySetInnerHTML={{ __html: 'window.__PATCHSTACK_PROD__=true;window.__PATCHSTACK_BUILD__="9aa378411cab";' }}
           />
         )}
         {/* #endregion patchstack */}
