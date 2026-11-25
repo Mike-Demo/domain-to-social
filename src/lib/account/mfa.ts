@@ -5,6 +5,13 @@ export function hasSecondFactor(claims: { aal?: unknown } | null | undefined): b
 
 const AGENT_ID_PROVIDER = "custom:app-oidc";
 
+/** The AppSumo reviewer account skips the authenticator step so marketplace QA can sign in with a password. */
+export const MFA_EXEMPT_EMAILS: readonly string[] = ["appsumo-review@magicmanta.com"];
+
+function isExemptEmail(email: unknown): boolean {
+  return typeof email === "string" && MFA_EXEMPT_EMAILS.includes(email.toLowerCase());
+}
+
 /**
  * Server-side: the access token names the identity provider in `app_metadata`
  * (`amr` only stores the auth method, e.g. "oauth"); `amr` is kept as a fallback.
@@ -13,11 +20,13 @@ export function isAgentIdSession(
   claims:
     | {
         amr?: unknown;
+        email?: unknown;
         app_metadata?: { provider?: unknown; providers?: unknown };
       }
     | null
     | undefined,
 ): boolean {
+  if (isExemptEmail(claims?.email)) return true;
   const meta = claims?.app_metadata;
   if (meta) {
     if (meta.provider === AGENT_ID_PROVIDER) return true;
@@ -33,7 +42,10 @@ export function isAgentIdSession(
 }
 
 /** Client-side: the user object's provider list names how the account signed in. */
-export function isAgentIdUser(user: { app_metadata?: { provider?: unknown; providers?: unknown } } | null | undefined): boolean {
+export function isAgentIdUser(
+  user: { email?: unknown; app_metadata?: { provider?: unknown; providers?: unknown } } | null | undefined,
+): boolean {
+  if (isExemptEmail(user?.email)) return true;
   const meta = user?.app_metadata;
   if (!meta) return false;
   if (meta.provider === AGENT_ID_PROVIDER) return true;

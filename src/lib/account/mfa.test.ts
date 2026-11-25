@@ -46,3 +46,12 @@ describe("isAgentIdUser", () => {
     expect(isAgentIdUser(null)).toBe(false);
   });
 });
+
+describe("AppSumo reviewer exemption", () => {
+  it("exempts only the reviewer email", () => {
+    expect(isAgentIdSession({ email: "appsumo-review@magicmanta.com" })).toBe(true);
+    expect(isAgentIdUser({ email: "APPSUMO-review@magicmanta.com" })).toBe(true);
+    expect(isAgentIdSession({ email: "someone@magicmanta.com" })).toBe(false);
+    expect(isAgentIdUser({ email: "someone@magicmanta.com" })).toBe(false);
+  });
+});
