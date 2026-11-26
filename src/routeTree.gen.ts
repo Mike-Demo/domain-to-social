@@ -28,6 +28,7 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PricingDotmdRouteImport } from './routes/pricing[.]md'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as RRouteImport } from './routes/r'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SourceRouteImport } from './routes/source'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as Char91DotwellKnownChar93ApiCatalogRouteImport } from './routes/[.well-known]/api-catalog'
@@ -136,6 +137,11 @@ const RRoute = RRouteImport.update({
   path: '/r',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SourceRoute = SourceRouteImport.update({
   id: '/source',
   path: '/source',
@@ -226,6 +232,7 @@ export interface FileRoutesByFullPath {
   '/pricing.md': typeof PricingDotmdRoute
   '/privacy': typeof PrivacyRoute
   '/r': typeof RRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/source': typeof SourceRoute
   '/support': typeof SupportRoute
   '/.well-known/api-catalog': typeof Char91DotwellKnownChar93ApiCatalogRoute
@@ -259,6 +266,7 @@ export interface FileRoutesByTo {
   '/pricing.md': typeof PricingDotmdRoute
   '/privacy': typeof PrivacyRoute
   '/r': typeof RRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/source': typeof SourceRoute
   '/support': typeof SupportRoute
   '/.well-known/api-catalog': typeof Char91DotwellKnownChar93ApiCatalogRoute
@@ -294,6 +302,7 @@ export interface FileRoutesById {
   '/pricing.md': typeof PricingDotmdRoute
   '/privacy': typeof PrivacyRoute
   '/r': typeof RRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/source': typeof SourceRoute
   '/support': typeof SupportRoute
   '/.well-known/api-catalog': typeof Char91DotwellKnownChar93ApiCatalogRoute
@@ -329,6 +338,7 @@ export interface FileRouteTypes {
     | '/pricing.md'
     | '/privacy'
     | '/r'
+    | '/reset-password'
     | '/source'
     | '/support'
     | '/.well-known/api-catalog'
@@ -362,6 +372,7 @@ export interface FileRouteTypes {
     | '/pricing.md'
     | '/privacy'
     | '/r'
+    | '/reset-password'
     | '/source'
     | '/support'
     | '/.well-known/api-catalog'
@@ -396,6 +407,7 @@ export interface FileRouteTypes {
     | '/pricing.md'
     | '/privacy'
     | '/r'
+    | '/reset-password'
     | '/source'
     | '/support'
     | '/.well-known/api-catalog'
@@ -431,6 +443,7 @@ export interface RootRouteChildren {
   PricingDotmdRoute: typeof PricingDotmdRoute
   PrivacyRoute: typeof PrivacyRoute
   RRoute: typeof RRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SourceRoute: typeof SourceRoute
   SupportRoute: typeof SupportRoute
   Char91DotwellKnownChar93ApiCatalogRoute: typeof Char91DotwellKnownChar93ApiCatalogRoute
@@ -578,6 +591,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/source': {
       id: '/source'
       path: '/source'
@@ -707,6 +727,7 @@ const rootRouteChildren: RootRouteChildren = {
   PricingDotmdRoute: PricingDotmdRoute,
   PrivacyRoute: PrivacyRoute,
   RRoute: RRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SourceRoute: SourceRoute,
   SupportRoute: SupportRoute,
   Char91DotwellKnownChar93ApiCatalogRoute:

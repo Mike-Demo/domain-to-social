@@ -73,6 +73,20 @@ function AuthPage() {
     setBusy(false);
   }
 
+  async function forgot() {
+    if (!email) {
+      setMsg("Enter your email above, then tap Forgot password.");
+      return;
+    }
+    setBusy(true);
+    setMsg(null);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setMsg(error ? error.message : "If that email has an account, a reset link is on its way.");
+    setBusy(false);
+  }
+
   async function google() {
     const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: returnUrl() });
     if (r.error) setMsg(r.error.message);
@@ -140,6 +154,16 @@ function AuthPage() {
           <button disabled={busy} className={`${btn} bg-primary-container text-on-primary-container shadow-stamp`}>
             {busy ? "Working…" : mode === "in" ? "Sign in" : "Sign up"}
           </button>
+          {mode === "in" && (
+            <button
+              type="button"
+              onClick={forgot}
+              disabled={busy}
+              className="font-code-terminal text-body-sm text-cyber-cyan self-start underline"
+            >
+              Forgot password?
+            </button>
+          )}
           {msg && <p className="font-code-terminal text-body-sm text-hazard-orange">{msg}</p>}
           <button
             type="button"
