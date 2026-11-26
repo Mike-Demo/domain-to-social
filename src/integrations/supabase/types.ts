@@ -357,6 +357,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      has_saved_lists_access: { Args: { _user_id: string }; Returns: boolean }
       redeem_gift_code: { Args: { _hash: string }; Returns: Json }
       reserve_lookup_quota: {
         Args: { _hosts: string[]; _user_id: string }

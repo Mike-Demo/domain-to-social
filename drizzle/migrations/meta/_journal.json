@@ -78,6 +78,13 @@
       "when": 1795627715819,
       "tag": "0010_lock_list_writes_and_role_check",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1795655324225,
+      "tag": "0011_gate_saved_lists_by_plan",
+      "breakpoints": true
     }
   ]
 }
