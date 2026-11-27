@@ -85,6 +85,13 @@
       "when": 1795655324225,
       "tag": "0011_gate_saved_lists_by_plan",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1795745719425,
+      "tag": "0012_remove_email_based_admin_grant",
+      "breakpoints": true
     }
   ]
 }
